@@ -6,8 +6,8 @@ class CuentaBanco
 
 	private $saldo;
         
-        public function __construct ($numero, $saldo) {
-            $this->numero = $numero;
+        public function __construct ($cuenta, $saldo) {
+            $this->numero = $cuenta;
             $this->saldo = $saldo;
         }
         
