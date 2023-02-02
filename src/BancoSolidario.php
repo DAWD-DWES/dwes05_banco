@@ -1,22 +1,20 @@
 <?php
 
 require "Banco.php";
-require "CuentaAhorros.php";
+require "CuentaBanco.php";
 
 class BancoSolidario implements Banco {
 
-    const interes = 0.5;
-
     private $cuentas = [];
 
-    public function abrirCuentaAhorros($saldo) {
+    public function abrirCuenta($saldo) {
         $cuentaId = uniqid();
-        $cuentaAhorros = new CuentaAhorros($cuentaId, $saldo, self::interes);
-        $this->anadeCuenta($cuentaAhorros);
+        $cuenta = new CuentaBanco($cuentaId, $saldo);
+        $this->anadeCuenta($cuenta);
         return $cuentaId;
     }
 
-    public function cerrarCuentaAhorros($cuentaId) {
+    public function cerrarCuenta($cuentaId) {
         $existeCuenta = $this->existeCuenta($cuentaId);
         if ($existeCuenta) {
             $this->eliminaCuenta($cuentaId);
