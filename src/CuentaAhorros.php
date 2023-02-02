@@ -1,5 +1,4 @@
 <?php
-
 require "CuentaBanco.php";
 
 class CuentaAhorros extends CuentaBanco {
