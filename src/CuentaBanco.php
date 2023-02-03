@@ -2,28 +2,28 @@
 
 class CuentaBanco
 {
-	private $numero;
+	private $id;
 
 	private $saldo;
         
-        public function __construct ($cuenta, $saldo) {
-            $this->numero = $cuenta;
+        public function __construct ($id, $saldo) {
+            $this->numero = $id;
             $this->saldo = $saldo;
         }
         
-        public function getNumero() {
-            return $this->numero;
+        public function getId() {
+            return $this->id;
         }
 
         public function getSaldo() {
             return $this->saldo;
         }
 
-        public function setNumero($numero): void {
+        public function setId($id) {
             $this->numero = $numero;
         }
 
-        public function setSaldo($saldo): void {
+        public function setSaldo($saldo) {
             $this->saldo = $saldo;
         }
 
