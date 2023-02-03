@@ -7,7 +7,7 @@ class CuentaBanco
 	private $saldo;
         
         public function __construct ($id, $saldo) {
-            $this->numero = $id;
+            $this->id = $id;
             $this->saldo = $saldo;
         }
         
@@ -20,13 +20,12 @@ class CuentaBanco
         }
 
         public function setId($id) {
-            $this->numero = $numero;
+            $this->id = $numero;
         }
 
         public function setSaldo($saldo) {
             $this->saldo = $saldo;
         }
-
         
 	public function ingreso($cantidad)
 	{
@@ -42,7 +41,6 @@ class CuentaBanco
 			return true;
 		}
                 return false;
-
 	}
 }
 
