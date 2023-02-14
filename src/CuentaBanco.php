@@ -1,47 +1,43 @@
 <?php
 
-class CuentaBanco
-{
-	private $id;
+class CuentaBanco {
 
-	private $saldo;
-        
-        public function __construct ($id, $saldo) {
-            $this->id = $id;
-            $this->saldo = $saldo;
-        }
-        
-        public function getId() {
-            return $this->id;
-        }
+    private $id;
+    private $saldo;
 
-        public function getSaldo() {
-            return $this->saldo;
-        }
+    public function __construct($id, $saldo) {
+        $this->id = $id;
+        $this->saldo = $saldo;
+    }
 
-        public function setId($id) {
-            $this->id = $numero;
-        }
+    public function getId() {
+        return $this->id;
+    }
 
-        public function setSaldo($saldo) {
-            $this->saldo = $saldo;
-        }
-        
-	public function ingreso($cantidad)
-	{
-		if ($cantidad > 0) {
-			$this->saldo += $cantidad;
-		}
-	}
+    public function getSaldo() {
+        return $this->saldo;
+    }
 
-	public function retirada($cantidad)
-	{
-		if ($cantidad <= $this->saldo) {
-			$this->saldo -= $cantidad;
-			return true;
-		}
-                return false;
-	}
+    public function setId($id) {
+        $this->id = $numero;
+    }
+
+    public function setSaldo($saldo) {
+        $this->saldo = $saldo;
+    }
+
+    public function ingreso($cantidad) {
+        if ($cantidad > 0) {
+            $this->saldo += $cantidad;
+        }
+    }
+
+    public function retirada($cantidad) {
+        if ($cantidad <= $this->saldo) {
+            $this->saldo -= $cantidad;
+            return true;
+        }
+        return false;
+    }
+
 }
-
-
