@@ -62,7 +62,7 @@ class CuentaBanco {
      * @param string $id El identificador de la cuenta de banco
      */
     public function setId($id) {
-        $this->id = $numero;
+        $this->id = $id;
     }
 
     /**
@@ -78,7 +78,7 @@ class CuentaBanco {
      * Realiza un ingreso en la cuenta de banco
      *
      * @param float $cantidad La cantidad a ingresar en la cuenta de banco
-     * @return saldo El saldo de la cuenta de banco
+     * @return float El saldo de la cuenta de banco
      */
     public function ingreso($cantidad) {
         if ($cantidad > 0) {
