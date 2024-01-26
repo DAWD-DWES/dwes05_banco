@@ -19,24 +19,25 @@ foreach ($datosClientes as $datosCliente) {
 
     // Crear tres cuentas bancarias para cada cliente
     for ($i = 0; $i < 3; $i++) {
-        $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 500));
+        $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100));
+        // Realizar tres operaciones de ingreso en las cada cuenta
+        for ($i = 0; $i < 3; $i++) {
+            $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, rand(0, 500));
+        }
     }
 }
 
-// Mostrar las cuentas y saldos del primer cliente
+// Mostrar las cuentas y saldos de las cuentas de los clientes
 $clientes = $banco->getClientes();
-
-$primerCliente = reset($clientes);
-$cuentas = $primerCliente->getCuentas();
-// Imprime los ID de cuenta y saldos del primer cliente
-foreach ($cuentas as $idCuenta) {
-    $cuenta = $banco->obtenerCuenta($idCuenta);
-    echo "ID de Cuenta: " . $cuenta->getId() . ", Saldo: " . $cuenta->getSaldo() . "€\n" . "</br>";
+foreach ($clientes as $dniCliente => $cliente) {
+    echo "Datos del cliente con DNI: $dniCliente </br>";
+    $idCuentas = $cliente->getCuentas();
+    foreach ($idCuentas as $idCuenta) {
+        echo "Datos de la cuenta: $idCuenta </br>";
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        $operaciones = $cuenta->getOperaciones();
+        foreach ($operaciones as $clave => $operacion) {
+            echo $operacion . "</br>";
+        }
+    }
 }
-
-
-
-// En este punto, el banco tiene 3 clientes, cada uno con 3 cuentas bancarias.
-
-
-// 

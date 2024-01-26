@@ -43,4 +43,8 @@ class Operacion {
         $this->fecha = $fecha;
         return $this;
     }
+    
+    public function __toString() {
+        return ("Operación {$this->getTipo()->name} Cantidad {$this->getCantidad()} Fecha {$this->getFecha()->format('Y-m-d H:i:s')}");
+    }
 }

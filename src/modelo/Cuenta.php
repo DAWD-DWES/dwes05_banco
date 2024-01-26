@@ -32,21 +32,26 @@ class Cuenta {
      */
     private array $operaciones;
 
-    public function __construct(float $saldo = 0) {
+    public function __construct(string $idCliente, float $saldo = 0) {
         $this->setId(uniqid());
         $this->setSaldo($saldo);
+        $this->setIdCliente($idCliente);
     }
 
-    public function getId() {
+    public function getId(): string {
         return $this->id;
     }
 
-    public function getSaldo() {
+    public function getSaldo(): float {
         return $this->saldo;
     }
 
-    public function getIdCliente() {
+    public function getIdCliente(): string {
         return $this->id;
+    }
+
+    public function getOperaciones(): array {
+        return $this->operaciones;
     }
 
     public function setId($id) {
@@ -63,7 +68,7 @@ class Cuenta {
 
     public function ingreso($cantidad) {
         if ($cantidad > 0) {
-            $operacion = new Operacion('Ingreso', $cantidad);
+            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);
         }
@@ -71,12 +76,15 @@ class Cuenta {
 
     public function debito($cantidad) {
         if ($cantidad <= $this->getSaldo()) {
-            $operacion = new Operacion('Debito', $cantidad);
+            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
-        }
-        else {
+        } else {
             throw new SaldoInsuficienteException();
         }
+    }
+
+    public function agregaOperacion($operacion) {
+        $this->operaciones[] = $operacion;
     }
 }

@@ -161,10 +161,11 @@ class Banco {
      * @param string $dni
      * @param float $saldo
      */
-    public function altaCuentaCliente(string $dni, float $saldo = 0) {
-        $cuenta = $this->altaCuenta($saldo);
+    public function altaCuentaCliente(string $dni, float $saldo = 0): string {
+        $cuenta = $this->altaCuenta($saldo, $dni);
         $cliente = $this->obtenerCliente($dni);
         $cliente->altaCuenta($cuenta->getId());
+        return $cuenta->getId();
     }
 
     /**
@@ -172,8 +173,8 @@ class Banco {
      * @param type $saldo
      * @return Cuenta
      */
-    public function altaCuenta($saldo): Cuenta {
-        $cuenta = new Cuenta($saldo);
+    public function altaCuenta($saldo, $dni): Cuenta {
+        $cuenta = new Cuenta($dni, $saldo);
         $this->cuentas[$cuenta->getId()] = $cuenta;
         return $cuenta;
     }
