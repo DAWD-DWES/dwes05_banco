@@ -22,7 +22,8 @@ foreach ($datosClientes as $datosCliente) {
         $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100));
         // Realizar tres operaciones de ingreso en las cada cuenta
         for ($i = 0; $i < 3; $i++) {
-            $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, rand(0, 500));
+            $cantidad = rand(0, 500);
+            $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
         }
     }
 }

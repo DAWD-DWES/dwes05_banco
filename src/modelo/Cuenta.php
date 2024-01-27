@@ -66,17 +66,17 @@ class Cuenta {
         $this->idCliente = $idCliente;
     }
 
-    public function ingreso($cantidad) {
+    public function ingreso($cantidad, $asunto) {
         if ($cantidad > 0) {
-            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad);
+            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);
         }
     }
 
-    public function debito($cantidad) {
+    public function debito($cantidad, $asunto) {
         if ($cantidad <= $this->getSaldo()) {
-            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad);
+            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
         } else {

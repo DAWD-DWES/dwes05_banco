@@ -162,21 +162,11 @@ class Banco {
      * @param float $saldo
      */
     public function altaCuentaCliente(string $dni, float $saldo = 0): string {
-        $cuenta = $this->altaCuenta($saldo, $dni);
         $cliente = $this->obtenerCliente($dni);
-        $cliente->altaCuenta($cuenta->getId());
-        return $cuenta->getId();
-    }
-
-    /**
-     * Crea una cuenta
-     * @param type $saldo
-     * @return Cuenta
-     */
-    public function altaCuenta($saldo, $dni): Cuenta {
         $cuenta = new Cuenta($dni, $saldo);
         $this->cuentas[$cuenta->getId()] = $cuenta;
-        return $cuenta;
+        $cliente->altaCuenta($cuenta->getId());
+        return $cuenta->getId();
     }
 
     /**
@@ -187,18 +177,9 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, string $idCuenta) {
         $cliente = $this->obtenerCliente($dni);
-        $this->bajaCuenta($idCuenta);
-        $cliente->bajaCuenta($idCuenta);
-    }
-
-    /**
-     * Elimina un cuenta
-     * 
-     * @param string $idCuenta
-     */
-    public function bajaCuenta(string $idCuenta) {
         $cuenta = $this->obtenerCuenta($idCuenta);
         unset($this->cuentas[$idCuenta]);
+        $cliente->bajaCuenta($idCuenta);
     }
 
     /**
@@ -231,11 +212,12 @@ class Banco {
      * @param string $dni
      * @param string $idCuenta
      * @param float $cantidad
+     * @param string $asunto
      */
-    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad) {
+    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
-        $cuenta->ingreso($cantidad);
+        $cuenta->ingreso($cantidad, $asunto);
     }
 
     /**
@@ -243,12 +225,13 @@ class Banco {
      * 
      * @param string $dni
      * @param string $idCuenta
-     * @param float $saldo
+     * @param float $cantidad
+     * @param string $asunto
      */
-    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad) {
+    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
-        $cuenta->debito($cantidad);
+        $cuenta->debito($cantidad, $asunto);
     }
 
     /**
