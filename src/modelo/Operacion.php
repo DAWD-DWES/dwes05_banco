@@ -10,11 +10,13 @@ class Operacion {
     private TipoOperacion $tipo;
     private float $cantidad;
     private DateTime $fecha;
+    private string $asunto;
 
-    public function __construct($tipo, $cantidad) {
+    public function __construct($tipo, $cantidad, $asunto) {
         $this->setTipo($tipo);
         $this->setCantidad($cantidad);
         $this->setFecha(new DateTime());
+        $this->setAsunto($asunto);
     }
 
     public function getTipo() {
@@ -27,6 +29,10 @@ class Operacion {
 
     public function getFecha() {
         return $this->fecha;
+    }
+    
+    public function getAsunto() {
+        return $this->asunto;
     }
 
     public function setTipo($tipo) {
@@ -44,7 +50,12 @@ class Operacion {
         return $this;
     }
     
+     public function setAsunto($asunto) {
+        $this->asunto = $asunto;
+        return $this;
+    }
+    
     public function __toString() {
-        return ("Operación {$this->getTipo()->name} Cantidad {$this->getCantidad()} Fecha {$this->getFecha()->format('Y-m-d H:i:s')}");
+        return ("Operación {$this->getTipo()->name} Cantidad {$this->getCantidad()} Fecha {$this->getFecha()->format('Y-m-d H:i:s')} Asunto {$this->getAsunto()})");
     }
 }

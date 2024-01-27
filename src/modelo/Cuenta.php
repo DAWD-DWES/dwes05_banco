@@ -1,6 +1,7 @@
 <?php
 
 require_once "Operacion.php";
+require_once "TipoCuenta.php";
 require_once "../src/excepciones/SaldoInsuficienteException.php";
 
 /**
@@ -53,6 +54,10 @@ class Cuenta {
     public function getOperaciones(): array {
         return $this->operaciones;
     }
+    
+     public function getTipoCuenta(): array {
+        return $this->tipoCuenta;
+    }
 
     public function setId($id) {
         $this->id = $id;
@@ -65,18 +70,22 @@ class Cuenta {
     public function setIdCliente($idCliente) {
         $this->idCliente = $idCliente;
     }
+    
+     public function setTipoCuenta($tipoCuenta) {
+        $this->tipoCuenta = $tipoCuenta;
+    }
 
-    public function ingreso($cantidad) {
+    public function ingreso($cantidad, $asunto) {
         if ($cantidad > 0) {
-            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad);
+            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);
         }
     }
 
-    public function debito($cantidad) {
+    public function debito($cantidad, $asunto) {
         if ($cantidad <= $this->getSaldo()) {
-            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad);
+            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
         } else {

@@ -2,6 +2,9 @@
 
 require_once "Cliente.php";
 require_once "Cuenta.php";
+require_once "CuentaCorriente.php";
+require_once "CuentaAhorros.php";
+require_once "TipoCuenta.php";
 require_once "../src/excepciones/ClienteNoEncontradoException.php";
 require_once "../src/excepciones/CuentaNoEncontradaException.php";
 require_once "../src/excepciones/SaldoInsuficienteException.php";
@@ -10,7 +13,21 @@ require_once "../src/excepciones/SaldoInsuficienteException.php";
  * Clase Banco
  */
 class Banco {
+    
+    /**
+     * Comisión de mantenimiento de la cuenta corriente en euros
+     * @var float
+     */
 
+    private float $comisionCC = 5; 
+    
+    /**
+     * Interés de la cuenta de ahorros en porcentaje
+     * @var float
+     */
+
+    private float $interesCA = 5;  
+    
     /**
      * Nombre del banco
      * @var string
@@ -66,6 +83,23 @@ class Banco {
     public function getCuentas(): array {
         return $this->cuentas;
     }
+    /**
+     * Obtiene la comisión del banco
+     * 
+     * @return string
+     */
+    public function getComisionCC(): float {
+        return $this->comisionCC;
+    }
+    
+    /**
+     * Obtiene el interés del banco
+     * 
+     * @return string
+     */
+    public function getInteresCA(): float {
+        return $this->interesCA;
+    }
 
     /**
      * Establece el nombre del banco
@@ -99,7 +133,32 @@ class Banco {
         $this->clientes = $cuentas;
         return $this;
     }
-
+    
+    /**
+     * Establece la comision de cuenta corriente del banco
+     * 
+     * @param float $comisionCC Comisión del banco
+     * @return $this
+     */
+    public function setComisionCC( float $comisionCC) {
+        $this->comisionCC = $comisionCC;
+        CuentaCorriente::$comisionCC = $comisionCC;
+        return $this;
+    }
+    
+    /**
+     * Establece el interés de la cuenta de ahorros del banco
+     * 
+     * @param float $interesCA Interés del banco
+     * @return $this
+     */
+    public function setInteresCA( float $interesCA) {
+        $this->interesCA = $interesCA;
+        CuentaAhorros::$interesCA = $interesCA;
+        return $this;
+    }
+    
+    
     /**
      * Realiza un alta de cliente del banco
      * 
@@ -161,11 +220,12 @@ class Banco {
      * @param string $dni
      * @param float $saldo
      */
-    public function altaCuentaCliente(string $dni, float $saldo = 0): string {
-        $cuenta = $this->altaCuenta($saldo, $dni);
+    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo): string {
+        if ($tipo === TipoCuenta::CORRIENTE) {
+        $cuentaCorriente = $this->altaCuentaCorriente($saldo, $dni);
         $cliente = $this->obtenerCliente($dni);
-        $cliente->altaCuenta($cuenta->getId());
-        return $cuenta->getId();
+        $cliente->altaCuenta($cuentaCorriente->getId());
+        return $cuentaCorriente->getId();
     }
 
     /**
@@ -232,10 +292,10 @@ class Banco {
      * @param string $idCuenta
      * @param float $cantidad
      */
-    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad) {
+    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
-        $cuenta->ingreso($cantidad);
+        $cuenta->ingreso($cantidad, $asunto);
     }
 
     /**
@@ -245,10 +305,10 @@ class Banco {
      * @param string $idCuenta
      * @param float $saldo
      */
-    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad) {
+    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
-        $cuenta->debito($cantidad);
+        $cuenta->debito($cantidad, $asunto);
     }
 
     /**
@@ -266,8 +326,8 @@ class Banco {
         $clienteDestino = $this->obtenerCliente($dniClienteDestino);
 
         if (isset($this->cuentas[$idCuentaOrigen]) && isset($this->cuentas[$idCuentaDestino])) {
-            if ($this->cuentas[$idCuentaOrigen]->debito($saldo)) {
-                $this->cuentas[$idCuentaDestino]->ingreso($saldo);
+            if ($this->cuentas[$idCuentaOrigen]->debito($saldo, "transferencia hacia la cuenta $idCuentaDestino")) {
+                $this->cuentas[$idCuentaDestino]->ingreso($saldo, "transferencia a favor desde la cuenta $idCuentaOrigen");
             }
         }
     }
