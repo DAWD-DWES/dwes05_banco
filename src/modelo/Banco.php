@@ -13,21 +13,25 @@ require_once "../src/excepciones/SaldoInsuficienteException.php";
  * Clase Banco
  */
 class Banco {
-    
+
     /**
      * Comisión de mantenimiento de la cuenta corriente en euros
      * @var float
      */
+    private float $comisionCC = 0;
 
-    private float $comisionCC = 5; 
-    
+    /**
+     * Mínimo saldo para no pagar comisión
+     * @var float
+     */
+    private float $minSaldoComisionCC = 0;
+
     /**
      * Interés de la cuenta de ahorros en porcentaje
      * @var float
      */
+    private float $interesCA = 0;
 
-    private float $interesCA = 5;  
-    
     /**
      * Nombre del banco
      * @var string
@@ -83,6 +87,7 @@ class Banco {
     public function getCuentas(): array {
         return $this->cuentas;
     }
+
     /**
      * Obtiene la comisión del banco
      * 
@@ -91,7 +96,16 @@ class Banco {
     public function getComisionCC(): float {
         return $this->comisionCC;
     }
-    
+
+    /**
+     * Obtiene el mínimo saldo sin comisión
+     * 
+     * @return string
+     */
+    public function getminSaldoComisionCC(): float {
+        return $this->minSaldoComisionCC;
+    }
+
     /**
      * Obtiene el interés del banco
      * 
@@ -133,32 +147,40 @@ class Banco {
         $this->clientes = $cuentas;
         return $this;
     }
-    
+
     /**
      * Establece la comision de cuenta corriente del banco
      * 
      * @param float $comisionCC Comisión del banco
      * @return $this
      */
-    public function setComisionCC( float $comisionCC) {
+    public function setComisionCC(float $comisionCC) {
         $this->comisionCC = $comisionCC;
-        CuentaCorriente::$comisionCC = $comisionCC;
         return $this;
     }
-    
+
+    /**
+     * Establece el mínimo saldo para no pagar comisión
+     * 
+     * @param float $minSaldoComisionCC mínimo saldo sin comisión
+     * @return $this
+     */
+    public function setMinSaldoComisionCC(float $minSaldoComisionCC) {
+        $this->minSaldoComisionCC = $minSaldoComisionCC;
+        return $this;
+    }
+
     /**
      * Establece el interés de la cuenta de ahorros del banco
      * 
      * @param float $interesCA Interés del banco
      * @return $this
      */
-    public function setInteresCA( float $interesCA) {
+    public function setInteresCA(float $interesCA) {
         $this->interesCA = $interesCA;
-        CuentaAhorros::$interesCA = $interesCA;
         return $this;
     }
-    
-    
+
     /**
      * Realiza un alta de cliente del banco
      * 
@@ -220,23 +242,16 @@ class Banco {
      * @param string $dni
      * @param float $saldo
      */
-    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo): string {
-        if ($tipo === TipoCuenta::CORRIENTE) {
-        $cuentaCorriente = $this->altaCuentaCorriente($saldo, $dni);
-        $cliente = $this->obtenerCliente($dni);
-        $cliente->altaCuenta($cuentaCorriente->getId());
-        return $cuentaCorriente->getId();
-    }
-
-    /**
-     * Crea una cuenta
-     * @param type $saldo
-     * @return Cuenta
-     */
-    public function altaCuenta($saldo, $dni): Cuenta {
-        $cuenta = new Cuenta($dni, $saldo);
+    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
+        if ($tipo == TipoCuenta::CORRIENTE) {
+            $cuenta = new CuentaCorriente($dni, $saldo);
+        } elseif ($tipo == TipoCuenta::AHORROS) {
+            $cuenta = new CuentaAhorros($dni, $saldo);
+        }
         $this->cuentas[$cuenta->getId()] = $cuenta;
-        return $cuenta;
+        $cliente = $this->obtenerCliente($dni);
+        $cliente->altaCuenta($cuenta->getId());
+        return $cuenta->getId();
     }
 
     /**
@@ -247,18 +262,9 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, string $idCuenta) {
         $cliente = $this->obtenerCliente($dni);
-        $this->bajaCuenta($idCuenta);
-        $cliente->bajaCuenta($idCuenta);
-    }
-
-    /**
-     * Elimina un cuenta
-     * 
-     * @param string $idCuenta
-     */
-    public function bajaCuenta(string $idCuenta) {
         $cuenta = $this->obtenerCuenta($idCuenta);
         unset($this->cuentas[$idCuenta]);
+        $cliente->bajaCuenta($idCuenta);
     }
 
     /**
@@ -330,5 +336,31 @@ class Banco {
                 $this->cuentas[$idCuentaDestino]->ingreso($saldo, "transferencia a favor desde la cuenta $idCuentaOrigen");
             }
         }
+    }
+
+    /**
+     * Aplica cargos de comisión a la cuenta corriente
+     */
+    public function aplicaComisionCC() {
+        $cuentasCorrientes = array_filter($this->getCuentas(), fn($cuenta) => $cuenta instanceof CuentaCorriente);
+
+        // Captura las propiedades necesarias con 'use'
+        $comisionCC = $this->getComisionCC();
+        $minSaldoComisionCC = $this->getminSaldoComisionCC();
+
+        array_walk($cuentasCorrientes, function ($cuentaCC) use ($comisionCC, $minSaldoComisionCC) {
+            $cuentaCC->aplicaComision($comisionCC, $minSaldoComisionCC);
+        });
+    }
+
+    public function aplicaInteresCA() {
+        $cuentasAhorros = array_filter($this->getCuentas(), fn($cuenta) => $cuenta instanceof CuentaAhorros);
+
+        // Captura las propiedades necesarias con 'use'
+        $interesCA = $this->getInteresCA();
+
+        array_walk($cuentasAhorros, function ($cuentaCA) use ($interesCA) {
+            $cuentaCA->aplicaInteres($interesCA);
+        });
     }
 }

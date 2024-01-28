@@ -6,15 +6,14 @@
  */
 class CuentaCorriente extends Cuenta{
 
-    private static float $comisionCC = 0;
     
     public function __construct(string $idCliente, float $saldo = 0) {
         parent::__construct($idCliente, $saldo);
     }
 
-    public function aplicaComision($comisionCC): void {
-        if ($this->getSaldo() < 400) {
-            $this->debito(self::$comisionCC, "Cargo de comisión de mantenimiento");
+    public function aplicaComision($comision, $minSaldo): void {
+        if ($this->getSaldo() < $minSaldo) {
+            $this->debito($comision, "Cargo de comisión de mantenimiento");
         }
     }
 }

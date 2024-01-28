@@ -11,7 +11,7 @@ class CuentaAhorros extends Cuenta {
     }
 
     public function aplicaInteres(float $interes): void {
-        $intereses = $this->getSaldo() * $interes;
+        $intereses = $this->getSaldo() * $interes / 100;
         $this->ingreso($intereses, "Intereses a tu favor.");
     }
 }
