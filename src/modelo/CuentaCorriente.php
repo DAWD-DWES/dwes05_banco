@@ -4,7 +4,7 @@
 /**
  * Clase CuentaCorriente 
  */
-class CuentaCorriente extends Cuenta{
+class CuentaCorriente extends Cuenta implements IProductoBancario{
 
     
     public function __construct(string $idCliente, float $saldo = 0) {

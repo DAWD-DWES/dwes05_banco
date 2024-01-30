@@ -76,7 +76,7 @@ class Banco {
      * @return array
      */
     public function getClientes(): array {
-        return $this->clientes;
+        return unserialize(serialize($this->clientes));
     }
 
     /**
@@ -85,7 +85,7 @@ class Banco {
      * @return array
      */
     public function getCuentas(): array {
-        return $this->cuentas;
+        return unserialize(serialize($this->cuentas));
     }
 
     /**
@@ -203,7 +203,7 @@ class Banco {
      * @param string $dni
      */
     public function bajaCliente(string $dni) {
-        $cliente = $this->obtenerCliente($dni);
+        $cliente = ($this->clientes)[$dni];
         $cuentas = $cliente->obtenerCuentas();
         foreach ($cuentas as $idCuenta) {
             $this->bajaCuenta($idCuenta);
@@ -219,8 +219,8 @@ class Banco {
      * @throws ClienteNoEncontradoException
      */
     public function obtenerCliente(string $dni): Cliente {
-        if (isset($this->getClientes()[$dni])) {
-            return $this->getClientes()[$dni];
+        if ($this->existeCliente($dni)) {
+            return unserialize(serialize(($this->clientes)[$dni]));
         } else {
             throw new ClienteNoEncontradoException($dni);
         }
@@ -233,7 +233,7 @@ class Banco {
      * @return bool
      */
     public function existeCliente(string $dni): bool {
-        return (isset($this->clientes[$dni]));
+        return (isset(($this->clientes)[$dni]));
     }
 
     /**
@@ -249,7 +249,7 @@ class Banco {
             $cuenta = new CuentaAhorros($dni, $saldo);
         }
         $this->cuentas[$cuenta->getId()] = $cuenta;
-        $cliente = $this->obtenerCliente($dni);
+        $cliente = $this->clientes[$dni];
         $cliente->altaCuenta($cuenta->getId());
         return $cuenta->getId();
     }
@@ -264,7 +264,7 @@ class Banco {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
         unset($this->cuentas[$idCuenta]);
-        $cliente->bajaCuenta($idCuenta);
+        ($this->clientes)[$dni]->bajaCuenta($idCuenta);
     }
 
     /**
@@ -275,7 +275,7 @@ class Banco {
      */
     public function obtenerCuenta(string $idCuenta): Cuenta {
         if (isset($this->cuentas[$idCuenta])) {
-            return ($this->cuentas[$idCuenta]);
+            return (unserialize(serialize($this->cuentas[$idCuenta])));
         } else {
             throw new CuentaNoEncontradaException($dni);
         }
@@ -300,7 +300,7 @@ class Banco {
      */
     public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = $this->obtenerCuenta($idCuenta);
+        $cuenta = ($this->cuentas)[$idCuenta];
         $cuenta->ingreso($cantidad, $asunto);
     }
 
@@ -313,7 +313,7 @@ class Banco {
      */
     public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = $this->obtenerCuenta($idCuenta);
+        $cuenta = ($this->cuentas)[$idCuenta];
         $cuenta->debito($cantidad, $asunto);
     }
 
@@ -342,7 +342,7 @@ class Banco {
      * Aplica cargos de comisión a la cuenta corriente
      */
     public function aplicaComisionCC() {
-        $cuentasCorrientes = array_filter($this->getCuentas(), fn($cuenta) => $cuenta instanceof CuentaCorriente);
+        $cuentasCorrientes = array_filter($this->cuentas, fn($cuenta) => $cuenta instanceof CuentaCorriente);
 
         // Captura las propiedades necesarias con 'use'
         $comisionCC = $this->getComisionCC();
@@ -354,7 +354,7 @@ class Banco {
     }
 
     public function aplicaInteresCA() {
-        $cuentasAhorros = array_filter($this->getCuentas(), fn($cuenta) => $cuenta instanceof CuentaAhorros);
+        $cuentasAhorros = array_filter($this->cuentas, fn($cuenta) => $cuenta instanceof CuentaAhorros);
 
         // Captura las propiedades necesarias con 'use'
         $interesCA = $this->getInteresCA();

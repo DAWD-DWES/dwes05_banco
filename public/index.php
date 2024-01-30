@@ -54,3 +54,4 @@ foreach ($clientes as $dniCliente => $cliente) {
         echo "Saldo total: {$cuenta->getSaldo()}" . "</br>" ;
     }
 }
+

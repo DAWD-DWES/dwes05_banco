@@ -3,7 +3,7 @@
 /**
  * Clase CuentaAhorros 
  */
-class CuentaAhorros extends Cuenta {
+class CuentaAhorros extends Cuenta implements IProductoBancario {
 
 
     public function __construct(string $idCliente, float $saldo = 0) {
