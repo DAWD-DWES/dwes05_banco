@@ -194,7 +194,7 @@ class Banco {
      */
     public function altaCliente(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento) {
         $cliente = new Cliente($dni, $nombre, $apellido1, $apellido2, $telefono, $fechaNacimiento);
-        $this->clientes[$dni] = $cliente;
+        $this->clientes[$idCliente] = $cliente;
     }
 
     /**
@@ -249,7 +249,7 @@ class Banco {
             $cuenta = new CuentaAhorros($dni, $saldo);
         }
         $this->cuentas[$cuenta->getId()] = $cuenta;
-        $cliente = $this->clientes[$dni];
+        $cliente = $this->clientes[$idsCliente];
         $cliente->altaCuenta($cuenta->getId());
         return $cuenta->getId();
     }
@@ -260,11 +260,11 @@ class Banco {
      * @param string $dni
      * @param string $idCuenta
      */
-    public function bajaCuentaCliente(string $dni, string $idCuenta) {
+    public function bajaCuentaCliente(string $dni, int $idCuenta) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
         unset($this->cuentas[$idCuenta]);
-        ($this->clientes)[$dni]->bajaCuenta($idCuenta);
+        ($this->clientes)[$cliente->getId()]->bajaCuenta($idCuenta);
     }
 
     /**
@@ -273,11 +273,11 @@ class Banco {
      * @param string $idCuenta
      * @return type
      */
-    public function obtenerCuenta(string $idCuenta): Cuenta {
+    public function obtenerCuenta(int $idCuenta): Cuenta {
         if (isset($this->cuentas[$idCuenta])) {
             return (unserialize(serialize($this->cuentas[$idCuenta])));
         } else {
-            throw new CuentaNoEncontradaException($dni);
+            throw new CuentaNoEncontradaException($idCuenta);
         }
     }
 
@@ -287,7 +287,7 @@ class Banco {
      * @param string $idCuenta
      * @return bool
      */
-    public function existeCuenta(string $idCuenta): bool {
+    public function existeCuenta(int $idCuenta): bool {
         return (isset($this->cuentas[$idCuenta]));
     }
 
@@ -298,7 +298,7 @@ class Banco {
      * @param string $idCuenta
      * @param float $cantidad
      */
-    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
+    public function ingresoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = ($this->cuentas)[$idCuenta];
         $cuenta->ingreso($cantidad, $asunto);
@@ -311,7 +311,7 @@ class Banco {
      * @param string $idCuenta
      * @param float $saldo
      */
-    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
+    public function debitoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $asunto) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = ($this->cuentas)[$idCuenta];
         $cuenta->debito($cantidad, $asunto);
@@ -327,7 +327,7 @@ class Banco {
      * @param float $saldo
      * @return bool
      */
-    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, string $idCuentaOrigen, string $idCuentaDestino, float $saldo) {
+    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, int $idCuentaOrigen, int $idCuentaDestino, float $saldo) {
         $clienteOrigen = $this->obtenerCliente($dniClienteOrigen);
         $clienteDestino = $this->obtenerCliente($dniClienteDestino);
 

@@ -6,6 +6,12 @@
 class Cliente {
 
     /**
+     * ID del cliente
+     * @var string
+     */
+    private string $id;
+
+    /**
      * DNI del cliente
      * @var string
      */
@@ -47,14 +53,30 @@ class Cliente {
      */
     private array $idCuentas;
 
-    public function __construct(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento) {
-        $this->setDni($dni);
-        $this->setNombre($nombre);
-        $this->setApellido1($apellido1);
-        $this->setApellido2($apellido2);
-        $this->setTelefono($telefono);
-        $this->setFechaNacimiento(new DateTime($fechaNacimiento));
+    public function __construct(string $dni = null, string $nombre = null, string $apellido1 = null, string $apellido2 = null, string $telefono = null, string $fechaNacimiento = null) {
+        if (!is_null($dni)) {
+            $this->setDni($dni);
+        }
+        if (!is_null($nombre)) {
+            $this->setNombre($nombre);
+        }
+        if (!is_null($apellido1)) {
+            $this->setApellido1($apellido1);
+        }
+        if (!is_null($apellido2)) {
+            $this->setApellido2($apellido2);
+        }
+        if (!is_null($telefono)) {
+            $this->setTelefono($telefono);
+        }
+        if (!is_null($fechaNacimiento)) {
+            $this->setFechaNacimiento(new DateTime($fechaNacimiento));
+        }
         $this->setCuentas([]);
+    }
+
+    public function getId(): int {
+        return $this->id;
     }
 
     public function getDni(): string {
@@ -83,6 +105,11 @@ class Cliente {
 
     public function getCuentas(): array {
         return $this->idCuentas;
+    }
+
+    public function setId(int $id) {
+        $this->id = $id;
+        return $this;
     }
 
     public function setDni(string $dni) {
@@ -115,7 +142,7 @@ class Cliente {
         return $this;
     }
 
-    public function setCuentas(array $idCuentas) {
+    public function setIdCuentas(array $idCuentas) {
         $this->idCuentas = $idCuentas;
         return $this;
     }

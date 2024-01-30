@@ -3,10 +3,11 @@
 require_once "TipoOperacion.php";
 
 /**
- * Clase CuentaBanco
+ * Clase Operacion
  */
 class Operacion {
 
+    private int $id;
     private TipoOperacion $tipo;
     private float $cantidad;
     private DateTime $fecha;

@@ -11,9 +11,9 @@ class Cuenta {
 
     /**
      * Id de la cuenta
-     * @var string
+     * @var int
      */
-    private string $id;
+    private int $id;
 
     /**
      * Saldo de la cuenta
@@ -25,7 +25,19 @@ class Cuenta {
      * Id del cliente dueño de la cuenta
      * @var string
      */
-    private string $idCliente;
+    private int $idCliente;
+
+    /**
+     * Tipo de Cuenta
+     * @var TipoCuenta
+     */
+    private TipoCuenta $tipo;
+
+    /**
+     * Fecha de Creación de la cuenta
+     * @var DateTime
+     */
+    private DateTime $fechaCreacion;
 
     /**
      * Operaciones realizadas en la cuenta
@@ -33,10 +45,15 @@ class Cuenta {
      */
     private array $operaciones;
 
-    public function __construct(string $idCliente, float $cantidad = 0) {
-        $this->setId(uniqid());
-        $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
-        $this->setIdCliente($idCliente);
+    public function __construct(string $dni = null, float $saldo = 0) {
+        if (!is_null($dni)) {
+            $this->setDNI($dni);
+        }
+        if ($saldo > 0) {
+            $this->setSaldo($saldo);
+            $this->ingreso($saldo, "Ingreso inicial de $saldo € en la cuenta");
+        }
+        $this->fechaCreacion = (is_string($this->fechaCreacion)) ? new DateTime($this->fechaCreacion) : $this->fechaCreacion = new DateTime();
     }
 
     public function getId(): string {
@@ -54,9 +71,13 @@ class Cuenta {
     public function getOperaciones(): array {
         return $this->operaciones;
     }
-    
-     public function getTipoCuenta(): array {
-        return $this->tipoCuenta;
+
+    public function getTipo(): array {
+        return $this->tipo;
+    }
+
+    public function getFechaCreacion(): DateTime {
+        return $this->fechaCreación;
     }
 
     public function setId($id) {
@@ -70,9 +91,13 @@ class Cuenta {
     public function setIdCliente($idCliente) {
         $this->idCliente = $idCliente;
     }
-    
-     public function setTipoCuenta($tipoCuenta) {
-        $this->tipoCuenta = $tipoCuenta;
+
+    public function setTipo($tipoCuenta) {
+        $this->tipo = $tipoCuenta;
+    }
+
+    public function setFechaCreacion($fechaCreacion) {
+        $this->fechaCreacion($fechaCreacion);
     }
 
     public function ingreso($cantidad, $asunto): void {
