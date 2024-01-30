@@ -1,12 +1,13 @@
 <?php
 
+require_once "IProductoBancario.php";
+require_once "Cuenta.php";
 
 /**
  * Clase CuentaCorriente 
  */
-class CuentaCorriente extends Cuenta implements IProductoBancario{
+class CuentaCorriente extends Cuenta implements IProductoBancario {
 
-    
     public function __construct(string $idCliente, float $saldo = 0) {
         parent::__construct($idCliente, $saldo);
     }

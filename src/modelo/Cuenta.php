@@ -75,7 +75,7 @@ class Cuenta {
         $this->tipoCuenta = $tipoCuenta;
     }
 
-    public function ingreso($cantidad, $asunto) {
+    public function ingreso($cantidad, $asunto): void {
         if ($cantidad > 0) {
             $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
@@ -83,7 +83,7 @@ class Cuenta {
         }
     }
 
-    public function debito($cantidad, $asunto) {
+    public function debito($cantidad, $asunto): void {
         if ($cantidad <= $this->getSaldo()) {
             $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
