@@ -1,12 +1,18 @@
 <?php
 
+require_once '../src/bd/BD.php';
 require_once '../src/modelo/Banco.php';
 require_once '../src/modelo/Cliente.php';
 require_once '../src/modelo/Cuenta.php';
 require_once '../src/modelo/TipoCuenta.php';
 
+$pdo = BD::getConexion();
 
 $banco = new Banco("Molocos");
+
+$clienteDAO = new ClienteDAO($pdo);
+$cuentaDAO = new CuentaDAO($pdo);
+$operacionDAO = new operacionDAO($pdo);
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
@@ -21,12 +27,11 @@ $datosClientes = [
 
 // Crear tres clientes y agregar tres cuentas a cada uno
 foreach ($datosClientes as $datosCliente) {
-    $banco->altaCliente($datosCliente['dni'], $datosCliente['nombre'], $datosCliente['apellido1'], $datosCliente['apellido2'], $datosCliente['telefono'], $datosCliente['fechaNacimiento']);
-
+    $cliente = $banco->altaCliente($datosCliente['dni'], $datosCliente['nombre'], $datosCliente['apellido1'], $datosCliente['apellido2'], $datosCliente['telefono'], $datosCliente['fechaNacimiento']);
     // Crear tres cuentas bancarias para cada cliente
     for ($i = 0; $i < 3; $i++) {
         $tipoCuenta = rand(0, 1) ? TipoCuenta::CORRIENTE : TipoCuenta::AHORROS;
-        $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100), $tipoCuenta);
+        $cuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100), $tipoCuenta);
         // Realizar tres operaciones de ingreso en las cada cuenta
         for ($i = 0; $i < 3; $i++) {
             $cantidad = rand(0, 500);
@@ -46,12 +51,12 @@ foreach ($clientes as $dniCliente => $cliente) {
     $idCuentas = $cliente->getCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo "Datos de la cuenta: $idCuenta Tipo Cuenta: ". get_class($cuenta) . " </br>";
+        echo "Datos de la cuenta: $idCuenta Tipo Cuenta: " . get_class($cuenta) . " </br>";
         $operaciones = $cuenta->getOperaciones();
         foreach ($operaciones as $clave => $operacion) {
             echo $operacion . "</br>";
         }
-        echo "Saldo total: {$cuenta->getSaldo()}" . "</br>" ;
+        echo "Saldo total: {$cuenta->getSaldo()}" . "</br>";
     }
 }
 

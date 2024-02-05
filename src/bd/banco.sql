@@ -23,7 +23,7 @@ CREATE TABLE cuentas (
 CREATE TABLE operaciones (
     operacion_id INT AUTO_INCREMENT PRIMARY KEY,
     cuenta_id INT NOT NULL,
-    tipo_operacion ENUM('deposito', 'retiro', 'transferencia') NOT NULL,
+    tipo_operacion ENUM('ingreso', 'debito') NOT NULL,
     cantidad DECIMAL(10, 2) NOT NULL,
     fecha_operacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     descripcion VARCHAR(255),

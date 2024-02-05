@@ -5,6 +5,9 @@ require_once "Cuenta.php";
 require_once "CuentaCorriente.php";
 require_once "CuentaAhorros.php";
 require_once "TipoCuenta.php";
+require_once "ClienteDAO.php";
+require_once "CuentaDAO.php";
+require_once "OperacionDAO.php";
 require_once "../src/excepciones/ClienteNoEncontradoException.php";
 require_once "../src/excepciones/CuentaNoEncontradaException.php";
 require_once "../src/excepciones/SaldoInsuficienteException.php";
@@ -13,6 +16,8 @@ require_once "../src/excepciones/SaldoInsuficienteException.php";
  * Clase Banco
  */
 class Banco {
+
+    private PDO $pdo;
 
     /**
      * Comisión de mantenimiento de la cuenta corriente en euros
@@ -42,23 +47,23 @@ class Banco {
      * Colección de clientes del banco
      * @var array
      */
-    private array $clientes;
+    // private array $clientes;
 
     /**
      * Colección de cuentas bancarias abiertas
      * @var array
      */
-    private array $cuentas;
+    // private array $cuentas;
 
     /**
      * Constructor de la clase Banco
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct(string $nombre) {
+    public function __construct(PDO $pdo, string $nombre) {
         $this->setNombre($nombre);
-        $this->setClientes();
-        $this->setCuentas();
+        //  $this->setClientes();
+        //  $this->setCuentas();
     }
 
     /**
@@ -76,7 +81,8 @@ class Banco {
      * @return array
      */
     public function getClientes(): array {
-        return unserialize(serialize($this->clientes));
+        $clienteDAO = new ClienteDAO($this->pdo);
+        return $clienteDAO->obtenerTodos();
     }
 
     /**
@@ -85,7 +91,8 @@ class Banco {
      * @return array
      */
     public function getCuentas(): array {
-        return unserialize(serialize($this->cuentas));
+        $cuentaDAO = new CuentaDAO($this->pdo);
+        return $cuentaDAO->obtenerTodos();
     }
 
     /**
@@ -132,10 +139,10 @@ class Banco {
      * @param array $clientes Colección de clientes del banco
      * @return $this
      */
-    public function setClientes(array $clientes = []) {
-        $this->clientes = $clientes;
-        return $this;
-    }
+//    public function setClientes(array $clientes = []) {
+//        $this->clientes = $clientes;
+//        return $this;
+//    }
 
     /**
      * Establece la colección de cuentas del banco
@@ -143,10 +150,10 @@ class Banco {
      * @param array $cuentas Colección de cuentas del banco
      * @return $this
      */
-    public function setCuentas(array $cuentas = []) {
-        $this->clientes = $cuentas;
-        return $this;
-    }
+//    public function setCuentas(array $cuentas = []) {
+//        $this->clientes = $cuentas;
+//        return $this;
+//    }
 
     /**
      * Establece la comision de cuenta corriente del banco
@@ -192,9 +199,10 @@ class Banco {
      * @param DateTime $fechaNacimiento
      * @return bool
      */
-    public function altaCliente(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento) {
+    public function altaCliente(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento): void {
         $cliente = new Cliente($dni, $nombre, $apellido1, $apellido2, $telefono, $fechaNacimiento);
-        $this->clientes[$idCliente] = $cliente;
+        $clienteDAO = new ClienteDAO($pdo);
+        $clienteDAO->crear($cliente);
     }
 
     /**
@@ -209,6 +217,8 @@ class Banco {
             $this->bajaCuenta($idCuenta);
         }
         unset($this->clientes[$dni]);
+        $clienteDAO = new ClienteDAO($this->pdo);
+        $clienteDAO->eliminar($cliente->getId());
     }
 
     /**
@@ -218,9 +228,11 @@ class Banco {
      * @return Cliente
      * @throws ClienteNoEncontradoException
      */
-    public function obtenerCliente(string $dni): Cliente {
-        if ($this->existeCliente($dni)) {
-            return unserialize(serialize(($this->clientes)[$dni]));
+    public function obtenerCliente(string $dni): ?Cliente {
+        $clienteDAO = new ClienteDAO($this->pdo);
+        $cliente = $clienteDAO->obtenerPorDNI($dni);
+        if ($cliente) {
+            return $cliente;
         } else {
             throw new ClienteNoEncontradoException($dni);
         }
@@ -233,7 +245,9 @@ class Banco {
      * @return bool
      */
     public function existeCliente(string $dni): bool {
-        return (isset(($this->clientes)[$dni]));
+        $clienteDAO = new ClienteDAO($this->pdo);
+        $cliente = $clienteDAO->obtenerPorDNI($dni);
+        return $cliente;
     }
 
     /**
@@ -242,7 +256,7 @@ class Banco {
      * @param string $dni
      * @param float $saldo
      */
-    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
+    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): Cuenta {
         if ($tipo == TipoCuenta::CORRIENTE) {
             $cuenta = new CuentaCorriente($dni, $saldo);
         } elseif ($tipo == TipoCuenta::AHORROS) {
@@ -251,7 +265,7 @@ class Banco {
         $this->cuentas[$cuenta->getId()] = $cuenta;
         $cliente = $this->clientes[$idsCliente];
         $cliente->altaCuenta($cuenta->getId());
-        return $cuenta->getId();
+        return $cuenta;
     }
 
     /**
@@ -273,9 +287,11 @@ class Banco {
      * @param string $idCuenta
      * @return type
      */
-    public function obtenerCuenta(int $idCuenta): Cuenta {
-        if (isset($this->cuentas[$idCuenta])) {
-            return (unserialize(serialize($this->cuentas[$idCuenta])));
+    public function obtenerCuenta(int $idCuenta): ?Cuenta {
+        $cuentaDAO = new CuentaDAO($this->pdo);
+        $cuenta = $cuentaDAO->obtenerPorId($idCuenta);
+        if ($cuenta) {
+            return $cuenta;
         } else {
             throw new CuentaNoEncontradaException($idCuenta);
         }

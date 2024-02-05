@@ -100,19 +100,21 @@ class Cuenta {
         $this->fechaCreacion($fechaCreacion);
     }
 
-    public function ingreso($cantidad, $asunto): void {
+    public function ingreso($cantidad, $asunto): Operacion {
         if ($cantidad > 0) {
             $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);
+            return $operacion;
         }
     }
 
-    public function debito($cantidad, $asunto): void {
+    public function debito($cantidad, $asunto): Operacion {
         if ($cantidad <= $this->getSaldo()) {
             $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $asunto);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
+            return $operacion;
         } else {
             throw new SaldoInsuficienteException();
         }

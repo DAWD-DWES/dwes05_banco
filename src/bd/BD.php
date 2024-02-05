@@ -5,7 +5,7 @@ class BD
     protected static $bd = null;
     const DB_HOST = '127.0.0.1';
     const DB_PORT = '3306';
-    const DB_DATABASE = 'proyecto';
+    const DB_DATABASE = 'banco';
     const DB_USERNAME = 'gestor';
     const DB_PASSWORD = 'secreto';
     

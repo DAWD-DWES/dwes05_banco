@@ -8,55 +8,61 @@ require_once "TipoOperacion.php";
 class Operacion {
 
     private int $id;
+    private int $idCuenta;
     private TipoOperacion $tipo;
     private float $cantidad;
-    private DateTime $fecha;
-    private string $asunto;
+    private $fecha;
+    private string $descripcion;
 
-    public function __construct($tipo, $cantidad, $asunto) {
+    public function __construct($idCuenta, $tipo, $cantidad, $asunto) {
+        $this->setIdCuenta($idCuenta);
         $this->setTipo($tipo);
         $this->setCantidad($cantidad);
         $this->setFecha(new DateTime());
         $this->setAsunto($asunto);
     }
 
-    public function getTipo() {
+    public function getTipo(): TipoOperacion {
         return $this->tipo;
     }
 
-    public function getCantidad() {
+    public function getCantidad(): float {
         return $this->cantidad;
     }
 
-    public function getFecha() {
+    public function getFecha(): DateTime {
         return $this->fecha;
     }
     
-    public function getAsunto() {
-        return $this->asunto;
+    public function getDescripcion(): string {
+        return $this->descripcion;
+    }
+    
+     public function getIdCuenta(): int {
+        return $this->idCuenta;
     }
 
-    public function setTipo($tipo) {
+    public function setTipo(TipoOperacion $tipo): Operacion {
         $this->tipo = $tipo;
         return $this;
     }
 
-    public function setCantidad($cantidad) {
+    public function setCantidad(float $cantidad): Operacion {
         $this->cantidad = $cantidad;
         return $this;
     }
 
-    public function setFecha($fecha) {
+    public function setFecha(DateTime $fecha): Operacion {
         $this->fecha = $fecha;
         return $this;
     }
     
-     public function setAsunto($asunto) {
-        $this->asunto = $asunto;
+     public function setDescripcion($descripcion): Operacion {
+        $this->asunto = $descripcion;
         return $this;
     }
     
     public function __toString() {
-        return ("Operación {$this->getTipo()->name} Cantidad {$this->getCantidad()} Fecha {$this->getFecha()->format('Y-m-d H:i:s')} Asunto {$this->getAsunto()})");
+        return ("Operación {$this->getTipo()->name} Cuenta {$this->getIdCuenta()} Cantidad {$this->getCantidad()} Fecha {$this->getFecha()->format('Y-m-d H:i:s')} Asunto {$this->getDescripcion()})");
     }
 }

@@ -39,7 +39,7 @@ class Cliente {
      * Fecha de nacimiento del cliente
      * @var DateTime
      */
-    private DateTime $fechaNacimiento;
+    private $fechaNacimiento;
 
     /**
      * Teléfono del cliente
@@ -53,27 +53,43 @@ class Cliente {
      */
     private array $idCuentas;
 
+//    public function __construct(string $dni = null, string $nombre = null, string $apellido1 = null, string $apellido2 = null, string $telefono = null, string $fechaNacimiento = null) {
+//        if (!is_null($dni)) {
+//            $this->setDni($dni);
+//        }
+//        if (!is_null($nombre)) {
+//            $this->setNombre($nombre);
+//        }
+//        if (!is_null($apellido1)) {
+//            $this->setApellido1($apellido1);
+//        }
+//        if (!is_null($apellido2)) {
+//            $this->setApellido2($apellido2);
+//        }
+//        if (!is_null($telefono)) {
+//            $this->setTelefono($telefono);
+//        }
+//        if (!is_null($fechaNacimiento)) {
+//            $this->setFechaNacimiento(new DateTime($fechaNacimiento));
+//        }
+//        $this->setCuentas([]);
+//    }
     public function __construct(string $dni = null, string $nombre = null, string $apellido1 = null, string $apellido2 = null, string $telefono = null, string $fechaNacimiento = null) {
-        if (!is_null($dni)) {
+        if (func_num_args() > 0) {
             $this->setDni($dni);
-        }
-        if (!is_null($nombre)) {
             $this->setNombre($nombre);
-        }
-        if (!is_null($apellido1)) {
             $this->setApellido1($apellido1);
-        }
-        if (!is_null($apellido2)) {
             $this->setApellido2($apellido2);
-        }
-        if (!is_null($telefono)) {
             $this->setTelefono($telefono);
-        }
-        if (!is_null($fechaNacimiento)) {
             $this->setFechaNacimiento(new DateTime($fechaNacimiento));
+        } else {
+            if (is_string($this->fechaNacimiento)) {
+                $this->fechaNacimiento = new DateTime($this->fechaNacimiento);
+            }
         }
-        $this->setCuentas([]);
+        $this->setIdCuentas([]);
     }
+
 
     public function getId(): int {
         return $this->id;
@@ -103,7 +119,7 @@ class Cliente {
         return $this->fechaNacimiento;
     }
 
-    public function getCuentas(): array {
+    public function getIdCuentas(): array {
         return $this->idCuentas;
     }
 
@@ -157,7 +173,7 @@ class Cliente {
 
     public function bajaCuenta(string $idCuenta) {
         $clave = array_search($idCuenta, $this->getCuentas());
-        // Si la clave existe en el array, elimina el elemento
+// Si la clave existe en el array, elimina el elemento
         if ($clave !== false) {
             unset($this->getCuentas[$clave]);
         }

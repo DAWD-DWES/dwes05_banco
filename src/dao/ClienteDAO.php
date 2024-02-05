@@ -14,18 +14,26 @@ class ClienteDAO {
         $stmt = $this->pdo->prepare("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE cliente_id = :id");
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
-        return $stmt->fetch();
+        $cliente = $stmt->fetch();
+        return $cliente ? $this->inicializarPostPDO($cliente) : null;
+    }
+
+    private function inicializarPostPDO(Cliente $cliente): Cliente {
+        if (is_string($cliente->getFechaNacimiento())) {
+            $cliente->setFechaNacimiento(new DateTime($cliente->getFechaNacimiento()));
+        }
+        return $cliente;
     }
 
     public function obtenerPorDNI(string $dni): ?Cliente {
-        $stmt = $this->pdo->prepare("SELECT SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE dni = :dni");
+        $stmt = $this->pdo->prepare("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE dni = :dni");
         $stmt->execute(['dni' => $dni]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
         return $stmt->fetch();
     }
 
     public function obtenerTodos() {
-        $stmt = $this->pdo->query("SELECT SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes");
+        $stmt = $this->pdo->query("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes");
         return $stmt->fetchAll(PDO::FETCH_CLASS, 'Cliente');
     }
 
