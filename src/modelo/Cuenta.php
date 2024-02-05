@@ -89,7 +89,7 @@ class Cuenta {
      * @param type $descripcion Descripcion del debito
      * @throws SaldoInsuficienteException
      */
-    public function debito(float $cantidad, $descripcion) {
+    public function debito(float $cantidad, string $descripcion) {
         if ($cantidad <= $this->getSaldo()) {
             $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $descripcion);
             $this->agregaOperacion($operacion);
