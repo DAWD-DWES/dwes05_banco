@@ -54,7 +54,7 @@ class Cliente {
         $this->setApellido2($apellido2);
         $this->setTelefono($telefono);
         $this->setFechaNacimiento(new DateTime($fechaNacimiento));
-        $this->setCuentas([]);
+        $this->setIdCuentas([]);
     }
 
     public function getDni(): string {
@@ -81,11 +81,11 @@ class Cliente {
         return $this->fechaNacimiento;
     }
 
-    public function getCuentas(): array {
+    public function getIdCuentas(): array {
         return $this->idCuentas;
     }
 
-    public function setDni(string $dni) {
+    private function setDni(string $dni) {
         $this->dni = $dni;
         return $this;
     }
@@ -115,25 +115,48 @@ class Cliente {
         return $this;
     }
 
-    public function setCuentas(array $idCuentas) {
+    public function setIdCuentas(array $idCuentas) {
         $this->idCuentas = $idCuentas;
         return $this;
     }
 
+    public function compruebaIdCuenta(string $idCuenta) {
+        $clave = array_search($idCuenta, $this->getIdCuentas());
+        // Si la clave existe en el array, elimina el elemento
+        if ($clave !== false) {
+            return $clave;
+        } else {
+            throw new CuentaNoPerteneceClienteException($this->dni, $idCuenta);
+        }
+    }
+
+    /**
+     * Alta de la cuenta en el cliente
+     * @param string $idCuenta
+     */
     public function altaCuenta(string $idCuenta) {
         $this->idCuentas[] = $idCuenta;
     }
 
-    public function tieneCuenta(string $idCuenta) {
-        return (array_search($idCuenta, $this->getCuentas()) !== false);
+    /**
+     * Comprueba si el cliente tiene esa cuenta
+     * @param string $idCuenta
+     * @return bool
+     */
+    public function existeCuenta(string $idCuenta): bool {
+        return (array_search($idCuenta, $this->getIdCuentas()) !== false);
     }
 
+    /**
+     * Baja de la cuenta en para el cliente
+     * @param string $idCuenta
+     */
     public function bajaCuenta(string $idCuenta) {
-        $clave = array_search($idCuenta, $this->getCuentas());
+        $clave = array_search($idCuenta, $this->getIdCuentas());
         // Si la clave existe en el array, elimina el elemento
         if ($clave !== false) {
-            unset($this->getCuentas[$clave]);
+            unset($this->getIdCuentas[$clave]);
         }
-        $this->setCuentas(array_values($this->getCuentas()));
+        $this->setIdCuentas(array_values($this->getIdCuentas()));
     }
 }

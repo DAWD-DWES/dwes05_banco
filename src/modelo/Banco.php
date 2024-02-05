@@ -192,7 +192,7 @@ class Banco {
         if (isset($this->cuentas[$idCuenta])) {
             return ($this->cuentas[$idCuenta]);
         } else {
-            throw new CuentaNoEncontradaException($dni);
+            throw new CuentaNoEncontradaException($idCuenta);
         }
     }
 
@@ -214,10 +214,10 @@ class Banco {
      * @param float $cantidad
      * @param string $asunto
      */
-    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
+    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
-        $cuenta->ingreso($cantidad, $asunto);
+        $cuenta->ingreso($cantidad, $descripcion);
     }
 
     /**
@@ -228,10 +228,10 @@ class Banco {
      * @param float $cantidad
      * @param string $asunto
      */
-    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
+    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->obtenerCuenta($idCuenta);
-        $cuenta->debito($cantidad, $asunto);
+        $cuenta->debito($cantidad, $descripcion);
     }
 
     /**
@@ -241,17 +241,14 @@ class Banco {
      * @param string $dniClienteDestino
      * @param string $idCuentaOrigen
      * @param string $idCuentaDestino
-     * @param float $saldo
-     * @return bool
+     * @param float $cantidad
      */
-    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, string $idCuentaOrigen, string $idCuentaDestino, float $saldo) {
+    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, string $idCuentaOrigen, string $idCuentaDestino, float $cantidad) {
         $clienteOrigen = $this->obtenerCliente($dniClienteOrigen);
         $clienteDestino = $this->obtenerCliente($dniClienteDestino);
-
-        if (isset($this->cuentas[$idCuentaOrigen]) && isset($this->cuentas[$idCuentaDestino])) {
-            if ($this->cuentas[$idCuentaOrigen]->debito($saldo)) {
-                $this->cuentas[$idCuentaDestino]->ingreso($saldo);
-            }
-        }
+        $clienteOrigen->compruebaIdCuenta($idCuentaOrigen);
+        $clienteDestino->compruebaIdCuenta($idCuentaDestino);
+        $this->debitoCuentaCliente($dniClienteOrigen, $idCuentaOrigen, $cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen");
+        $this->ingresoCuentaCliente($dniClienteDestino, $idCuentaDestino, $cantidad, "Transferencia de $cantidad € a su cuenta $idCuentaDestino");
     }
 }

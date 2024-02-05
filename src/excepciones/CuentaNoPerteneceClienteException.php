@@ -1,6 +1,6 @@
 <?php
 
-class CuentaNoEncontradaException extends Exception {
+class CuentaNoPerteneceClienteException extends Exception {
 
     private $dni;
     private $idCuenta;

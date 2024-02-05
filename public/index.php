@@ -20,25 +20,26 @@ foreach ($datosClientes as $datosCliente) {
     // Crear tres cuentas bancarias para cada cliente
     for ($i = 0; $i < 3; $i++) {
         $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100));
-        // Realizar tres operaciones de ingreso en las cada cuenta
-        for ($i = 0; $i < 3; $i++) {
+        // Realizar tres operaciones de ingreso en cada cuenta
+        for ($j = 0; $j < 3; $j++) {
             $cantidad = rand(0, 500);
             $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
         }
     }
 }
 
+try {
+    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
+} catch (SaldoInsuficienteException $ex) {
+    echo $ex->getMessage();
+}
 // Mostrar las cuentas y saldos de las cuentas de los clientes
 $clientes = $banco->getClientes();
 foreach ($clientes as $dniCliente => $cliente) {
-    echo "Datos del cliente con DNI: $dniCliente </br>";
-    $idCuentas = $cliente->getCuentas();
+    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
-        echo "Datos de la cuenta: $idCuenta </br>";
         $cuenta = $banco->obtenerCuenta($idCuenta);
-        $operaciones = $cuenta->getOperaciones();
-        foreach ($operaciones as $clave => $operacion) {
-            echo $operacion . "</br>";
-        }
+        echo "</br>$cuenta </br>";
     }
 }

@@ -27,8 +27,8 @@ class Cuenta {
     private string $idCliente;
 
     /**
-     * Operaciones realizadas en la cuenta
-     * @param float $saldo
+     * Operaciones bancarias realizadas en la cuenta
+     * @var array $operaciones
      */
     private array $operaciones;
 
@@ -47,44 +47,73 @@ class Cuenta {
     }
 
     public function getIdCliente(): string {
-        return $this->id;
+        return $this->idCliente;
     }
 
     public function getOperaciones(): array {
         return $this->operaciones;
     }
 
-    public function setId($id) {
+    private function setId(string $id) {
         $this->id = $id;
     }
 
-    public function setSaldo($saldo) {
+    public function setSaldo(float $saldo) {
         $this->saldo = $saldo;
     }
 
-    public function setIdCliente($idCliente) {
+    public function setIdCliente(string $idCliente) {
         $this->idCliente = $idCliente;
     }
 
-    public function ingreso($cantidad, $asunto) {
+    public function setOperaciones(array $operaciones) {
+        $this->operaciones = operaciones;
+    }
+
+    /**
+     * Ingreso de una cantidad en una cuenta
+     * @param type $cantidad Cantidad de dinero
+     * @param type $descripcion Descripción del ingreso
+     */
+    public function ingreso(float $cantidad, string $descripcion) {
         if ($cantidad > 0) {
-            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $asunto);
+            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $descripcion);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);
         }
     }
 
-    public function debito($cantidad, $asunto) {
+    /**
+     * 
+     * @param type $cantidad Cantidad de dinero a retirar
+     * @param type $descripcion Descripcion del debito
+     * @throws SaldoInsuficienteException
+     */
+    public function debito(float $cantidad, $descripcion) {
         if ($cantidad <= $this->getSaldo()) {
-            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $asunto);
+            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $descripcion);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
         } else {
-            throw new SaldoInsuficienteException();
+            throw new SaldoInsuficienteException($this->getId());
         }
     }
 
-    public function agregaOperacion($operacion) {
+    public function __toString() {
+        $saldoFormatted = number_format($this->getSaldo(), 2); // Formatear el saldo con dos decimales
+        $operacionesStr = implode("\n", array_map(fn($operacion) => "{$operacion->__toString()}", $this->getOperaciones())); // Convertir las operaciones en una cadena separada por saltos de línea
+
+        return "Cuenta ID: {$this->getId()}\n" .
+                "Cliente ID: {$this->getIdCliente()}\n" .
+                "Saldo: $saldoFormatted\n" .
+                "Operaciones:\n$operacionesStr";
+    }
+
+    /**
+     * Agrega operación a la lista de operaciones de la cuenta
+     * @param type $operacion Operación a añadir
+     */
+    private function agregaOperacion($operacion) {
         $this->operaciones[] = $operacion;
     }
 }
