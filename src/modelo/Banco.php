@@ -102,7 +102,7 @@ class Banco {
      * 
      * @return string
      */
-    public function getminSaldoComisionCC(): float {
+    public function getMinSaldoComisionCC(): float {
         return $this->minSaldoComisionCC;
     }
 
@@ -123,7 +123,6 @@ class Banco {
      */
     public function setNombre(string $nombre) {
         $this->nombre = $nombre;
-        return $this;
     }
 
     /**
@@ -134,7 +133,6 @@ class Banco {
      */
     public function setClientes(array $clientes = []) {
         $this->clientes = $clientes;
-        return $this;
     }
 
     /**
@@ -145,7 +143,6 @@ class Banco {
      */
     public function setCuentas(array $cuentas = []) {
         $this->clientes = $cuentas;
-        return $this;
     }
 
     /**
@@ -156,7 +153,6 @@ class Banco {
      */
     public function setComisionCC(float $comisionCC) {
         $this->comisionCC = $comisionCC;
-        return $this;
     }
 
     /**
@@ -167,7 +163,6 @@ class Banco {
      */
     public function setMinSaldoComisionCC(float $minSaldoComisionCC) {
         $this->minSaldoComisionCC = $minSaldoComisionCC;
-        return $this;
     }
 
     /**
@@ -178,7 +173,6 @@ class Banco {
      */
     public function setInteresCA(float $interesCA) {
         $this->interesCA = $interesCA;
-        return $this;
     }
 
     /**
