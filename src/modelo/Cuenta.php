@@ -113,7 +113,7 @@ class Cuenta {
      * Agrega operación a la lista de operaciones de la cuenta
      * @param type $operacion Operación a añadir
      */
-    private function agregaOperacion($operacion) {
+    private function agregaOperacion(Operacion $operacion) {
         $this->operaciones[] = $operacion;
     }
 }
