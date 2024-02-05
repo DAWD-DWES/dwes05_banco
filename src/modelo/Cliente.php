@@ -87,37 +87,30 @@ class Cliente {
 
     private function setDni(string $dni) {
         $this->dni = $dni;
-        return $this;
     }
 
     public function setNombre(string $nombre) {
         $this->nombre = $nombre;
-        return $this;
     }
 
     public function setApellido1(string $apellido1) {
         $this->apellido1 = $apellido1;
-        return $this;
     }
 
     public function setApellido2(string $apellido2) {
         $this->apellido2 = $apellido2;
-        return $this;
     }
 
     public function setTelefono(string $telefono) {
         $this->telefono = $telefono;
-        return $this;
     }
 
     public function setFechaNacimiento(DateTime $fechaNacimiento) {
         $this->fechaNacimiento = $fechaNacimiento;
-        return $this;
     }
 
     public function setIdCuentas(array $idCuentas) {
         $this->idCuentas = $idCuentas;
-        return $this;
     }
 
     public function compruebaIdCuenta(string $idCuenta) {
@@ -155,7 +148,7 @@ class Cliente {
         $clave = array_search($idCuenta, $this->getIdCuentas());
         // Si la clave existe en el array, elimina el elemento
         if ($clave !== false) {
-            unset($this->getIdCuentas[$clave]);
+            unset($this->idCuentas[$clave]);
         }
         $this->setIdCuentas(array_values($this->getIdCuentas()));
     }

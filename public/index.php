@@ -43,3 +43,18 @@ foreach ($clientes as $dniCliente => $cliente) {
         echo "</br>$cuenta </br>";
     }
 }
+
+$banco->bajaCuentaCliente('12345678A', ($banco->obtenerCliente('12345678A')->getIdCuentas())[0]);
+$banco->bajaCliente('34567890C');
+
+
+// Mostrar las cuentas y saldos de las cuentas de los clientes
+$clientes = $banco->getClientes();
+foreach ($clientes as $dniCliente => $cliente) {
+    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    $idCuentas = $cliente->getIdCuentas();
+    foreach ($idCuentas as $idCuenta) {
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        echo "</br>$cuenta </br>";
+    }
+}

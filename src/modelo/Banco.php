@@ -55,7 +55,7 @@ class Banco {
      * @return array
      */
     public function getClientes(): array {
-        return $this->clientes;
+        return unserialize(serialize($this->clientes));
     }
 
     /**
@@ -64,7 +64,7 @@ class Banco {
      * @return array
      */
     public function getCuentas(): array {
-        return $this->cuentas;
+        return unserialize(serialize($this->cuentas));
     }
 
     /**
@@ -98,6 +98,38 @@ class Banco {
     }
 
     /**
+     * Elimna un cliente de la lista de clientes del banco
+     * @param string $dni
+     */
+    private function eliminaCliente(string $dni) {
+        unset($this->clientes[$dni]);
+    }
+
+    /**
+     * Añade un clientes a la lista de clientes del banco
+     * @param Cliente $cliente
+     */
+    private function agregaCliente(Cliente $cliente) {
+        $this->clientes[$cliente->getDni()] = $cliente;
+    }
+
+    /**
+     * Elimina una cuenta de la lista de cuentas del banco
+     * @param string $idCuenta
+     */
+    private function eliminaCuenta(string $idCuenta) {
+        unset($this->cuentas[$idCuenta]);
+    }
+
+    /**
+     * Añade una cuenta a la lista de cuentas del banco
+     * @param Cuenta $cuenta
+     */
+    private function agregaCuenta(Cuenta $cuenta) {
+        $this->cuentas[$cuenta->getId()] = $cuenta;
+    }
+
+    /**
      * Realiza un alta de cliente del banco
      * 
      * @param string $dni
@@ -110,7 +142,7 @@ class Banco {
      */
     public function altaCliente(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento) {
         $cliente = new Cliente($dni, $nombre, $apellido1, $apellido2, $telefono, $fechaNacimiento);
-        $this->clientes[$dni] = $cliente;
+        $this->agregaCliente($cliente);
     }
 
     /**
@@ -120,11 +152,11 @@ class Banco {
      */
     public function bajaCliente(string $dni) {
         $cliente = $this->obtenerCliente($dni);
-        $cuentas = $cliente->obtenerCuentas();
+        $cuentas = $cliente->getIdCuentas();
         foreach ($cuentas as $idCuenta) {
-            $this->bajaCuenta($idCuenta);
+            $this->eliminaCuenta($idCuenta);
         }
-        unset($this->clientes[$dni]);
+        $this->eliminaCliente($dni);
     }
 
     /**
@@ -135,8 +167,8 @@ class Banco {
      * @throws ClienteNoEncontradoException
      */
     public function obtenerCliente(string $dni): Cliente {
-        if (isset($this->getClientes()[$dni])) {
-            return $this->getClientes()[$dni];
+        if ($this->existeCliente($dni)) {
+            return ($this->clientes)[$dni];
         } else {
             throw new ClienteNoEncontradoException($dni);
         }
@@ -161,7 +193,7 @@ class Banco {
     public function altaCuentaCliente(string $dni, float $saldo = 0): string {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = new Cuenta($dni, $saldo);
-        $this->cuentas[$cuenta->getId()] = $cuenta;
+        $this->agregaCuenta($cuenta);
         $cliente->altaCuenta($cuenta->getId());
         return $cuenta->getId();
     }
@@ -174,8 +206,7 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, string $idCuenta) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = $this->obtenerCuenta($idCuenta);
-        unset($this->cuentas[$idCuenta]);
+        $this->eliminaCuenta($idCuenta);
         $cliente->bajaCuenta($idCuenta);
     }
 
@@ -186,7 +217,7 @@ class Banco {
      * @return type
      */
     public function obtenerCuenta(string $idCuenta): Cuenta {
-        if (isset($this->cuentas[$idCuenta])) {
+        if ($this->existeCuenta($idCuenta)) {
             return ($this->cuentas[$idCuenta]);
         } else {
             throw new CuentaNoEncontradaException($idCuenta);
