@@ -75,7 +75,6 @@ class Banco {
      */
     public function setNombre(string $nombre) {
         $this->nombre = $nombre;
-        return $this;
     }
 
     /**
@@ -86,7 +85,6 @@ class Banco {
      */
     public function setClientes(array $clientes = []) {
         $this->clientes = $clientes;
-        return $this;
     }
 
     /**
@@ -97,7 +95,6 @@ class Banco {
      */
     public function setCuentas(array $cuentas = []) {
         $this->clientes = $cuentas;
-        return $this;
     }
 
     /**
@@ -212,7 +209,7 @@ class Banco {
      * @param string $dni
      * @param string $idCuenta
      * @param float $cantidad
-     * @param string $asunto
+     * @param string $descripcion
      */
     public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
@@ -226,7 +223,7 @@ class Banco {
      * @param string $dni
      * @param string $idCuenta
      * @param float $cantidad
-     * @param string $asunto
+     * @param string $descripcion
      */
     public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
