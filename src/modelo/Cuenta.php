@@ -34,7 +34,7 @@ class Cuenta {
 
     public function __construct(string $idCliente, float $saldo = 0) {
         $this->setId(uniqid());
-        $this->setSaldo($saldo);
+        $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
         $this->setIdCliente($idCliente);
         $this->setOperaciones([]);
     }
