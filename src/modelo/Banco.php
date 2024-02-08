@@ -71,48 +71,21 @@ class Banco {
     }
 
     /**
-     * Obtiene los clientes del banco
+     * Obtiene los clientes del banco como array de aliases de los clientes
      * 
      * @return array
      */
-    public function getClientes(): array {
-        return unserialize(serialize($this->clientes));
+    private function getClientes(): array {
+        return ($this->clientes);
     }
 
     /**
-     * Obtiene las cuentas del banco
+     * Obtiene las cuentas del banco como array de aliases de las cuentas
      * 
      * @return array
      */
-    public function getCuentas(): array {
-        return unserialize(serialize($this->cuentas));
-    }
-
-    /**
-     * Obtiene la comisión del banco
-     * 
-     * @return string
-     */
-    public function getComisionCC(): float {
-        return $this->comisionCC;
-    }
-
-    /**
-     * Obtiene el mínimo saldo sin comisión
-     * 
-     * @return string
-     */
-    public function getMinSaldoComisionCC(): float {
-        return $this->minSaldoComisionCC;
-    }
-
-    /**
-     * Obtiene el interés del banco
-     * 
-     * @return string
-     */
-    public function getInteresCA(): float {
-        return $this->interesCA;
+    private function getCuentas(): array {
+        return ($this->cuentas);
     }
 
     /**
@@ -143,6 +116,130 @@ class Banco {
      */
     public function setCuentas(array $cuentas = []) {
         $this->clientes = $cuentas;
+    }
+
+    // Gestión de la colección de clientes del banco
+
+    /**
+     * Elimina un cliente de la lista de clientes del banco
+     * @param string $dni
+     */
+    private function eliminaCliente(string $dni) {
+        unset($this->clientes[$dni]);
+    }
+
+    /**
+     * Añade un clientes a la lista de clientes del banco
+     * @param Cliente $cliente
+     */
+    private function agregaCliente(Cliente $cliente) {
+        $this->clientes[$cliente->getDni()] = $cliente;
+    }
+
+    /**
+     * Predicado para saber si un cliente existe o no
+     * 
+     * @param string $dni
+     * @return ?Cliente
+     */
+    private function existeCliente(string $dni): ?Cliente {
+        return ($this->clientes[$dni] ?? null);
+    }
+
+    /**
+     * Obtiene un cliente del banco (como alias del cliente en la colección)
+     * 
+     * @param string DNI del cliente
+     * @return Cliente
+     * @throws ClienteNoEncontradoException
+     */
+    public function getCliente(string $dni): Cliente {
+        $cliente = $this->existeCliente($dni);
+        if ($cliente) {
+            return $cliente;
+        } else {
+            throw new ClienteNoEncontradoException($dni);
+        }
+    }
+
+    // Gestión de la colección de cuentas del banco  
+
+    /**
+     * Elimina una cuenta de la lista de cuentas del banco
+     * @param string $idCuenta
+     */
+    private function eliminaCuenta(string $idCuenta) {
+        unset($this->cuentas[$idCuenta]);
+    }
+
+    /**
+     * Añade una cuenta a la lista de cuentas del banco
+     * @param Cuenta $cuenta
+     */
+    private function agregaCuenta(Cuenta $cuenta) {
+        $this->cuentas[$cuenta->getId()] = $cuenta;
+    }
+
+    /**
+     * Predicado para saber si una cuenta existe o no
+     * 
+     * @param string $idCuenta
+     * @return ?Cuenta
+     */
+    private function existeCuenta(string $idCuenta): ?Cuenta {
+        return ($this->cuentas[$idCuenta] ?? null);
+    }
+
+    /**
+     * Obtiene una cuenta del banco (como alias de la cuenta en la colección)
+     * 
+     * @param string Id de la cuenta
+     * @return Cuenta
+     * @throws CuentaNoEncontradaException
+     */
+    public function getCuenta(string $idCuenta): Cuenta {
+        $cuenta = $this->existeCuenta($idCuenta);
+        if ($cuenta) {
+            return $cuenta;
+        } else {
+            throw new CuentaNoEncontradaException($idCuenta);
+        }
+    }
+
+    /**
+     * Obtiene las cuentas del banco (como array de copias de la colección)
+     * 
+     * @return array
+     */
+    public function obtenerCuentas(): array {
+        return unserialize(serialize($this->cuentas));
+    }
+
+    /**
+     * Obtiene la comisión del banco
+     * 
+     * @return string
+     */
+    public function getComisionCC(): float {
+        return $this->comisionCC;
+    }
+
+    /**
+     * Obtiene el mínimo saldo sin comisión
+     * 
+     * @return string
+     */
+    public function getMinSaldoComisionCC(): float {
+        return $this->minSaldoComisionCC;
+    }
+
+    /**
+     * Obtiene el interés del banco
+     * 
+     * @return string
+     */
+    public function getInteresCA(): float {
+        return $this->interesCA;
     }
 
     /**
@@ -188,7 +285,7 @@ class Banco {
      */
     public function altaCliente(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento) {
         $cliente = new Cliente($dni, $nombre, $apellido1, $apellido2, $telefono, $fechaNacimiento);
-        $this->clientes[$dni] = $cliente;
+        $this->agregaCliente($cliente);
     }
 
     /**
@@ -197,37 +294,33 @@ class Banco {
      * @param string $dni
      */
     public function bajaCliente(string $dni) {
-        $cliente = ($this->clientes)[$dni];
-        $cuentas = $cliente->obtenerCuentas();
+        $cliente = $this->getCliente($dni);
+        $cuentas = $cliente->getIdCuentas();
+        $cliente->setIdCuentas([]);
         foreach ($cuentas as $idCuenta) {
-            $this->bajaCuenta($idCuenta);
+            $this->eliminaCuenta($idCuenta);
         }
-        unset($this->clientes[$dni]);
+        $this->eliminaCliente($dni);
     }
 
     /**
-     * Obtiene el objeto cliente del banco
+     * Obtiene un cliente del banco (como copia del cliente en la colección)
      * 
-     * @param string $dni
+     * @param string DNI del cliente
      * @return Cliente
      * @throws ClienteNoEncontradoException
      */
     public function obtenerCliente(string $dni): Cliente {
-        if ($this->existeCliente($dni)) {
-            return unserialize(serialize(($this->clientes)[$dni]));
-        } else {
-            throw new ClienteNoEncontradoException($dni);
-        }
+        return unserialize(serialize($this->getCliente($dni)));
     }
 
     /**
-     * Predicado para saber si un cliente existe o no
+     * Obtiene los clientes del banco como array de copias de los clientes
      * 
-     * @param string $dni
-     * @return bool
+     * @return array
      */
-    public function existeCliente(string $dni): bool {
-        return (isset(($this->clientes)[$dni]));
+    public function obtenerClientes(): array {
+        return unserialize(serialize($this->clientes));
     }
 
     /**
@@ -237,13 +330,13 @@ class Banco {
      * @param float $saldo
      */
     public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
+        $cliente = $this->getCliente($dni);
         if ($tipo == TipoCuenta::CORRIENTE) {
             $cuenta = new CuentaCorriente($dni, $saldo);
         } elseif ($tipo == TipoCuenta::AHORROS) {
             $cuenta = new CuentaAhorros($dni, $saldo);
         }
-        $this->cuentas[$cuenta->getId()] = $cuenta;
-        $cliente = $this->clientes[$dni];
+        $this->agregaCuenta($cuenta);
         $cliente->altaCuenta($cuenta->getId());
         return $cuenta->getId();
     }
@@ -255,34 +348,19 @@ class Banco {
      * @param string $idCuenta
      */
     public function bajaCuentaCliente(string $dni, string $idCuenta) {
-        $cliente = $this->obtenerCliente($dni);
-        $cuenta = $this->obtenerCuenta($idCuenta);
-        unset($this->cuentas[$idCuenta]);
-        ($this->clientes)[$dni]->bajaCuenta($idCuenta);
+        $cliente = $this->getCliente($dni);
+        $this->eliminaCuenta($idCuenta);
+        $cliente->bajaCuenta($idCuenta);
     }
 
     /**
-     * Obtener cuenta bancaria
+     * Obtener cuenta bancaria (como copia del objeto cuenta del banco)
      * 
      * @param string $idCuenta
      * @return type
      */
     public function obtenerCuenta(string $idCuenta): Cuenta {
-        if (isset($this->cuentas[$idCuenta])) {
-            return (unserialize(serialize($this->cuentas[$idCuenta])));
-        } else {
-            throw new CuentaNoEncontradaException($dni);
-        }
-    }
-
-    /**
-     * Predicado para saber si una cuenta existe
-     * 
-     * @param string $idCuenta
-     * @return bool
-     */
-    public function existeCuenta(string $idCuenta): bool {
-        return (isset($this->cuentas[$idCuenta]));
+        return unserialize(serialize($this->getCuenta($idCuenta)));
     }
 
     /**
@@ -291,11 +369,12 @@ class Banco {
      * @param string $dni
      * @param string $idCuenta
      * @param float $cantidad
+     * @param string $descripcion
      */
-    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
-        $cliente = $this->obtenerCliente($dni);
-        $cuenta = ($this->cuentas)[$idCuenta];
-        $cuenta->ingreso($cantidad, $asunto);
+    public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
+        $cliente = $this->getCliente($dni);
+        $cuenta = $this->getCuenta($idCuenta);
+        $cuenta->ingreso($cantidad, $descripcion);
     }
 
     /**
@@ -303,12 +382,13 @@ class Banco {
      * 
      * @param string $dni
      * @param string $idCuenta
-     * @param float $saldo
+     * @param float $cantidad
+     * @param string $descripcion
      */
-    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $asunto) {
-        $cliente = $this->obtenerCliente($dni);
-        $cuenta = ($this->cuentas)[$idCuenta];
-        $cuenta->debito($cantidad, $asunto);
+    public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
+        $cliente = $this->getCliente($dni);
+        $cuenta = $this->getCuenta($idCuenta);
+        $cuenta->debito($cantidad, $descripcion);
     }
 
     /**
@@ -318,25 +398,22 @@ class Banco {
      * @param string $dniClienteDestino
      * @param string $idCuentaOrigen
      * @param string $idCuentaDestino
-     * @param float $saldo
-     * @return bool
+     * @param float $cantidad
      */
-    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, string $idCuentaOrigen, string $idCuentaDestino, float $saldo) {
-        $clienteOrigen = $this->obtenerCliente($dniClienteOrigen);
-        $clienteDestino = $this->obtenerCliente($dniClienteDestino);
-
-        if (isset($this->cuentas[$idCuentaOrigen]) && isset($this->cuentas[$idCuentaDestino])) {
-            if ($this->cuentas[$idCuentaOrigen]->debito($saldo, "transferencia hacia la cuenta $idCuentaDestino")) {
-                $this->cuentas[$idCuentaDestino]->ingreso($saldo, "transferencia a favor desde la cuenta $idCuentaOrigen");
-            }
-        }
+    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, string $idCuentaOrigen, string $idCuentaDestino, float $cantidad) {
+        $clienteOrigen = $this->getCliente($dniClienteOrigen);
+        $clienteDestino = $this->getCliente($dniClienteDestino);
+        $clienteOrigen->compruebaIdCuenta($idCuentaOrigen);
+        $clienteDestino->compruebaIdCuenta($idCuentaDestino);
+        $this->debitoCuentaCliente($dniClienteOrigen, $idCuentaOrigen, $cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen");
+        $this->ingresoCuentaCliente($dniClienteDestino, $idCuentaDestino, $cantidad, "Transferencia de $cantidad € a su cuenta $idCuentaDestino");
     }
 
     /**
      * Aplica cargos de comisión a la cuenta corriente
      */
     public function aplicaComisionCC() {
-        $cuentasCorrientes = array_filter($this->cuentas, fn($cuenta) => $cuenta instanceof CuentaCorriente);
+        $cuentasCorrientes = array_filter($this->getCuentas(), fn($cuenta) => $cuenta instanceof CuentaCorriente);
 
         // Captura las propiedades necesarias con 'use'
         $comisionCC = $this->getComisionCC();
@@ -348,7 +425,7 @@ class Banco {
     }
 
     public function aplicaInteresCA() {
-        $cuentasAhorros = array_filter($this->cuentas, fn($cuenta) => $cuenta instanceof CuentaAhorros);
+        $cuentasAhorros = array_filter($this->getCuentas(), fn($cuenta) => $cuenta instanceof CuentaAhorros);
 
         // Captura las propiedades necesarias con 'use'
         $interesCA = $this->getInteresCA();

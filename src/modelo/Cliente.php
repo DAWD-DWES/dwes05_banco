@@ -81,7 +81,7 @@ class Cliente {
         return $this->fechaNacimiento;
     }
 
-    public function getCuentas(): array {
+    public function getIdCuentas(): array {
         return $this->idCuentas;
     }
 

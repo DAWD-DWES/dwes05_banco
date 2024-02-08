@@ -37,6 +37,7 @@ class Cuenta {
         $this->setId(uniqid());
         $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
         $this->setIdCliente($idCliente);
+        $this->setOperaciones([]);
     }
 
     public function getId(): string {
@@ -54,8 +55,8 @@ class Cuenta {
     public function getOperaciones(): array {
         return $this->operaciones;
     }
-    
-     public function getTipoCuenta(): array {
+
+    public function getTipoCuenta(): array {
         return $this->tipoCuenta;
     }
 
@@ -70,9 +71,13 @@ class Cuenta {
     public function setIdCliente($idCliente) {
         $this->idCliente = $idCliente;
     }
-    
-     public function setTipoCuenta($tipoCuenta) {
+
+    public function setTipoCuenta($tipoCuenta) {
         $this->tipoCuenta = $tipoCuenta;
+    }
+    
+    public function setOperaciones(array $operaciones) {
+        $this->operaciones = $operaciones;
     }
 
     public function ingreso($cantidad, $asunto): void {
@@ -95,5 +100,15 @@ class Cuenta {
 
     public function agregaOperacion($operacion) {
         $this->operaciones[] = $operacion;
+    }
+
+    public function __toString() {
+        $saldoFormatted = number_format($this->getSaldo(), 2); // Formatear el saldo con dos decimales
+        $operacionesStr = implode("</br>", array_map(fn($operacion) => "{$operacion->__toString()}", $this->getOperaciones())); // Convertir las operaciones en una cadena separada por saltos de línea
+
+        return "Cuenta ID: {$this->getId()}</br>" .
+                // "Cliente ID: {$this->getIdCliente()}</br>" .
+                "Saldo: $saldoFormatted</br>" .
+                "$operacionesStr";
     }
 }
