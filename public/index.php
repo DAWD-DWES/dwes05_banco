@@ -5,7 +5,6 @@ require_once '../src/modelo/Cliente.php';
 require_once '../src/modelo/Cuenta.php';
 require_once '../src/modelo/TipoCuenta.php';
 
-
 $banco = new Banco("Molocos");
 
 $banco->setComisionCC(5);
@@ -39,19 +38,33 @@ $banco->aplicaComisionCC();
 
 $banco->aplicaInteresCA();
 
+try {
+    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
+} catch (SaldoInsuficienteException $ex) {
+    echo $ex->getMessage();
+}
+
 // Mostrar las cuentas y saldos de las cuentas de los clientes
-$clientes = $banco->getClientes();
+$clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
     echo "Datos del cliente con DNI: $dniCliente </br>";
-    $idCuentas = $cliente->getCuentas();
+    $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo "Datos de la cuenta: $idCuenta Tipo Cuenta: ". get_class($cuenta) . " </br>";
-        $operaciones = $cuenta->getOperaciones();
-        foreach ($operaciones as $clave => $operacion) {
-            echo $operacion . "</br>";
-        }
-        echo "Saldo total: {$cuenta->getSaldo()}" . "</br>" ;
+        echo "</br>$cuenta </br>";
     }
 }
 
+$banco->bajaCuentaCliente('12345678A', ($banco->obtenerCliente('12345678A')->getIdCuentas())[0]);
+$banco->bajaCliente('34567890C');
+
+// Mostrar las cuentas y saldos de las cuentas de los clientes
+$clientes = $banco->obtenerClientes();
+foreach ($clientes as $dniCliente => $cliente) {
+    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    $idCuentas = $cliente->getIdCuentas();
+    foreach ($idCuentas as $idCuenta) {
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        echo "</br>$cuenta </br>";
+    }
+}
