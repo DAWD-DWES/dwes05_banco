@@ -36,6 +36,7 @@ class Cuenta {
         $this->setId(uniqid());
         $this->setSaldo($saldo);
         $this->setIdCliente($idCliente);
+        $this->setOperaciones([]);
     }
 
     public function getId(): string {
@@ -67,7 +68,7 @@ class Cuenta {
     }
 
     public function setOperaciones(array $operaciones) {
-        $this->operaciones = operaciones;
+        $this->operaciones = $operaciones;
     }
 
     /**
