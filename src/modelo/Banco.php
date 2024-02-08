@@ -50,21 +50,21 @@ class Banco {
     }
 
     /**
-     * Obtiene los clientes del banco
+     * Obtiene los clientes del banco como array de aliases de los clientes
      * 
      * @return array
      */
-    public function getClientes(): array {
-        return unserialize(serialize($this->clientes));
+    private function getClientes(): array {
+        return ($this->clientes);
     }
 
     /**
-     * Obtiene las cuentas del banco
+     * Obtiene las cuentas del banco como array de aliases de las cuentas
      * 
      * @return array
      */
-    public function getCuentas(): array {
-        return unserialize(serialize($this->cuentas));
+    private function getCuentas(): array {
+        return ($this->cuentas);
     }
 
     /**
@@ -184,6 +184,15 @@ class Banco {
             throw new CuentaNoEncontradaException($idCuenta);
         }
     }
+    
+    /**
+     * Obtiene las cuentas del banco (como array de copias de la colección)
+     * 
+     * @return array
+     */
+    public function obtenerCuentas(): array {
+        return unserialize(serialize($this->cuentas));
+    }
 
     // Operaciones del interfaz del banco
 
@@ -228,6 +237,16 @@ class Banco {
     public function obtenerCliente(string $dni): Cliente {
         return unserialize(serialize($this->getCliente($dni)));
     }
+    
+    /**
+     * Obtiene los clientes del banco como array de copias de los clientes
+     * 
+     * @return array
+     */
+    public function obtenerClientes(): array {
+        return unserialize(serialize($this->clientes));
+    }
+
 
     /**
      * Crea una cuenta de un cliente del banco

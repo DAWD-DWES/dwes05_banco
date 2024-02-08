@@ -102,12 +102,12 @@ class Cuenta {
 
     public function __toString() {
         $saldoFormatted = number_format($this->getSaldo(), 2); // Formatear el saldo con dos decimales
-        $operacionesStr = implode("\n", array_map(fn($operacion) => "{$operacion->__toString()}", $this->getOperaciones())); // Convertir las operaciones en una cadena separada por saltos de línea
+        $operacionesStr = implode("</br>", array_map(fn($operacion) => "{$operacion->__toString()}", $this->getOperaciones())); // Convertir las operaciones en una cadena separada por saltos de línea
 
-        return "Cuenta ID: {$this->getId()}\n" .
-                "Cliente ID: {$this->getIdCliente()}\n" .
-                "Saldo: $saldoFormatted\n" .
-                "Operaciones:\n$operacionesStr";
+        return "Cuenta ID: {$this->getId()}</br>" .
+               // "Cliente ID: {$this->getIdCliente()}</br>" .
+                "Saldo: $saldoFormatted</br>" .
+                "$operacionesStr";
     }
 
     /**

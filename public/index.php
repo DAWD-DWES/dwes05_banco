@@ -34,7 +34,7 @@ try {
     echo $ex->getMessage();
 }
 // Mostrar las cuentas y saldos de las cuentas de los clientes
-$clientes = $banco->getClientes();
+$clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
     echo "</br> Datos del cliente con DNI: $dniCliente</br>";
     $idCuentas = $cliente->getIdCuentas();
@@ -49,7 +49,7 @@ $banco->bajaCliente('34567890C');
 
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
-$clientes = $banco->getClientes();
+$clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
     echo "</br> Datos del cliente con DNI: $dniCliente</br>";
     $idCuentas = $cliente->getIdCuentas();
