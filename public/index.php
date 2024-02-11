@@ -69,3 +69,22 @@ foreach ($clientes as $dniCliente => $cliente) {
         echo "</br>$cuenta</br>";
     }
 }
+
+$clientesCuentas = array_map(fn($cliente) => $cliente->getIdCuentas(), $banco->obtenerClientes());
+
+foreach ($clientesCuentas as $clienteDni => $idCuentas) {
+    foreach ($idCuentas as $idCuenta) {
+        $cuenta = $banco->getCuenta($idCuenta);
+        $banco->ingresoProductoBancarioCliente($clienteDni, $cuenta, 20, "Regalo de cortesía del banco");
+    }
+}
+
+$clientes = $banco->obtenerClientes();
+foreach ($clientes as $dniCliente => $cliente) {
+    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    $idCuentas = $cliente->getIdCuentas();
+    foreach ($idCuentas as $idCuenta) {
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        echo "</br>$cuenta</br>";
+    }
+}
