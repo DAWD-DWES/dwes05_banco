@@ -25,9 +25,9 @@ foreach ($datosClientes as $datosCliente) {
     // Crear tres cuentas bancarias para cada cliente
     for ($i = 0; $i < 3; $i++) {
         $tipoCuenta = rand(0, 1) ? TipoCuenta::CORRIENTE : TipoCuenta::AHORROS;
-        $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100), $tipoCuenta);
+        $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 500), $tipoCuenta);
         // Realizar tres operaciones de ingreso en las cada cuenta
-        for ($i = 0; $i < 3; $i++) {
+        for ($j = 0; $j < 3; $j++) {
             $cantidad = rand(0, 500);
             $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
         }
@@ -39,7 +39,7 @@ $banco->aplicaComisionCC();
 $banco->aplicaInteresCA();
 
 try {
-    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
+    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->getCliente('12345678A')->getIdCuentas())[1], ($banco->getCliente('23456789B')->getIdCuentas())[0], 500);
 } catch (SaldoInsuficienteException $ex) {
     echo $ex->getMessage();
 }
@@ -53,9 +53,10 @@ foreach ($clientes as $dniCliente => $cliente) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
         echo "</br>$cuenta </br>";
     }
+    echo "</br>";
 }
 
-$banco->bajaCuentaCliente('12345678A', ($banco->obtenerCliente('12345678A')->getIdCuentas())[0]);
+$banco->bajaCuentaCliente('12345678A', ($banco->getCliente('12345678A')->getIdCuentas())[0]);
 $banco->bajaCliente('34567890C');
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
@@ -65,6 +66,25 @@ foreach ($clientes as $dniCliente => $cliente) {
     $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo "</br>$cuenta </br>";
+        echo "</br>$cuenta</br>";
+    }
+}
+
+$clientesCuentas = array_map(fn($cliente) => $cliente->getIdCuentas(), $banco->obtenerClientes());
+
+foreach ($clientesCuentas as $clienteDni => $idCuentas) {
+    foreach ($idCuentas as $idCuenta) {
+        $cuenta = $banco->getCuenta($idCuenta);
+        $banco->ingresoProductoBancarioCliente($clienteDni, $cuenta, 20, "Regalo de cortesía del banco");
+    }
+}
+
+$clientes = $banco->obtenerClientes();
+foreach ($clientes as $dniCliente => $cliente) {
+    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    $idCuentas = $cliente->getIdCuentas();
+    foreach ($idCuentas as $idCuenta) {
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        echo "</br>$cuenta</br>";
     }
 }

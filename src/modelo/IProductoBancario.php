@@ -1,14 +1,13 @@
 <?php
 
 /**
- * Interface Cuenta 
+ * Interface IProductoBancario
  */
 Interface IProductoBancario {
 
-    public function ingreso($cantidad, $asunto): void;
+    public function ingreso(float $cantidad, string $descripcion): void;
 
-    public function debito($cantidad, $asunto): void;
-    
+    public function debito(float $cantidad, string $asunto): void;
+
     public function getSaldo(): float;
-    
 }
