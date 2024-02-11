@@ -5,9 +5,9 @@ require_once "Cuenta.php";
 require_once "CuentaCorriente.php";
 require_once "CuentaAhorros.php";
 require_once "TipoCuenta.php";
-require_once "ClienteDAO.php";
-require_once "CuentaDAO.php";
-require_once "OperacionDAO.php";
+require_once "../src/dao/ClienteDAO.php";
+require_once "../src/dao/CuentaDAO.php";
+require_once "../src/dao/OperacionDAO.php";
 require_once "../src/excepciones/ClienteNoEncontradoException.php";
 require_once "../src/excepciones/CuentaNoEncontradaException.php";
 require_once "../src/excepciones/SaldoInsuficienteException.php";
@@ -16,8 +16,6 @@ require_once "../src/excepciones/SaldoInsuficienteException.php";
  * Clase Banco
  */
 class Banco {
-
-    private PDO $pdo;
 
     /**
      * Comisión de mantenimiento de la cuenta corriente en euros
@@ -44,6 +42,24 @@ class Banco {
     private string $nombre;
 
     /**
+     * DAO para persistir clientes
+     * @var IDAO
+     */
+    private IDAO $clienteDAO;
+
+    /**
+     * DAO para persistir cuentas
+     * @var IDAO
+     */
+    private IDAO $cuentaDAO;
+
+    /**
+     * DAO para persistir operaciones
+     * @var IDAO
+     */
+    private IDAO $operacionDAO;
+
+    /**
      * Colección de clientes del banco
      * @var array
      */
@@ -60,8 +76,11 @@ class Banco {
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct(PDO $pdo, string $nombre) {
+    public function __construct(string $nombre, IDAO $clienteDAO, IDAO $cuentaDAO, IDAO $operacionDAO) {
         $this->setNombre($nombre);
+        $this->clienteDAO = $clienteDAO;
+        $this->cuentaDAO = $cuentaDAO;
+        $this->operacionDAO = $operacionDAO;
         //  $this->setClientes();
         //  $this->setCuentas();
     }
@@ -81,8 +100,7 @@ class Banco {
      * @return array
      */
     public function getClientes(): array {
-        $clienteDAO = new ClienteDAO($this->pdo);
-        return $clienteDAO->obtenerTodos();
+        return $this->clienteDAO->obtenerTodos();
     }
 
     /**
@@ -91,8 +109,7 @@ class Banco {
      * @return array
      */
     public function getCuentas(): array {
-        $cuentaDAO = new CuentaDAO($this->pdo);
-        return $cuentaDAO->obtenerTodos();
+        return $this->cuentaDAO->obtenerTodos();
     }
 
     /**
@@ -201,8 +218,7 @@ class Banco {
      */
     public function altaCliente(string $dni, string $nombre, string $apellido1, string $apellido2, string $telefono, string $fechaNacimiento): void {
         $cliente = new Cliente($dni, $nombre, $apellido1, $apellido2, $telefono, $fechaNacimiento);
-        $clienteDAO = new ClienteDAO($pdo);
-        $clienteDAO->crear($cliente);
+        $this->clienteDAO->crear($cliente);
     }
 
     /**
@@ -211,8 +227,8 @@ class Banco {
      * @param string $dni
      */
     public function bajaCliente(string $dni) {
-        $cliente = ($this->clientes)[$dni];
-        $cuentas = $cliente->obtenerCuentas();
+        $cliente = $this->clienteDAO->obtenerPorDni($dni);
+        $cuentas = $cliente->obtenerIdCuentas();
         foreach ($cuentas as $idCuenta) {
             $this->bajaCuenta($idCuenta);
         }

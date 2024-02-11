@@ -1,12 +1,13 @@
 <?php
 
+require_once '../src/modelo/IDAO.php';
 require_once '../src/modelo/Cuenta.php';
 require_once '../src/modelo/CuentaAhorros.php';
 require_once '../src/modelo/CuentaCorriente.php';
 require_once '../src/modelo/TipoCuenta.php';
 require_once 'OperacionDAO.php';
 
-class CuentaDAO {
+class CuentaDAO implements IDAO{
 
     private PDO $pdo;
 

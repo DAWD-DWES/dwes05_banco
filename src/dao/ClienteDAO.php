@@ -1,8 +1,9 @@
 <?php
 
+require_once '../src/dao/IDAO.php';
 require_once '../src/modelo/Cliente.php';
 
-class ClienteDAO {
+class ClienteDAO implements IDAO{
 
     private $pdo;
 
@@ -63,7 +64,7 @@ class ClienteDAO {
         ]);
     }
 
-    public function eliminar($id) {
+    public function eliminar(int $id) {
         $stmt = $this->pdo->prepare("DELETE FROM clientes WHERE cliente_id = :id");
         $stmt->execute(['id' => $id]);
     }

@@ -63,6 +63,6 @@ class Operacion {
     }
     
     public function __toString() {
-        return ("Operación {$this->getTipo()->name} Cuenta {$this->getIdCuenta()} Cantidad {$this->getCantidad()} Fecha {$this->getFecha()->format('Y-m-d H:i:s')} Asunto {$this->getDescripcion()})");
+        return ("{$this->getTipo()->name} Cantidad: {$this->getCantidad()} Fecha: {$this->getFecha()->format('Y-m-d H:i:s')} Descripción: {$this->getDescripcion()}");
     }
 }

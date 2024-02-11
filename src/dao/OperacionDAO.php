@@ -1,8 +1,8 @@
 <?php
-
+require_once '../src/modelo/IDAO.php';
 require_once '../src/modelo/Operacion.php';
 
-class OperacionDAO {
+class OperacionDAO implements IDAO{
 
     private $pdo;
 

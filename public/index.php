@@ -8,11 +8,13 @@ require_once '../src/modelo/TipoCuenta.php';
 
 $pdo = BD::getConexion();
 
-$banco = new Banco("Molocos");
-
 $clienteDAO = new ClienteDAO($pdo);
 $cuentaDAO = new CuentaDAO($pdo);
-$operacionDAO = new operacionDAO($pdo);
+$operacionDAO = new OperacionDAO($pdo);
+
+$banco = new Banco("Molocos", $clienteDAO, $cuentaDAO, $operacionDAO);
+
+
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
@@ -45,18 +47,13 @@ $banco->aplicaComisionCC();
 $banco->aplicaInteresCA();
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
-$clientes = $banco->getClientes();
+$clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
-    echo "Datos del cliente con DNI: $dniCliente </br>";
-    $idCuentas = $cliente->getCuentas();
+    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo "Datos de la cuenta: $idCuenta Tipo Cuenta: " . get_class($cuenta) . " </br>";
-        $operaciones = $cuenta->getOperaciones();
-        foreach ($operaciones as $clave => $operacion) {
-            echo $operacion . "</br>";
-        }
-        echo "Saldo total: {$cuenta->getSaldo()}" . "</br>";
+        echo "</br>$cuenta </br>";
     }
 }
 
