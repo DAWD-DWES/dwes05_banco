@@ -2,13 +2,12 @@
 
 require_once "Operacion.php";
 require_once "TipoCuenta.php";
-require_once "IProductoBancario.php";
 require_once "../src/excepciones/SaldoInsuficienteException.php";
 
 /**
  * Clase Cuenta 
  */
-class Cuenta implements IProductoBancario{
+class Cuenta {
 
     /**
      * Id de la cuenta
