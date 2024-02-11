@@ -9,7 +9,7 @@ $banco = new Banco("Molocos");
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
-$banco->setInteresCA(2);
+$banco->setInteresCA(1.5);
 
 // Datos de clientes de ejemplo
 $datosClientes = [
