@@ -34,10 +34,11 @@ class Cuenta {
 
     public function __construct(string $idCliente, float $cantidad = 0) {
         $this->setId(uniqid());
-         $this->setSaldo(0);
+        $this->setSaldo(0);
+        $this->setOperaciones([]);
         $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
         $this->setIdCliente($idCliente);
-        $this->setOperaciones([]);
+        
     }
 
     public function getId(): string {
@@ -97,7 +98,7 @@ class Cuenta {
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
         } else {
-            throw new SaldoInsuficienteException($this->getId());
+            throw new SaldoInsuficienteException($this->getId(), $cantidad);
         }
     }
 
@@ -106,7 +107,7 @@ class Cuenta {
         $operacionesStr = implode("</br>", array_map(fn($operacion) => "{$operacion->__toString()}", $this->getOperaciones())); // Convertir las operaciones en una cadena separada por saltos de línea
 
         return "Cuenta ID: {$this->getId()}</br>" .
-               // "Cliente ID: {$this->getIdCliente()}</br>" .
+                // "Cliente ID: {$this->getIdCliente()}</br>" .
                 "Saldo: $saldoFormatted</br>" .
                 "$operacionesStr";
     }

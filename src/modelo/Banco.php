@@ -94,7 +94,7 @@ class Banco {
      * @return $this
      */
     public function setCuentas(array $cuentas = []) {
-        $this->clientes = $cuentas;
+        $this->cuentas = $cuentas;
     }
 
     // Gestión de la colección de clientes del banco
@@ -326,7 +326,7 @@ class Banco {
         $clienteDestino = $this->getCliente($dniClienteDestino);
         $clienteOrigen->compruebaIdCuenta($idCuentaOrigen);
         $clienteDestino->compruebaIdCuenta($idCuentaDestino);
-        $this->debitoCuentaCliente($dniClienteOrigen, $idCuentaOrigen, $cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen");
-        $this->ingresoCuentaCliente($dniClienteDestino, $idCuentaDestino, $cantidad, "Transferencia de $cantidad € a su cuenta $idCuentaDestino");
+        $this->debitoCuentaCliente($dniClienteOrigen, $idCuentaOrigen, $cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
+        $this->ingresoCuentaCliente($dniClienteDestino, $idCuentaDestino, $cantidad, "Transferencia de $cantidad € a su cuenta $idCuentaDestino desde la cuenta $idCuentaOrigen");
     }
 }
