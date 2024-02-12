@@ -7,7 +7,6 @@ require_once "CuentaAhorros.php";
 require_once "TipoCuenta.php";
 require_once "../src/excepciones/ClienteNoEncontradoException.php";
 require_once "../src/excepciones/CuentaNoEncontradaException.php";
-require_once "../src/excepciones/SaldoInsuficienteException.php";
 
 /**
  * Clase Banco
