@@ -115,7 +115,7 @@ class Banco {
      * @return $this
      */
     public function setCuentas(array $cuentas = []) {
-        $this->clientes = $cuentas;
+        $this->cuentas = $cuentas;
     }
 
     // Gestión de la colección de clientes del banco
