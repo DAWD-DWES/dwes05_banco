@@ -38,7 +38,6 @@ class Cuenta {
         $this->setOperaciones();
         $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
         $this->setIdCliente($idCliente);
-        
     }
 
     public function getId(): string {
@@ -69,7 +68,7 @@ class Cuenta {
         $this->idCliente = $idCliente;
     }
 
-    public function setOperaciones(array $operaciones=[]) {
+    public function setOperaciones(array $operaciones = []) {
         $this->operaciones = $operaciones;
     }
 
