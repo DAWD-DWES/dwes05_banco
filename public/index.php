@@ -42,7 +42,7 @@ foreach ($datosClientes as $datosCliente) {
 try {
     $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
 } catch (SaldoInsuficienteException $ex) {
-    echo $ex->getMessage();
+    echo $ex->getMessage() . "</br>";
 }
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
