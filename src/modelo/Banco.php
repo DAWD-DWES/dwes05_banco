@@ -348,8 +348,10 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, string $idCuenta) {
         $cliente = $this->getCliente($dni);
-        $this->eliminaCuenta($idCuenta);
-        $cliente->bajaCuenta($idCuenta);
+        if ($cliente->compruebaIdCuenta($idCuenta)) {
+            $this->eliminaCuenta($idCuenta);
+            $cliente->bajaCuenta($idCuenta);
+        }
     }
 
     /**
@@ -438,7 +440,7 @@ class Banco {
             $cuentaCA->aplicaInteres($interesCA);
         });
     }
-    
+
     /**
      * Realiza un ingreso a un producto bancario cualquiera
      * 
@@ -447,12 +449,11 @@ class Banco {
      * @param float $cantidad
      * @param string $descripcion
      */
-
     public function ingresoProductoBancarioCliente(string $dni, IProductoBancario $productoBancario, float $cantidad, string $descripcion) {
         $cliente = $this->getCliente($dni);
         $productoBancario->ingreso($cantidad, $descripcion);
     }
-    
+
     /**
      * Realiza un debito a un producto bancario cualquiera
      * @param string $dni
