@@ -373,8 +373,10 @@ class Banco {
      */
     public function ingresoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->getCliente($dni);
-        $cuenta = $this->getCuenta($idCuenta);
-        $cuenta->ingreso($cantidad, $descripcion);
+        if ($cliente->compruebaIdCuenta($idCuenta)) {
+            $cuenta = $this->getCuenta($idCuenta);
+            $cuenta->ingreso($cantidad, $descripcion);
+        }
     }
 
     /**
@@ -387,8 +389,10 @@ class Banco {
      */
     public function debitoCuentaCliente(string $dni, string $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->getCliente($dni);
-        $cuenta = $this->getCuenta($idCuenta);
-        $cuenta->debito($cantidad, $descripcion);
+        if ($cliente->compruebaIdCuenta($idCuenta)) {
+            $cuenta = $this->getCuenta($idCuenta);
+            $cuenta->debito($cantidad, $descripcion);
+        }
     }
 
     /**
@@ -403,10 +407,10 @@ class Banco {
     public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, string $idCuentaOrigen, string $idCuentaDestino, float $cantidad) {
         $clienteOrigen = $this->getCliente($dniClienteOrigen);
         $clienteDestino = $this->getCliente($dniClienteDestino);
-        $clienteOrigen->compruebaIdCuenta($idCuentaOrigen);
-        $clienteDestino->compruebaIdCuenta($idCuentaDestino);
-        $this->debitoCuentaCliente($dniClienteOrigen, $idCuentaOrigen, $cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen");
-        $this->ingresoCuentaCliente($dniClienteDestino, $idCuentaDestino, $cantidad, "Transferencia de $cantidad € a su cuenta $idCuentaDestino");
+        if ($clienteOrigen->compruebaIdCuenta($idCuentaOrigen) && $clienteDestino->compruebaIdCuenta($idCuentaDestino)) {
+            $this->debitoCuentaCliente($dniClienteOrigen, $idCuentaOrigen, $cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
+            $this->ingresoCuentaCliente($dniClienteDestino, $idCuentaDestino, $cantidad, "Transferencia de $cantidad € a su cuenta $idCuentaDestino desde la cuenta $idCuentaOrigen");
+        }
     }
 
     /**
@@ -435,7 +439,7 @@ class Banco {
             $cuentaCA->aplicaInteres($interesCA);
         });
     }
-    
+
     /**
      * Realiza un ingreso a un producto bancario cualquiera
      * 
@@ -444,12 +448,11 @@ class Banco {
      * @param float $cantidad
      * @param string $descripcion
      */
-
     public function ingresoProductoBancarioCliente(string $dni, IProductoBancario $productoBancario, float $cantidad, string $descripcion) {
         $cliente = $this->getCliente($dni);
         $productoBancario->ingreso($cantidad, $descripcion);
     }
-    
+
     /**
      * Realiza un debito a un producto bancario cualquiera
      * @param string $dni

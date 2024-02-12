@@ -120,11 +120,11 @@ class Cliente {
         return $this;
     }
 
-    public function compruebaIdCuenta(string $idCuenta) {
+    public function compruebaIdCuenta(string $idCuenta): bool {
         $clave = array_search($idCuenta, $this->getIdCuentas());
         // Si la clave existe en el array, elimina el elemento
         if ($clave !== false) {
-            return $clave;
+            return true;
         } else {
             throw new CuentaNoPerteneceClienteException($this->dni, $idCuenta);
         }
