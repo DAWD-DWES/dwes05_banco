@@ -4,7 +4,6 @@ require_once "Cliente.php";
 require_once "Cuenta.php";
 require_once "../src/excepciones/ClienteNoEncontradoException.php";
 require_once "../src/excepciones/CuentaNoEncontradaException.php";
-require_once "../src/excepciones/SaldoInsuficienteException.php";
 
 /**
  * Clase Banco
