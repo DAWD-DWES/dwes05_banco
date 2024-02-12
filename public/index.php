@@ -22,12 +22,12 @@ foreach ($datosClientes as $datosCliente) {
         $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 100));
         // Realizar tres operaciones de ingreso en cada cuenta
         for ($j = 0; $j < 3; $j++) {
-            $tipoCuenta = rand(0, 1) ? TipoOperacion::INGRESO : TipoOperacion::DEBITO;
+            $tipoOperacion = rand(0, 1) ? TipoOperacion::INGRESO : TipoOperacion::DEBITO;
             $cantidad = rand(0, 500);
             $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
             $cantidad = rand(0, 500);
             try {
-                if ($tipoCuenta === TipoOperacion::INGRESO) {
+                if ($tipoOperacion === TipoOperacion::INGRESO) {
                     $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
                 } else {
                     $banco->debitoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Retirada de $cantidad € en la cuenta");
