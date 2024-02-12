@@ -1,8 +1,6 @@
 <?php
 
 require_once '../src/modelo/Banco.php';
-require_once '../src/modelo/Cliente.php';
-require_once '../src/modelo/Cuenta.php';
 
 $banco = new Banco("Molocos");
 
