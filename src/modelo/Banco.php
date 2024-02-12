@@ -268,8 +268,10 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, string $idCuenta) {
         $cliente = $this->getCliente($dni);
-        $this->eliminaCuenta($idCuenta);
-        $cliente->bajaCuenta($idCuenta);
+        if ($cliente->compruebaIdCuenta($idCuenta)) {
+            $this->eliminaCuenta($idCuenta);
+            $cliente->bajaCuenta($idCuenta);
+        }
     }
 
     /**
