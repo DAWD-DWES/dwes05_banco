@@ -132,7 +132,7 @@ class Banco {
      * @return Cliente
      * @throws ClienteNoEncontradoException
      */
-    public function getCliente(string $dni): Cliente {
+    private function getCliente(string $dni): Cliente {
         $cliente = $this->existeCliente($dni);
         if ($cliente) {
             return $cliente;
@@ -176,7 +176,7 @@ class Banco {
      * @return Cuenta
      * @throws CuentaNoEncontradaException
      */
-    public function getCuenta(string $idCuenta): Cuenta {
+    private function getCuenta(string $idCuenta): Cuenta {
         $cuenta = $this->existeCuenta($idCuenta);
         if ($cuenta) {
             return $cuenta;
