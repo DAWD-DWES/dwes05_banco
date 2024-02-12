@@ -44,7 +44,7 @@ try {
 } catch (SaldoInsuficienteException $ex) {
     echo $ex->getMessage();
 }
-echo "<h1>Clientes y cuentas del banco</h1>";
+
 // Mostrar las cuentas y saldos de las cuentas de los clientes
 $clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {

@@ -116,10 +116,10 @@ class Banco {
     }
 
     /**
-     * Predicado para saber si un cliente existe o no
+     * Muestra si un cliente existe o no
      * 
      * @param string $dni
-     * @return ?Cliente
+     * @return ?Cliente Si el cliente existe devuelve el cliente sino devuelve nulo
      */
     private function existeCliente(string $dni): ?Cliente {
         return ($this->clientes[$dni] ?? null);
