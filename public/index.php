@@ -45,6 +45,8 @@ try {
     echo $ex->getMessage() . "</br>";
 }
 
+echo "<h1>Clientes y cuentas</h1>";
+
 // Mostrar las cuentas y saldos de las cuentas de los clientes
 $clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
