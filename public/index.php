@@ -28,8 +28,19 @@ foreach ($datosClientes as $datosCliente) {
         $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], rand(0, 500), $tipoCuenta);
         // Realizar tres operaciones de ingreso en las cada cuenta
         for ($j = 0; $j < 3; $j++) {
+            $tipoOperacion = rand(0, 1) ? TipoOperacion::INGRESO : TipoOperacion::DEBITO;
             $cantidad = rand(0, 500);
             $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
+            $cantidad = rand(0, 500);
+            try {
+                if ($tipoOperacion === TipoOperacion::INGRESO) {
+                    $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
+                } else {
+                    $banco->debitoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Retirada de $cantidad € en la cuenta");
+                }
+            } catch (SaldoInsuficienteException $ex) {
+                echo $ex->getMessage() . "</br>";
+            }
         }
     }
 }
@@ -45,6 +56,8 @@ try {
 }
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
+echo "<h1>Clientes y cuentas del banco</h1>";
+
 $clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
     echo "Datos del cliente con DNI: $dniCliente </br>";
@@ -60,6 +73,7 @@ $banco->bajaCuentaCliente('12345678A', ($banco->getCliente('12345678A')->getIdCu
 $banco->bajaCliente('34567890C');
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
+echo "<h1>Clientes y cuentas del banco (baja de una cuenta y un cliente)</h1>";
 $clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
     echo "</br> Datos del cliente con DNI: $dniCliente</br>";
