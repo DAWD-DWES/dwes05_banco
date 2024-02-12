@@ -7,8 +7,8 @@ require_once "Cuenta.php";
  */
 class CuentaCorriente extends Cuenta {
 
-    public function __construct(string $idCliente, float $cantidad = 0) {
-        parent::__construct($idCliente, $cantidad);
+    public function __construct(string $idCliente, float $saldo = 0) {
+        parent::__construct($idCliente, $saldo);
     }
 
     public function aplicaComision($comision, $minSaldo): void {
