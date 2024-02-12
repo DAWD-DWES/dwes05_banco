@@ -439,29 +439,4 @@ class Banco {
             $cuentaCA->aplicaInteres($interesCA);
         });
     }
-
-    /**
-     * Realiza un ingreso a un producto bancario cualquiera
-     * 
-     * @param string $dni
-     * @param IProductoBancario $productoBancario
-     * @param float $cantidad
-     * @param string $descripcion
-     */
-    public function ingresoProductoBancarioCliente(string $dni, IProductoBancario $productoBancario, float $cantidad, string $descripcion) {
-        $cliente = $this->getCliente($dni);
-        $productoBancario->ingreso($cantidad, $descripcion);
-    }
-
-    /**
-     * Realiza un debito a un producto bancario cualquiera
-     * @param string $dni
-     * @param IProductoBancario $productoBancario
-     * @param float $cantidad
-     * @param string $descripcion
-     */
-    public function debitoProductoBancarioCliente(string $dni, IProductoBancario $productoBancario, float $cantidad, string $descripcion) {
-        $cliente = $this->getCliente($dni);
-        $productoBancario->debito($cantidad, $descripcion);
-    }
 }
