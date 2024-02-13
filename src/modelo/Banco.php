@@ -76,7 +76,7 @@ class Banco {
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct(string $nombre, IDAO $clienteDAO, IDAO $cuentaDAO, IDAO $operacionDAO) {
+    public function __construct(IDAO $clienteDAO, IDAO $cuentaDAO, IDAO $operacionDAO, string $nombre) {
         $this->setNombre($nombre);
         $this->clienteDAO = $clienteDAO;
         $this->cuentaDAO = $cuentaDAO;
@@ -168,7 +168,7 @@ class Banco {
      * @return $this
      */
 //    public function setCuentas(array $cuentas = []) {
-//        $this->clientes = $cuentas;
+//        $this->cuentas = $cuentas;
 //        return $this;
 //    }
 
@@ -180,7 +180,6 @@ class Banco {
      */
     public function setComisionCC(float $comisionCC) {
         $this->comisionCC = $comisionCC;
-        return $this;
     }
 
     /**
@@ -191,7 +190,6 @@ class Banco {
      */
     public function setMinSaldoComisionCC(float $minSaldoComisionCC) {
         $this->minSaldoComisionCC = $minSaldoComisionCC;
-        return $this;
     }
 
     /**
@@ -202,7 +200,6 @@ class Banco {
      */
     public function setInteresCA(float $interesCA) {
         $this->interesCA = $interesCA;
-        return $this;
     }
 
     /**
@@ -230,11 +227,9 @@ class Banco {
         $cliente = $this->clienteDAO->obtenerPorDni($dni);
         $cuentas = $cliente->obtenerIdCuentas();
         foreach ($cuentas as $idCuenta) {
-            $this->bajaCuenta($idCuenta);
+            $this->cuentaDAO->eliminar($idCuenta);
         }
-        unset($this->clientes[$dni]);
-        $clienteDAO = new ClienteDAO($this->pdo);
-        $clienteDAO->eliminar($cliente->getId());
+        $this->clienteDAO->eliminar($cliente->getId());
     }
 
     /**
@@ -245,8 +240,7 @@ class Banco {
      * @throws ClienteNoEncontradoException
      */
     public function obtenerCliente(string $dni): ?Cliente {
-        $clienteDAO = new ClienteDAO($this->pdo);
-        $cliente = $clienteDAO->obtenerPorDNI($dni);
+        $cliente = $this->clienteDAO->obtenerPorDNI($dni);
         if ($cliente) {
             return $cliente;
         } else {
@@ -274,13 +268,12 @@ class Banco {
      */
     public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): Cuenta {
         if ($tipo == TipoCuenta::CORRIENTE) {
-            $cuenta = new CuentaCorriente($dni, $saldo);
+            $cuenta = new CuentaCorriente($this->operacionDAO, $dni, $saldo);
         } elseif ($tipo == TipoCuenta::AHORROS) {
-            $cuenta = new CuentaAhorros($dni, $saldo);
+            $cuenta = new CuentaAhorros($this->operacionDAO, $dni, $saldo);
         }
-        $this->cuentas[$cuenta->getId()] = $cuenta;
-        $cliente = $this->clientes[$idsCliente];
-        $cliente->altaCuenta($cuenta->getId());
+        $cliente = $this->obtenerCliente($dni);
+        $this->cuentaDAO->crear($cuenta);
         return $cuenta;
     }
 
@@ -292,9 +285,8 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, int $idCuenta) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = $this->obtenerCuenta($idCuenta);
-        unset($this->cuentas[$idCuenta]);
-        ($this->clientes)[$cliente->getId()]->bajaCuenta($idCuenta);
+        $cuenta = $this->cuentaDAO->obtenerCuenta($idCuenta);
+        $this->cuentaDAO->eliminar($cuenta->getId());
     }
 
     /**
@@ -304,8 +296,7 @@ class Banco {
      * @return type
      */
     public function obtenerCuenta(int $idCuenta): ?Cuenta {
-        $cuentaDAO = new CuentaDAO($this->pdo);
-        $cuenta = $cuentaDAO->obtenerPorId($idCuenta);
+        $cuenta = $this->cuentaDAO->obtenerPorId($idCuenta);
         if ($cuenta) {
             return $cuenta;
         } else {
@@ -330,10 +321,11 @@ class Banco {
      * @param string $idCuenta
      * @param float $cantidad
      */
-    public function ingresoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $asunto) {
+    public function ingresoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = ($this->cuentas)[$idCuenta];
-        $cuenta->ingreso($cantidad, $asunto);
+        $cuenta = $this->obtenerCuenta($idCuenta);
+        $cuenta->ingreso($cantidad, $descripcion);
+        $this->cuentaDAO->modificar($cuenta);
     }
 
     /**
@@ -343,10 +335,11 @@ class Banco {
      * @param string $idCuenta
      * @param float $saldo
      */
-    public function debitoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $asunto) {
+    public function debitoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = ($this->cuentas)[$idCuenta];
-        $cuenta->debito($cantidad, $asunto);
+        $cuenta->debito($cantidad, $descripcion);
+        $this->cuentaDAO->modificar($cuenta);
     }
 
     /**
@@ -362,11 +355,16 @@ class Banco {
     public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, int $idCuentaOrigen, int $idCuentaDestino, float $saldo) {
         $clienteOrigen = $this->obtenerCliente($dniClienteOrigen);
         $clienteDestino = $this->obtenerCliente($dniClienteDestino);
+        $cuentaOrigen = $this->obtenerCuenta($idCuentaOrigen);
+        $cuentaDestino = $this->obtenerCuenta($idCuentaDestino);
 
-        if (isset($this->cuentas[$idCuentaOrigen]) && isset($this->cuentas[$idCuentaDestino])) {
-            if ($this->cuentas[$idCuentaOrigen]->debito($saldo, "transferencia hacia la cuenta $idCuentaDestino")) {
-                $this->cuentas[$idCuentaDestino]->ingreso($saldo, "transferencia a favor desde la cuenta $idCuentaOrigen");
-            }
+        try {
+            $this->cuentaDAO->beginTransaction();
+            $cuenta->debito($cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
+            $cuenta->ingreso($cantidad, "Transferencia de $cantidad € desde la cuenta $idCuentaOrigen a su cuenta $idCuentaDestino");
+            $this->cuentaDAO->commit();
+        } catch (Exception $ex) {
+            $this->cuentaDAO->rollback();
         }
     }
 

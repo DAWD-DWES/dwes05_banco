@@ -1,10 +1,10 @@
 <?php
-require_once '../src/modelo/IDAO.php';
+require_once '../src/dao/IDAO.php';
 require_once '../src/modelo/Operacion.php';
 
 class OperacionDAO implements IDAO{
 
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct($pdo) {
         $this->pdo = $pdo;
@@ -16,6 +16,15 @@ class OperacionDAO implements IDAO{
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operacion = $stmt->fetch();
         return $operacion ? $this->inicializarPostPDO($operacion) : null;
+    }
+    
+    public function obtenerPorIdCuenta(int $idCuenta): array {
+        $stmt = $this->pdo->prepare("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE cuenta_id = :idCuenta");
+        $stmt->execute(['idCuenta' => $idCuenta]);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
+        $operaciones = $stmt->fetchAll() ?? [];
+        array_walk ($operaciones, fn($operacion) => $this->inicializarPostPDO($operacion));
+        return $operaciones;
     }
 
     private function inicializarPostPDO(Operacion $operacion): Operacion {
@@ -31,7 +40,7 @@ class OperacionDAO implements IDAO{
         return $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
     }
 
-    public function crear(Operacion $operacion) {
+    public function crear(object $object) {
         $stmt = $this->pdo->prepare("INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, fecha_operacion, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :fecha_operacion, :descripcion)");
         $stmt->execute([
             'cuenta_id' => $operacion->getIdCuenta(),
@@ -43,7 +52,7 @@ class OperacionDAO implements IDAO{
         $operacion->setId($this->pdo->lastInsertId());
     }
 
-    public function modificar(Operacion $operacion) {
+    public function modificar(object $object) {
         $stmt = $this->pdo->prepare("UPDATE operacions SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id");
         $stmt->execute([
             'id' => $operacion->getId(),

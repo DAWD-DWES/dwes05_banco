@@ -1,5 +1,6 @@
 <?php
 
+require_once '../src/error_handler.php';
 require_once '../src/bd/BD.php';
 require_once '../src/modelo/Banco.php';
 require_once '../src/modelo/Cliente.php';
@@ -8,13 +9,11 @@ require_once '../src/modelo/TipoCuenta.php';
 
 $pdo = BD::getConexion();
 
-$clienteDAO = new ClienteDAO($pdo);
-$cuentaDAO = new CuentaDAO($pdo);
 $operacionDAO = new OperacionDAO($pdo);
+$cuentaDAO = new CuentaDAO($pdo, $operacionDAO);
+$clienteDAO = new ClienteDAO($pdo, $cuentaDAO);
 
-$banco = new Banco("Molocos", $clienteDAO, $cuentaDAO, $operacionDAO);
-
-
+$banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Molocos");
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);

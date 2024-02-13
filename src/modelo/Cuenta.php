@@ -1,8 +1,9 @@
 <?php
 
-require_once "Operacion.php";
-require_once "TipoCuenta.php";
-require_once "IProductoBancario.php";
+require_once "../src/modelo/Operacion.php";
+require_once "../src/modelo/TipoCuenta.php";
+require_once "../src/modelo/IProductoBancario.php";
+require_once "../src/dao/OperacionDAO.php";
 require_once "../src/excepciones/SaldoInsuficienteException.php";
 
 /**
@@ -10,6 +11,7 @@ require_once "../src/excepciones/SaldoInsuficienteException.php";
  */
 class Cuenta implements IProductoBancario{
 
+    private OperacionDAO $operacionDAO; 
     /**
      * Id de la cuenta
      * @var string
@@ -34,7 +36,8 @@ class Cuenta implements IProductoBancario{
      */
     private array $operaciones;
 
-    public function __construct(string $idCliente, float $cantidad = 0) {
+    public function __construct(OperacionDAO $operacionDAO, string $idCliente, float $cantidad = 0) {
+        $this->operacionDAO = $operacionDAO;
         $this->setId(uniqid());
         $this->setSaldo($cantidad);
         $this->setOperaciones([]);
@@ -86,6 +89,7 @@ class Cuenta implements IProductoBancario{
     public function ingreso(float $cantidad, string $descripcion): void {
         if ($cantidad > 0) {
             $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $descripcion);
+            $this->operacionDAO->crear($operacion);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);
         }
@@ -100,6 +104,7 @@ class Cuenta implements IProductoBancario{
     public function debito(float $cantidad, string $descripcion): void {
         if ($cantidad <= $this->getSaldo()) {
             $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $descripcion);
+            $this->operacionDAO->crear($operacion);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);
         } else {
