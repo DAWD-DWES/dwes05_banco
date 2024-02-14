@@ -14,12 +14,12 @@ class Operacion {
     private $fecha;
     private string $descripcion;
 
-    public function __construct($idCuenta, $tipo, $cantidad, $asunto) {
+    public function __construct($idCuenta, $tipo, $cantidad, $descripcion) {
         $this->setIdCuenta($idCuenta);
         $this->setTipo($tipo);
         $this->setCantidad($cantidad);
         $this->setFecha(new DateTime());
-        $this->setAsunto($asunto);
+        $this->setDescripcion($descripcion);
     }
 
     public function getTipo(): TipoOperacion {

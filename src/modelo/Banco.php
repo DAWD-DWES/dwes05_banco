@@ -266,7 +266,7 @@ class Banco {
      * @param string $dni
      * @param float $saldo
      */
-    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): Cuenta {
+    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
         $cliente = $this->obtenerCliente($dni);
         if ($tipo == TipoCuenta::CORRIENTE) {
             $cuenta = new CuentaCorriente($this->operacionDAO, $cliente->getId(), $saldo);
@@ -274,7 +274,7 @@ class Banco {
             $cuenta = new CuentaAhorros($this->operacionDAO, $cliente->getId(), $saldo);
         }
         $this->cuentaDAO->crear($cuenta);
-        return $cuenta;
+        return $cuenta->getId();
     }
 
     /**

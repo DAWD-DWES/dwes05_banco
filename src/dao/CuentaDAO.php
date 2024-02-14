@@ -12,19 +12,21 @@ class CuentaDAO implements IDAO {
     private PDO $pdo;
     private OperacionDAO $operacionDAO;
 
-    public function __construct(PDO $pdo) {
+    public function __construct(PDO $pdo, OperacionDAO $operacionDAO) {
         $this->pdo = $pdo;
+        $this->operacionDAO = $operacionDAO;
     }
-
+    
     public function obtenerPorId(int $id): CuentaCorriente|CuentaAhorros|null {
         $stmt = $this->pdo->prepare("SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas WHERE cuenta_id = :id");
         $stmt->execute(['id' => $id]);
-        $stmt->setFetchMode(PDO::FETCH_OBJECT);
+        $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
         if ($datosCuenta) {
             $cuenta = $this->crearCuenta($datosCuenta);
-            $operaciones = $this->operacionDAO->obtenerPorCuentaId($this->getId());
+            $operaciones = $this->operacionDAO->obtenerPorIdCuenta($cuenta->getId());
             $cuenta->setOperaciones($operaciones);
+            return $cuenta;
         }
     }
 
@@ -44,25 +46,24 @@ class CuentaDAO implements IDAO {
         return $idCuentas;
     }
 
-    private function crearCuenta(Object $datosCuenta): CuentaCorriente|CuentaAhorros {
-        $operacionDAO = new OperacionDAO($this->pdo);
-        $cuenta = match ($datosCuenta?->tipo) {
-            TipoCuenta::AHORROS => (new CuentaAhorros($datosCuenta->dni, $datosCuenta->saldo)),
-            TipoCuenta::CORRIENTE => (new CuentaAhorros($datosCuenta->dni, $datosCuenta->saldo)),
-            "default" => null
+    private function crearCuenta(object $datosCuenta): CuentaCorriente|CuentaAhorros {
+        $cuenta = match (strtoupper($datosCuenta?->tipo)) {
+            TipoCuenta::AHORROS->name => (new CuentaAhorros($this->operacionDAO, $datosCuenta->idCliente, $datosCuenta->saldo)),
+            TipoCuenta::CORRIENTE->name => (new CuentaCorriente($this->operacionDAO, $datosCuenta->idCliente, $datosCuenta->saldo)),
+            default => null
         };
-        if (is_string($datosCuenta->fechaCreacion())) {
+        if (is_string($datosCuenta->fechaCreacion)) {
             $cuenta->setFechaCreacion(new DateTime($datosCuenta->fechaCreacion));
         }
         $cuenta->setId($datosCuenta->id);
-        $operaciones = $operacionDAO->obtenerPorIdCuenta($datosCuenta->id);
+        $operaciones = $this->operacionDAO->obtenerPorIdCuenta($datosCuenta->id);
         $cuenta->setOperaciones($operaciones);
         return $cuenta;
     }
 
     public function obtenerTodos(): array {
         $stmt = $this->pdo->query("SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas");
-        $cuentasDatos = $stmt->fetchAll(PDO::FETCH_OBJECT);
+        $cuentasDatos = $stmt->fetchAll(PDO::FETCH_OBJ);
         return array_values(array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos));
     }
 
