@@ -1,6 +1,6 @@
 <?php
 
 enum TipoCuenta: string {
-    case CORRIENTE = 'CuentaCorriente';
-    case AHORROS = 'CuentaAhorros';
+    case CORRIENTE = 'corriente';
+    case AHORROS = 'ahorros';
 }

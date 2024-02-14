@@ -9,20 +9,33 @@ class Operacion {
 
     private int $id;
     private int $idCuenta;
-    private TipoOperacion $tipo;
+    private $tipo;
     private float $cantidad;
     private $fecha;
     private string $descripcion;
 
-    public function __construct($idCuenta, $tipo, $cantidad, $descripcion) {
-        $this->setIdCuenta($idCuenta);
-        $this->setTipo($tipo);
-        $this->setCantidad($cantidad);
-        $this->setFecha(new DateTime());
-        $this->setDescripcion($descripcion);
+    public function __construct($idCuenta = '', $tipo = null, $cantidad = 0, $descripcion = '') {
+        if (func_num_args() > 0) {
+            $this->setIdCuenta($idCuenta);
+            $this->setTipo($tipo);
+            $this->setCantidad($cantidad);
+            $this->setFecha(new DateTime());
+            $this->setDescripcion($descripcion);
+        } 
+        /* else {
+            if (is_string($this->tipo)) {
+                $this->fechaNacimiento = new DateTime($this->fechaNacimiento);
+            }
+        } */
     }
 
-    public function getTipo(): TipoOperacion {
+    public function getId(): int {
+        return $this->id;
+    }
+    
+    // Cuidado con el tipo
+
+    public function getTipo() {
         return $this->tipo;
     }
 
@@ -30,16 +43,21 @@ class Operacion {
         return $this->cantidad;
     }
 
-    public function getFecha(): DateTime {
+    // Cuidado tipo
+    public function getFecha() {
         return $this->fecha;
     }
-    
+
     public function getDescripcion(): string {
         return $this->descripcion;
     }
-    
-     public function getIdCuenta(): int {
+
+    public function getIdCuenta(): int {
         return $this->idCuenta;
+    }
+
+    public function setId(int $id) {
+        $this->id = $id;
     }
 
     public function setTipo(TipoOperacion $tipo) {
@@ -53,15 +71,15 @@ class Operacion {
     public function setFecha(DateTime $fecha) {
         $this->fecha = $fecha;
     }
-    
-     public function setDescripcion(string $descripcion) {
+
+    public function setDescripcion(string $descripcion) {
         $this->descripcion = $descripcion;
     }
-    
+
     public function setIdCuenta(int $idCuenta) {
         $this->idCuenta = $idCuenta;
     }
-    
+
     public function __toString() {
         return ("{$this->getTipo()->name} Cantidad: {$this->getCantidad()} Fecha: {$this->getFecha()->format('Y-m-d H:i:s')} Descripción: {$this->getDescripcion()}");
     }

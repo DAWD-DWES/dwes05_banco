@@ -48,6 +48,10 @@ class ClienteDAO implements IDAO {
     public function obtenerTodos() {
         $stmt = $this->pdo->query("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes");
         $clientes = $stmt->fetchAll(PDO::FETCH_CLASS, 'Cliente');
+        array_walk($clientes, function ($cliente) {
+            $this->inicializarPostPDO($cliente);
+            $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($cliente->getId()));
+        });
         return $clientes;
     }
 

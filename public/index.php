@@ -21,9 +21,9 @@ $banco->setInteresCA(2);
 
 // Datos de clientes de ejemplo
 $datosClientes = [
-    ['dni' => '12345678A', 'nombre' => 'Juan', 'apellido1' => 'Pérez', 'apellido2' => 'López', 'telefono' => '123456789', 'fechaNacimiento' => '1980-01-01'],
-    ['dni' => '23456789B', 'nombre' => 'Ana', 'apellido1' => 'García', 'apellido2' => 'Martín', 'telefono' => '987654321', 'fechaNacimiento' => '1985-02-02'],
-    ['dni' => '34567890C', 'nombre' => 'Carlos', 'apellido1' => 'Fernández', 'apellido2' => 'González', 'telefono' => '112233445', 'fechaNacimiento' => '1990-03-03']
+    ['dni' => '12345678I', 'nombre' => 'Juan', 'apellido1' => 'Pérez', 'apellido2' => 'López', 'telefono' => '123456789', 'fechaNacimiento' => '1980-01-01'],
+    ['dni' => '23456789I', 'nombre' => 'Ana', 'apellido1' => 'García', 'apellido2' => 'Martín', 'telefono' => '987654321', 'fechaNacimiento' => '1985-02-02'],
+    ['dni' => '34567890I', 'nombre' => 'Carlos', 'apellido1' => 'Fernández', 'apellido2' => 'González', 'telefono' => '112233445', 'fechaNacimiento' => '1990-03-03']
 ];
 
 // Crear tres clientes y agregar tres cuentas a cada uno
@@ -52,14 +52,18 @@ foreach ($datosClientes as $datosCliente) {
     }
 }
 
-$banco->aplicaComisionCC();
+try {
+    $banco->aplicaComisionCC();
 
-$banco->aplicaInteresCA();
+    $banco->aplicaInteresCA();
+} catch (SaldoInsuficienteException $ex) {
+    echo $ex->getMessage() . "</br>";
+}
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
 $clientes = $banco->obtenerClientes();
-foreach ($clientes as $dniCliente => $cliente) {
-    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+foreach ($clientes as $cliente) {
+    echo "</br> Datos del cliente con DNI: {$cliente->getDni()}</br>";
     $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);

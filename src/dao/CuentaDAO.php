@@ -33,9 +33,9 @@ class CuentaDAO implements IDAO {
     public function obtenerIdCuentasPorClienteId(int $idCliente): array {
         $stmt = $this->pdo->prepare("SELECT cuenta_id FROM cuentas WHERE cliente_id = :idCliente");
         $stmt->execute(['idCliente' => $idCliente]);
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_NUM);
         $idCuentas = $stmt->fetchAll() ?? [];
-        return $idCuentas;
+        return array_merge (...$idCuentas);
     }
 
     public function obtenerIdCuentasPorClienteDni(string $dni): array {
@@ -47,9 +47,9 @@ class CuentaDAO implements IDAO {
     }
 
     private function crearCuenta(object $datosCuenta): CuentaCorriente|CuentaAhorros {
-        $cuenta = match (strtoupper($datosCuenta?->tipo)) {
-            TipoCuenta::AHORROS->name => (new CuentaAhorros($this->operacionDAO, $datosCuenta->idCliente, $datosCuenta->saldo)),
-            TipoCuenta::CORRIENTE->name => (new CuentaCorriente($this->operacionDAO, $datosCuenta->idCliente, $datosCuenta->saldo)),
+        $cuenta = match ($datosCuenta?->tipo) {
+            TipoCuenta::AHORROS->value => (new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $datosCuenta->idCliente, $datosCuenta->saldo)),
+            TipoCuenta::CORRIENTE->value => (new CuentaCorriente($this->operacionDAO, TipoCuenta::CORRIENTE, $datosCuenta->idCliente, $datosCuenta->saldo)),
             default => null
         };
         if (is_string($datosCuenta->fechaCreacion)) {
@@ -73,7 +73,7 @@ class CuentaDAO implements IDAO {
             $stmt = $this->pdo->prepare("INSERT INTO cuentas (cliente_id, tipo, saldo, fecha_creacion) VALUES (:cliente_id, :tipo, :saldo, :fecha_creacion)");
             $stmt->execute([
                 'cliente_id' => $cuenta->getIdCliente(),
-                'tipo' => (get_class($cuenta) == "CuentaCorriente" ? TipoCuenta::CORRIENTE->name : TipoCuenta::AHORROS->name),
+                'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
                 'fecha_creacion' => $cuenta->getFechaCreacion()->format('Y-m-d H:i:s')
             ]);
@@ -90,7 +90,7 @@ class CuentaDAO implements IDAO {
             $stmt->execute([
                 'id' => $cuenta->getId(),
                 'cliente_id' => $cuenta->getIdCliente(),
-                'tipo' => $cuenta->getTipo(),
+                'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
                 'fecha_creacion' => $cuenta->getFechaCreacion()->format('Y-m-d H:i:s')
             ]);

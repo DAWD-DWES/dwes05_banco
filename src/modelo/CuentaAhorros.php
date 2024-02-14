@@ -9,8 +9,8 @@ require_once '../src/dao/OperacionDAO.php';
  */
 class CuentaAhorros extends Cuenta implements IProductoBancario {
 
-    public function __construct(OperacionDAO $operacionDAO, string $idCliente, float $saldo = 0) {
-        parent::__construct($operacionDAO, $idCliente, $saldo);
+    public function __construct(OperacionDAO $operacionDAO, TipoCuenta $tipo, string $idCliente, float $saldo = 0) {
+        parent::__construct($operacionDAO, $tipo, $idCliente, $saldo);
     }
 
     public function aplicaInteres(float $interes): void {

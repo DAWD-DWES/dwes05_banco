@@ -29,6 +29,13 @@ class Cuenta implements IProductoBancario{
      * @var DateTime
      */
     private DateTime $fechaCreacion;
+    
+    /**
+     * Tipo de la cuenta
+     * @var TipoCuenta
+     */
+    private TipoCuenta $tipo;
+            
 
     /**
      * Id del cliente dueño de la cuenta
@@ -42,13 +49,12 @@ class Cuenta implements IProductoBancario{
      */
     private array $operaciones;
 
-    public function __construct(OperacionDAO $operacionDAO, string $idCliente, float $cantidad = 0) {
+    public function __construct(OperacionDAO $operacionDAO, TipoCuenta $tipo, string $idCliente, float $cantidad = 0) {
         $this->operacionDAO = $operacionDAO;
-        //$this->setId(uniqid());
+        $this->tipo = $tipo;
         $this->setSaldo($cantidad);
         $this->setOperaciones([]);
         $this->setFechaCreacion(new DateTime());
-       // $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
         $this->setIdCliente($idCliente);
     }
 
@@ -62,6 +68,10 @@ class Cuenta implements IProductoBancario{
     
     public function getFechaCreacion(): DateTime {
         return $this->fechaCreacion;
+    }
+    
+    public function getTipo(): TipoCuenta {
+        return $this->tipo;
     }
 
     public function getIdCliente(): string {
@@ -118,7 +128,7 @@ class Cuenta implements IProductoBancario{
      */
     public function debito(float $cantidad, string $descripcion): void {
         if ($cantidad <= $this->getSaldo()) {
-            $operacion = new Operacion(TipoOperacion::DEBITO, $cantidad, $descripcion);
+            $operacion = new Operacion($this->getId(), TipoOperacion::DEBITO, $cantidad, $descripcion);
             $this->operacionDAO->crear($operacion);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() - $cantidad);

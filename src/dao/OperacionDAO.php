@@ -32,6 +32,13 @@ class OperacionDAO implements IDAO {
         if (is_string($operacion->getFecha())) {
             $operacion->setFecha(new DateTime($operacion->getFecha()));
         }
+        if (is_string($operacion->getTipo())) {
+            $operacion->setTipo(match ($operacion->getTipo()) {
+                TipoOperacion::INGRESO->value => TipoOperacion::INGRESO,
+                TipoOperacion::DEBITO->value => TipoOperacion::DEBITO,
+                default => null
+            });
+        }
         return $operacion;
     }
 
@@ -46,7 +53,7 @@ class OperacionDAO implements IDAO {
             $stmt = $this->pdo->prepare("INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, fecha_operacion, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :fecha_operacion, :descripcion)");
             $stmt->execute([
                 'cuenta_id' => $operacion->getIdCuenta(),
-                'tipo_operacion' => $operacion->getTipo(),
+                'tipo_operacion' => $operacion->getTipo()->value,
                 'cantidad' => $operacion->getCantidad(),
                 'fecha_operacion' => $operacion->getFecha()->format('Y-m-d'),
                 'descripcion' => $operacion->getDescripcion()

@@ -99,7 +99,7 @@ class Banco {
      * 
      * @return array
      */
-    public function getClientes(): array {
+    public function obtenerClientes(): array {
         return $this->clienteDAO->obtenerTodos();
     }
 
@@ -108,7 +108,7 @@ class Banco {
      * 
      * @return array
      */
-    public function getCuentas(): array {
+    public function obtenerCuentas(): array {
         return $this->cuentaDAO->obtenerTodos();
     }
 
@@ -269,9 +269,9 @@ class Banco {
     public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
         $cliente = $this->obtenerCliente($dni);
         if ($tipo == TipoCuenta::CORRIENTE) {
-            $cuenta = new CuentaCorriente($this->operacionDAO, $cliente->getId(), $saldo);
+            $cuenta = new CuentaCorriente($this->operacionDAO, TipoCuenta::CORRIENTE, $cliente->getId(), $saldo);
         } elseif ($tipo == TipoCuenta::AHORROS) {
-            $cuenta = new CuentaAhorros($this->operacionDAO, $cliente->getId(), $saldo);
+            $cuenta = new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $cliente->getId(), $saldo);
         }
         $this->cuentaDAO->crear($cuenta);
         return $cuenta->getId();
@@ -337,7 +337,7 @@ class Banco {
      */
     public function debitoCuentaCliente(string $dni, int $idCuenta, float $cantidad, string $descripcion) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = ($this->cuentas)[$idCuenta];
+        $cuenta = $this->obtenerCuenta($idCuenta);
         $cuenta->debito($cantidad, $descripcion);
         $this->cuentaDAO->modificar($cuenta);
     }
@@ -372,7 +372,7 @@ class Banco {
      * Aplica cargos de comisión a la cuenta corriente
      */
     public function aplicaComisionCC() {
-        $cuentasCorrientes = array_filter($this->cuentas, fn($cuenta) => $cuenta instanceof CuentaCorriente);
+        $cuentasCorrientes = array_filter($this->obtenerCuentas(), fn($cuenta) => $cuenta instanceof CuentaCorriente);
 
         // Captura las propiedades necesarias con 'use'
         $comisionCC = $this->getComisionCC();
@@ -384,7 +384,7 @@ class Banco {
     }
 
     public function aplicaInteresCA() {
-        $cuentasAhorros = array_filter($this->cuentas, fn($cuenta) => $cuenta instanceof CuentaAhorros);
+        $cuentasAhorros = array_filter($this->obtenerCuentas(), fn($cuenta) => $cuenta instanceof CuentaAhorros);
 
         // Captura las propiedades necesarias con 'use'
         $interesCA = $this->getInteresCA();
