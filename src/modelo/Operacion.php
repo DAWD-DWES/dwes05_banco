@@ -42,24 +42,24 @@ class Operacion {
         return $this->idCuenta;
     }
 
-    public function setTipo(TipoOperacion $tipo): Operacion {
+    public function setTipo(TipoOperacion $tipo) {
         $this->tipo = $tipo;
-        return $this;
     }
 
-    public function setCantidad(float $cantidad): Operacion {
+    public function setCantidad(float $cantidad) {
         $this->cantidad = $cantidad;
-        return $this;
     }
 
-    public function setFecha(DateTime $fecha): Operacion {
+    public function setFecha(DateTime $fecha) {
         $this->fecha = $fecha;
-        return $this;
     }
     
-     public function setDescripcion($descripcion): Operacion {
-        $this->asunto = $descripcion;
-        return $this;
+     public function setDescripcion(string $descripcion) {
+        $this->descripcion = $descripcion;
+    }
+    
+    public function setIdCuenta(int $idCuenta) {
+        $this->idCuenta = $idCuenta;
     }
     
     public function __toString() {

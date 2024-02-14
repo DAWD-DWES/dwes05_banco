@@ -16,19 +16,25 @@ class Cuenta implements IProductoBancario{
      * Id de la cuenta
      * @var string
      */
-    private string $id;
+    private int $id;
 
     /**
      * Saldo de la cuenta
      * @var float
      */
     private float $saldo;
+    
+    /**
+     * Fecha y hora de creación de la cuenta
+     * @var DateTime
+     */
+    private DateTime $fechaCreacion;
 
     /**
      * Id del cliente dueño de la cuenta
      * @var string
      */
-    private string $idCliente;
+    private int $idCliente;
 
     /**
      * Operaciones realizadas en la cuenta
@@ -38,10 +44,11 @@ class Cuenta implements IProductoBancario{
 
     public function __construct(OperacionDAO $operacionDAO, string $idCliente, float $cantidad = 0) {
         $this->operacionDAO = $operacionDAO;
-        $this->setId(uniqid());
+        //$this->setId(uniqid());
         $this->setSaldo($cantidad);
         $this->setOperaciones([]);
-        $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
+        $this->setFechaCreacion(new DateTime());
+       // $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
         $this->setIdCliente($idCliente);
     }
 
@@ -52,9 +59,13 @@ class Cuenta implements IProductoBancario{
     public function getSaldo(): float {
         return $this->saldo;
     }
+    
+    public function getFechaCreacion(): DateTime {
+        return $this->fechaCreacion;
+    }
 
     public function getIdCliente(): string {
-        return $this->id;
+        return $this->idCliente;
     }
 
     public function getOperaciones(): array {
@@ -67,6 +78,10 @@ class Cuenta implements IProductoBancario{
 
     public function setSaldo($saldo) {
         $this->saldo = $saldo;
+    }
+    
+    public function setFechaCreacion($fechaCreacion) {
+        $this->fechaCreacion = $fechaCreacion;
     }
 
     public function setIdCliente($idCliente) {
@@ -88,7 +103,7 @@ class Cuenta implements IProductoBancario{
      */
     public function ingreso(float $cantidad, string $descripcion): void {
         if ($cantidad > 0) {
-            $operacion = new Operacion(TipoOperacion::INGRESO, $cantidad, $descripcion);
+            $operacion = new Operacion($this->getId(), TipoOperacion::INGRESO, $cantidad, $descripcion);
             $this->operacionDAO->crear($operacion);
             $this->agregaOperacion($operacion);
             $this->setSaldo($this->getSaldo() + $cantidad);

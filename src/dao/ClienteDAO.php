@@ -33,7 +33,7 @@ class ClienteDAO implements IDAO {
         $cliente = $stmt->fetch();
         if ($cliente) {
             $this->inicializarPostPDO($cliente);
-            $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($this->getId()));
+            $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($cliente->getId()));
             return $cliente;
         }
     }
