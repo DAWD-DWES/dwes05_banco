@@ -9,9 +9,10 @@ require_once "../src/excepciones/SaldoInsuficienteException.php";
 /**
  * Clase Cuenta 
  */
-class Cuenta implements IProductoBancario{
+class Cuenta implements IProductoBancario {
 
-    private OperacionDAO $operacionDAO; 
+    private OperacionDAO $operacionDAO;
+
     /**
      * Id de la cuenta
      * @var string
@@ -23,19 +24,18 @@ class Cuenta implements IProductoBancario{
      * @var float
      */
     private float $saldo;
-    
+
     /**
      * Fecha y hora de creación de la cuenta
      * @var DateTime
      */
     private DateTime $fechaCreacion;
-    
+
     /**
      * Tipo de la cuenta
      * @var TipoCuenta
      */
     private TipoCuenta $tipo;
-            
 
     /**
      * Id del cliente dueño de la cuenta
@@ -49,13 +49,15 @@ class Cuenta implements IProductoBancario{
      */
     private array $operaciones;
 
-    public function __construct(OperacionDAO $operacionDAO, TipoCuenta $tipo, string $idCliente, float $cantidad = 0) {
-        $this->operacionDAO = $operacionDAO;
-        $this->tipo = $tipo;
-        $this->setSaldo($cantidad);
-        $this->setOperaciones([]);
-        $this->setFechaCreacion(new DateTime());
-        $this->setIdCliente($idCliente);
+    public function __construct(OperacionDAO $operacionDAO, TipoCuenta $tipo, string $idCliente) {
+        if (func_num_args() > 0) {
+            $this->operacionDAO = $operacionDAO;
+            $this->tipo = $tipo;
+            $this->setSaldo(0);
+            $this->setOperaciones([]);
+            $this->setFechaCreacion(new DateTime());
+            $this->setIdCliente($idCliente);
+        }
     }
 
     public function getId(): string {
@@ -65,11 +67,11 @@ class Cuenta implements IProductoBancario{
     public function getSaldo(): float {
         return $this->saldo;
     }
-    
+
     public function getFechaCreacion(): DateTime {
         return $this->fechaCreacion;
     }
-    
+
     public function getTipo(): TipoCuenta {
         return $this->tipo;
     }
@@ -89,7 +91,7 @@ class Cuenta implements IProductoBancario{
     public function setSaldo($saldo) {
         $this->saldo = $saldo;
     }
-    
+
     public function setFechaCreacion($fechaCreacion) {
         $this->fechaCreacion = $fechaCreacion;
     }

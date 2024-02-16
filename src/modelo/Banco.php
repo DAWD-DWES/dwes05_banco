@@ -225,7 +225,7 @@ class Banco {
      */
     public function bajaCliente(string $dni) {
         $cliente = $this->clienteDAO->obtenerPorDni($dni);
-        $cuentas = $cliente->obtenerIdCuentas();
+        $cuentas = $cliente->getIdCuentas();
         foreach ($cuentas as $idCuenta) {
             $this->cuentaDAO->eliminar($idCuenta);
         }
@@ -266,12 +266,12 @@ class Banco {
      * @param string $dni
      * @param float $saldo
      */
-    public function altaCuentaCliente(string $dni, float $saldo = 0, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
+    public function altaCuentaCliente(string $dni, TipoCuenta $tipo = TipoCuenta::CORRIENTE): string {
         $cliente = $this->obtenerCliente($dni);
         if ($tipo == TipoCuenta::CORRIENTE) {
-            $cuenta = new CuentaCorriente($this->operacionDAO, TipoCuenta::CORRIENTE, $cliente->getId(), $saldo);
+            $cuenta = new CuentaCorriente($this->operacionDAO, TipoCuenta::CORRIENTE, $cliente->getId());
         } elseif ($tipo == TipoCuenta::AHORROS) {
-            $cuenta = new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $cliente->getId(), $saldo);
+            $cuenta = new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $cliente->getId());
         }
         $this->cuentaDAO->crear($cuenta);
         return $cuenta->getId();
@@ -285,7 +285,7 @@ class Banco {
      */
     public function bajaCuentaCliente(string $dni, int $idCuenta) {
         $cliente = $this->obtenerCliente($dni);
-        $cuenta = $this->cuentaDAO->obtenerCuenta($idCuenta);
+        $cuenta = $this->cuentaDAO->obtenerPorId($idCuenta);
         $this->cuentaDAO->eliminar($cuenta->getId());
     }
 
@@ -352,7 +352,7 @@ class Banco {
      * @param float $saldo
      * @return bool
      */
-    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, int $idCuentaOrigen, int $idCuentaDestino, float $saldo) {
+    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, int $idCuentaOrigen, int $idCuentaDestino, float $cantidad) {
         $clienteOrigen = $this->obtenerCliente($dniClienteOrigen);
         $clienteDestino = $this->obtenerCliente($dniClienteDestino);
         $cuentaOrigen = $this->obtenerCuenta($idCuentaOrigen);
@@ -360,10 +360,12 @@ class Banco {
 
         try {
             $this->cuentaDAO->beginTransaction();
-            $cuenta->debito($cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
-            $cuenta->ingreso($cantidad, "Transferencia de $cantidad € desde la cuenta $idCuentaOrigen a su cuenta $idCuentaDestino");
+            $cuentaOrigen->debito($cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
+            $this->cuentaDAO->modificar($cuentaOrigen);
+            $cuentaDestino->ingreso($cantidad, "Transferencia de $cantidad € desde la cuenta $idCuentaOrigen a su cuenta $idCuentaDestino");
+            $this->cuentaDAO->modificar($cuentaDestino);
             $this->cuentaDAO->commit();
-        } catch (Exception $ex) {
+        } catch (PDOException) {
             $this->cuentaDAO->rollback();
         }
     }
@@ -380,6 +382,7 @@ class Banco {
 
         array_walk($cuentasCorrientes, function ($cuentaCC) use ($comisionCC, $minSaldoComisionCC) {
             $cuentaCC->aplicaComision($comisionCC, $minSaldoComisionCC);
+            $this->cuentaDAO->modificar($cuentaCC);
         });
     }
 
@@ -391,6 +394,7 @@ class Banco {
 
         array_walk($cuentasAhorros, function ($cuentaCA) use ($interesCA) {
             $cuentaCA->aplicaInteres($interesCA);
+            $this->cuentaDAO->modificar($cuentaCA);
         });
     }
 }

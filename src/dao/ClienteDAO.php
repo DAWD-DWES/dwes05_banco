@@ -22,8 +22,8 @@ class ClienteDAO implements IDAO {
         if ($cliente) {
             $this->inicializarPostPDO($cliente);
             $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($this->getId()));
-            return $cliente;
         }
+        return $cliente;
     }
 
     public function obtenerPorDNI(string $dni): ?Cliente {
@@ -34,8 +34,8 @@ class ClienteDAO implements IDAO {
         if ($cliente) {
             $this->inicializarPostPDO($cliente);
             $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($cliente->getId()));
-            return $cliente;
         }
+        return $cliente;
     }
 
     private function inicializarPostPDO(Cliente $cliente): Cliente {

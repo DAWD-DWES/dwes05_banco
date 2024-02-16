@@ -26,6 +26,8 @@ class CuentaDAO implements IDAO {
             $cuenta = $this->crearCuenta($datosCuenta);
             $operaciones = $this->operacionDAO->obtenerPorIdCuenta($cuenta->getId());
             $cuenta->setOperaciones($operaciones);
+            /* $cuenta->setSaldo(array_reduce($operaciones, fn(int $total, Operacion $operacion) => 
+                    $total + ($operacion->getTipo() === TipoOperacion::INGRESO) ? $operacion->getCantidad() : -($operacion->getCantidad()), 0)); */
             return $cuenta;
         }
     }
@@ -48,14 +50,15 @@ class CuentaDAO implements IDAO {
 
     private function crearCuenta(object $datosCuenta): CuentaCorriente|CuentaAhorros {
         $cuenta = match ($datosCuenta?->tipo) {
-            TipoCuenta::AHORROS->value => (new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $datosCuenta->idCliente, $datosCuenta->saldo)),
-            TipoCuenta::CORRIENTE->value => (new CuentaCorriente($this->operacionDAO, TipoCuenta::CORRIENTE, $datosCuenta->idCliente, $datosCuenta->saldo)),
+            TipoCuenta::AHORROS->value => (new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $datosCuenta->idCliente)),
+            TipoCuenta::CORRIENTE->value => (new CuentaCorriente($this->operacionDAO, TipoCuenta::CORRIENTE, $datosCuenta->idCliente)),
             default => null
         };
         if (is_string($datosCuenta->fechaCreacion)) {
             $cuenta->setFechaCreacion(new DateTime($datosCuenta->fechaCreacion));
         }
         $cuenta->setId($datosCuenta->id);
+        $cuenta->setSaldo($datosCuenta->saldo);
         $operaciones = $this->operacionDAO->obtenerPorIdCuenta($datosCuenta->id);
         $cuenta->setOperaciones($operaciones);
         return $cuenta;
@@ -100,6 +103,10 @@ class CuentaDAO implements IDAO {
     }
 
     public function eliminar(int $id) {
+        $operaciones = $this->operacionDAO->obtenerPorIdCuenta($id);
+        foreach ($operaciones as $operacion) {
+            $this->operacionDAO->eliminar($operacion->getId());
+        }
         $stmt = $this->pdo->prepare("DELETE FROM cuentas WHERE cuenta_id = :id");
         $stmt->execute(['id' => $id]);
     }

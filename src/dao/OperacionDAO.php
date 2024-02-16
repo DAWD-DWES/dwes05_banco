@@ -67,7 +67,7 @@ class OperacionDAO implements IDAO {
     public function modificar(object $object) {
         if ($object instanceof Operacion) {
             $operacion = $object;
-            $stmt = $this->pdo->prepare("UPDATE operacions SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id");
+            $stmt = $this->pdo->prepare("UPDATE operaciones SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id");
             $stmt->execute([
                 'id' => $operacion->getId(),
                 'cuenta_id' => $operacion->getIdCuenta(),
@@ -82,7 +82,7 @@ class OperacionDAO implements IDAO {
     }
 
     public function eliminar($id) {
-        $stmt = $this->pdo->prepare("DELETE FROM operacions WHERE operacion_id = :id");
+        $stmt = $this->pdo->prepare("DELETE FROM operaciones WHERE operacion_id = :id");
         $stmt->execute(['id' => $id]);
     }
 

@@ -83,11 +83,6 @@ class Cliente {
             $this->setTelefono($telefono);
             $this->setFechaNacimiento(new DateTime($fechaNacimiento));
         } 
-        /* else {
-            if (is_string($this->fechaNacimiento)) {
-                $this->fechaNacimiento = new DateTime($this->fechaNacimiento);
-            }
-        } */
         $this->setIdCuentas([]);
     }
 
