@@ -50,12 +50,11 @@ class OperacionDAO implements IDAO {
     public function crear(object $object) {
         if ($object instanceof Operacion) {
             $operacion = $object;
-            $stmt = $this->pdo->prepare("INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, fecha_operacion, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :fecha_operacion, :descripcion)");
+            $stmt = $this->pdo->prepare("INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion)");
             $stmt->execute([
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo()->value,
                 'cantidad' => $operacion->getCantidad(),
-                'fecha_operacion' => $operacion->getFecha()->format('Y-m-d'),
                 'descripcion' => $operacion->getDescripcion()
             ]);
             $operacion->setId($this->pdo->lastInsertId());
@@ -73,7 +72,7 @@ class OperacionDAO implements IDAO {
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo(),
                 'cantidad' => $operacion->getCantidad(),
-                'fecha_operacion' => $operacion->getFecha()->format('Y-m-d'),
+                'fecha_operacion' => $operacion->getFecha()->format('Y-m-d H:i:s'),
                 'descripcion' => $operacion->getDescripcion()
             ]);
         } else {

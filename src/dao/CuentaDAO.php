@@ -26,8 +26,6 @@ class CuentaDAO implements IDAO {
             $cuenta = $this->crearCuenta($datosCuenta);
             $operaciones = $this->operacionDAO->obtenerPorIdCuenta($cuenta->getId());
             $cuenta->setOperaciones($operaciones);
-            /* $cuenta->setSaldo(array_reduce($operaciones, fn(int $total, Operacion $operacion) => 
-                    $total + ($operacion->getTipo() === TipoOperacion::INGRESO) ? $operacion->getCantidad() : -($operacion->getCantidad()), 0)); */
             return $cuenta;
         }
     }
@@ -73,12 +71,11 @@ class CuentaDAO implements IDAO {
     public function crear(object $object) {
         if ($object instanceof Cuenta) {
             $cuenta = $object;
-            $stmt = $this->pdo->prepare("INSERT INTO cuentas (cliente_id, tipo, saldo, fecha_creacion) VALUES (:cliente_id, :tipo, :saldo, :fecha_creacion)");
+            $stmt = $this->pdo->prepare("INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo)");
             $stmt->execute([
                 'cliente_id' => $cuenta->getIdCliente(),
                 'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
-                'fecha_creacion' => $cuenta->getFechaCreacion()->format('Y-m-d H:i:s')
             ]);
             $cuenta->setId($this->pdo->lastInsertId());
         } else {
@@ -113,6 +110,10 @@ class CuentaDAO implements IDAO {
 
     public function beginTransaction() {
         $this->pdo->beginTransaction();
+    }
+    
+    public function endTransaction() {
+        $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
     }
 
     public function commit() {

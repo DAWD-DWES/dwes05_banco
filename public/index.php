@@ -60,7 +60,7 @@ try {
     echo $ex->getMessage() . "</br>";
 }
 
-try {
+ try {
     $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
 } catch (SaldoInsuficienteException $ex) {
     echo $ex->getMessage();
@@ -71,7 +71,7 @@ echo "<h1>Clientes y cuentas del banco</h1>";
 
 $clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
-    echo "Datos del cliente con DNI: $dniCliente </br>";
+    echo "Datos del cliente con DNI: {$cliente->getDni()} </br>";
     $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
@@ -87,7 +87,7 @@ $banco->bajaCliente('34567890C');
 echo "<h1>Clientes y cuentas del banco (baja de una cuenta y un cliente)</h1>";
 $clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
-    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
+    echo "</br> Datos del cliente con DNI: {$cliente->getDni()} </br>";
     $idCuentas = $cliente->getIdCuentas();
     foreach ($idCuentas as $idCuenta) {
         $cuenta = $banco->obtenerCuenta($idCuenta);

@@ -365,8 +365,11 @@ class Banco {
             $cuentaDestino->ingreso($cantidad, "Transferencia de $cantidad € desde la cuenta $idCuentaOrigen a su cuenta $idCuentaDestino");
             $this->cuentaDAO->modificar($cuentaDestino);
             $this->cuentaDAO->commit();
+            $this->cuentaDAO->endTransaction();
         } catch (PDOException) {
             $this->cuentaDAO->rollback();
+            $this->cuentaDAO->endTransaction();
+
         }
     }
 
