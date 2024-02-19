@@ -4,6 +4,7 @@ require_once "../src/modelo/Cliente.php";
 require_once "../src/modelo/Cuenta.php";
 require_once "../src/modelo/CuentaCorriente.php";
 require_once "../src/modelo/CuentaAhorros.php";
+require_once "../src/modelo/TarjetaCredito.php";
 require_once "../src/modelo/TipoCuenta.php";
 require_once "../src/dao/ClienteDAO.php";
 require_once "../src/dao/CuentaDAO.php";
@@ -289,6 +290,18 @@ class Banco {
         $cliente = $this->obtenerCliente($dni);
         $cuenta = $this->cuentaDAO->obtenerPorId($idCuenta);
         $this->cuentaDAO->eliminar($cuenta->getId());
+    }
+
+    /**
+     * Crea una tarjeta de un cliente del banco
+     * 
+     * @param string $dni
+     * @param float $saldo
+     */
+    public function altaTarjetaCreditoCliente(string $dni): TarjetaCredito {
+        $cliente = $this->getCliente($dni);
+        $tarjeta = new TarjetaCredito(10000);
+        return $tarjeta;
     }
 
     /**
