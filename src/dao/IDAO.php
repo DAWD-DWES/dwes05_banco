@@ -1,5 +1,7 @@
 <?php
 
+namespace App\dao;
+
 // Definición de la interfaz IDAO
 interface IDAO {
     public function obtenerPorId(int $id): ?object;

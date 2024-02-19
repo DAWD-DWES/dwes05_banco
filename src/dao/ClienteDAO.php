@@ -1,8 +1,12 @@
 <?php
 
-require_once '../src/dao/IDAO.php';
-require_once '../src/modelo/Cliente.php';
-require_once '../src/dao/CuentaDAO.php';
+namespace App\dao;
+
+use App\modelo\Cliente;
+use App\dao\CuentaDAO;
+use PDO;
+use DateTime;
+use InvalidArgumentException;
 
 /**
  * Clase ClienteDAO
@@ -36,7 +40,7 @@ class ClienteDAO implements IDAO {
         $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE cliente_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, '\App\modelo\Cliente');
         $cliente = $stmt->fetch();
         $stmt->closeCursor();
         if ($cliente) {
@@ -56,7 +60,7 @@ class ClienteDAO implements IDAO {
         $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE dni = :dni;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['dni' => $dni]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, 'App\modelo\Cliente');
         $cliente = $stmt->fetch();
         $stmt->closeCursor();
         if ($cliente) {
@@ -85,7 +89,7 @@ class ClienteDAO implements IDAO {
     public function obtenerTodos(): array {
         $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes;";
         $stmt = $this->pdo->query($sql);
-        $clientes = $stmt->fetchAll(PDO::FETCH_CLASS, 'Cliente');
+        $clientes = $stmt->fetchAll(PDO::FETCH_CLASS, '\App\modelo\Cliente');
         $stmt->closeCursor();
         array_walk($clientes, function ($cliente) {
             $this->inicializarPostPDO($cliente);
@@ -101,7 +105,7 @@ class ClienteDAO implements IDAO {
      */
     public function crear(object $object) {
         $sql = "INSERT INTO clientes (dni, nombre, apellido1, apellido2, fecha_nacimiento, telefono) VALUES (:dni, :nombre, :apellido1, :apellido2, :fecha_nacimiento, :telefono);";
-        if ($object instanceof Cliente) {
+        if ($object instanceof \App\modelo\Cliente) {
             $cliente = $object;
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
@@ -127,7 +131,7 @@ class ClienteDAO implements IDAO {
      */
     public function modificar(object $object) {
         $sql = "UPDATE clientes SET dni = :dni, nombre = :nombre, apellido1 = :apellido1, apellido2 = :apellido2, fecha_nacimiento = :fecha_nacimiento, telefono = :telefono WHERE cliente_id = :id;";
-        if ($object instanceof Cliente) {
+        if ($object instanceof \App\modelo\Cliente) {
             $cliente = $object;
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([

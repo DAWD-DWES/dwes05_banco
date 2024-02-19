@@ -1,11 +1,10 @@
 <?php
 
-require_once "../src/modelo/Operacion.php";
-require_once "../src/modelo/TipoCuenta.php";
-require_once "../src/modelo/IProductoBancario.php";
-require_once "../src/dao/OperacionDAO.php";
-require_once "../src/excepciones/SaldoInsuficienteException.php";
+namespace App\modelo;
 
+use App\dao\OperacionDAO;
+use App\excepciones\SaldoInsuficienteException;
+use DateTime;
 /**
  * Clase Cuenta 
  */

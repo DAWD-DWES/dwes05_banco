@@ -1,5 +1,9 @@
 <?php
 
+namespace App\excepciones;
+
+use Exception;
+
 class ClienteNoEncontradoException extends Exception {
     private $idCliente;
     

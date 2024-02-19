@@ -1,6 +1,8 @@
 <?php
 
-require_once "TipoOperacion.php";
+namespace App\modelo;
+
+use DateTime;
 
 /**
  * Clase Operacion

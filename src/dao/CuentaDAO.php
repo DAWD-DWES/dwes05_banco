@@ -1,12 +1,14 @@
 <?php
 
-require_once '../src/dao/IDAO.php';
-require_once '../src/modelo/Cuenta.php';
-require_once '../src/modelo/CuentaAhorros.php';
-require_once '../src/modelo/CuentaCorriente.php';
-require_once '../src/modelo/TipoCuenta.php';
-require_once '../src/dao/OperacionDAO.php';
+namespace App\dao;
 
+use App\modelo\CuentaAhorros;
+use App\modelo\CuentaCorriente;
+use App\modelo\TipoCuenta;
+use App\dao\OperacionDAO;
+use PDO;
+use DateTime;
+use InvalidArgumentException;
 /**
  * Clase CuentaDAO
  */
@@ -120,7 +122,7 @@ class CuentaDAO implements IDAO {
 
     public function crear(object $object) {
         $sql = "INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo);";
-        if ($object instanceof Cuenta) {
+        if ($object instanceof \App\modelo\Cuenta) {
             $cuenta = $object;
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
@@ -143,7 +145,7 @@ class CuentaDAO implements IDAO {
     
     public function modificar(object $object) {
         $sql = "UPDATE cuentas SET cliente_id = :cliente_id, tipo = :tipo, saldo = :saldo, fecha_creacion = :fecha_creacion WHERE cuenta_id = :id;";
-        if ($object instanceof Cuenta) {
+        if ($object instanceof \App\modelo\Cuenta) {
             $cuenta = $object;
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([

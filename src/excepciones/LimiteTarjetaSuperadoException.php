@@ -1,5 +1,9 @@
 <?php
 
+namespace App\excepciones;
+
+use Exception;
+
 class LimiteTarjetaSuperadoException extends Exception {
 
     private $numTarjeta;

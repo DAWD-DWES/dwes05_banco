@@ -1,18 +1,11 @@
 <?php
 
-require_once "../src/modelo/Cliente.php";
-require_once "../src/modelo/Cuenta.php";
-require_once "../src/modelo/CuentaCorriente.php";
-require_once "../src/modelo/CuentaAhorros.php";
-require_once "../src/modelo/TarjetaCredito.php";
-require_once "../src/modelo/TipoCuenta.php";
-require_once "../src/dao/ClienteDAO.php";
-require_once "../src/dao/CuentaDAO.php";
-require_once "../src/dao/OperacionDAO.php";
-require_once "../src/excepciones/ClienteNoEncontradoException.php";
-require_once "../src/excepciones/CuentaNoEncontradaException.php";
-require_once "../src/excepciones/SaldoInsuficienteException.php";
+namespace App\modelo;
 
+use App\dao\IDAO;
+use App\excepciones\ClienteNoEncontradoException;
+use App\excepciones\CuentaNoEncontradaException;
+use PDOException;
 /**
  * Clase Banco
  */

@@ -1,5 +1,9 @@
 <?php
 
+namespace App\modelo;
+
+use App\modelo\IProductoBancario;
+
 /**
  * Clase Cuenta 
  */
@@ -27,8 +31,6 @@ class TarjetaCredito implements IProductoBancario {
      * Id del cliente de la tarjeta
      * @var string dni
      */
-
-
     public function __construct(float $limite) {
         $this->setnumero(sprintf('%04d', mt_rand(0, 9999)) . " " . sprintf('%04d', mt_rand(0, 9999)) . " " . sprintf('%04d', mt_rand(0, 9999)) . " " . sprintf('%04d', mt_rand(0, 9999)));
         $this->setLimite($limite);

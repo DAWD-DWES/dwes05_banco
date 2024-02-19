@@ -1,5 +1,9 @@
 <?php
 
+namespace App\modelo;
+
+use DateTime;
+
 /**
  * Clase Cliente 
  */

@@ -1,11 +1,17 @@
 <?php
 
+require_once '../vendor/autoload.php';
 require_once '../src/error_handler.php';
-require_once '../src/bd/BD.php';
-require_once '../src/modelo/Banco.php';
-require_once '../src/modelo/Cliente.php';
-require_once '../src/modelo/Cuenta.php';
-require_once '../src/modelo/TipoCuenta.php';
+
+use App\bd\BD;
+use App\dao\{OperacionDAO, CuentaDAO, ClienteDAO};
+use App\modelo\{Banco, Cliente, Cuenta};
+use App\modelo\TipoCuenta;
+use App\modelo\TipoOperacion;
+
+use App\excepciones\SaldoInsuficienteException;
+
+
 
 $pdo = BD::getConexion();
 
@@ -60,7 +66,7 @@ try {
     echo $ex->getMessage() . "</br>";
 }
 
- try {
+try {
     $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
 } catch (SaldoInsuficienteException $ex) {
     echo $ex->getMessage();

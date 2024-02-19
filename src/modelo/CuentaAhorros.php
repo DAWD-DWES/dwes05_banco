@@ -1,16 +1,17 @@
 <?php
 
-require_once '../src/modelo/IProductoBancario.php';
-require_once '../src/modelo/Cuenta.php';
-require_once '../src/dao/OperacionDAO.php';
+namespace App\modelo;
+
+use App\modelo\Cuenta;
+use App\dao\OperacionDAO;
 
 /**
  * Clase CuentaAhorros 
  */
 class CuentaAhorros extends Cuenta implements IProductoBancario {
 
-    public function __construct(OperacionDAO $operacionDAO, TipoCuenta $tipo, string $idCliente, float $saldo = 0) {
-        parent::__construct($operacionDAO, $tipo, $idCliente, $saldo);
+    public function __construct(OperacionDAO $operacionDAO, TipoCuenta $tipo, string $idCliente) {
+        parent::__construct($operacionDAO, $tipo, $idCliente);
     }
 
     public function aplicaInteres(float $interes): void {
