@@ -349,7 +349,7 @@ class Banco {
      */
     public function altaTarjetaCreditoCliente(string $dni): TarjetaCredito {
         $cliente = $this->getCliente($dni);
-        $tarjeta = new TarjetaCredito($dni, 10000);
+        $tarjeta = new TarjetaCredito(10000);
         return $tarjeta;
     }
 

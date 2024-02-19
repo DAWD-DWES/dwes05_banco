@@ -12,12 +12,6 @@ class TarjetaCredito implements IProductoBancario {
     private string $numero;
 
     /**
-     * Pin de tarjeta
-     * @var string
-     */
-    private string $pin;
-
-    /**
      * limite de la tarjeta
      * @var float
      */
@@ -35,7 +29,7 @@ class TarjetaCredito implements IProductoBancario {
      */
 
 
-    public function __construct(string $dniCliente, float $limite) {
+    public function __construct(float $limite) {
         $this->setnumero(sprintf('%04d', mt_rand(0, 9999)) . " " . sprintf('%04d', mt_rand(0, 9999)) . " " . sprintf('%04d', mt_rand(0, 9999)) . " " . sprintf('%04d', mt_rand(0, 9999)));
         $this->setLimite($limite);
     }
@@ -100,13 +94,5 @@ class TarjetaCredito implements IProductoBancario {
     public function __toString() {
         return "Num Tarjeta: {$this->getNumero()}</br>" .
                 "Limite: {$this->getLimite()}</br>";
-    }
-
-    /**
-     * Agrega operación a la lista de operaciones de la cuenta
-     * @param type $operacion Operación a añadir
-     */
-    private function agregaOperacion(Operacion $operacion) {
-        $this->operaciones[] = $operacion;
     }
 }
