@@ -7,45 +7,79 @@ require_once '../src/modelo/CuentaCorriente.php';
 require_once '../src/modelo/TipoCuenta.php';
 require_once '../src/dao/OperacionDAO.php';
 
+/**
+ * Clase CuentaDAO
+ */
 class CuentaDAO implements IDAO {
 
+    /**
+     * Conexión a la base de datos
+     * @var PDO
+     */
     private PDO $pdo;
+
+    /**
+     * DAO para gestionar operaciones
+     * @var OperacionDAO
+     */
     private OperacionDAO $operacionDAO;
 
     public function __construct(PDO $pdo, OperacionDAO $operacionDAO) {
         $this->pdo = $pdo;
         $this->operacionDAO = $operacionDAO;
     }
-    
+
+    /**
+     * Obtener una cuenta dado su identificador
+     * @param int $id
+     * @return CuentaCorriente|CuentaAhorros|null
+     */
     public function obtenerPorId(int $id): CuentaCorriente|CuentaAhorros|null {
         $stmt = $this->pdo->prepare("SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas WHERE cuenta_id = :id");
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
+        $stmt->closeCursor();
         if ($datosCuenta) {
             $cuenta = $this->crearCuenta($datosCuenta);
-            $operaciones = $this->operacionDAO->obtenerPorIdCuenta($cuenta->getId());
-            $cuenta->setOperaciones($operaciones);
             return $cuenta;
         }
     }
 
+    /**
+     * Obtener los identificadores de las cuentas de un cliente dado su identificador
+     * @param int $idCliente
+     * @return array
+     */
     public function obtenerIdCuentasPorClienteId(int $idCliente): array {
         $stmt = $this->pdo->prepare("SELECT cuenta_id FROM cuentas WHERE cliente_id = :idCliente");
         $stmt->execute(['idCliente' => $idCliente]);
         $stmt->setFetchMode(PDO::FETCH_NUM);
         $idCuentas = $stmt->fetchAll() ?? [];
-        return array_merge (...$idCuentas);
+        $stmt->closeCursor();
+        return array_merge(...$idCuentas);
     }
 
+    /**
+     * Obtener los identificadores de las cuentas de un cliente dado su DNI
+     * @param string $dni
+     * @return array
+     */
     public function obtenerIdCuentasPorClienteDni(string $dni): array {
         $stmt = $this->pdo->prepare("SELECT cuenta_id FROM cuentas WHERE dni = :dni");
         $stmt->execute(['dni' => $dni]);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $idCuentas = $stmt->fetchAll() ?? [];
+        $stmt->closeCursor();
         return $idCuentas;
     }
 
+    /**
+     * Crea una cuenta a partir de los datos obtenidos del registro
+     * 
+     * @param object $datosCuenta
+     * @return CuentaCorriente|CuentaAhorros
+     */
     private function crearCuenta(object $datosCuenta): CuentaCorriente|CuentaAhorros {
         $cuenta = match ($datosCuenta?->tipo) {
             TipoCuenta::AHORROS->value => (new CuentaAhorros($this->operacionDAO, TipoCuenta::AHORROS, $datosCuenta->idCliente)),
@@ -62,11 +96,23 @@ class CuentaDAO implements IDAO {
         return $cuenta;
     }
 
+    /**
+     * Obtiene todas las cuentas de la base de datos
+     * 
+     * @return array
+     */
     public function obtenerTodos(): array {
         $stmt = $this->pdo->query("SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas");
         $cuentasDatos = $stmt->fetchAll(PDO::FETCH_OBJ);
-        return array_values(array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos));
+        $stmt->closeCursor();
+        return array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos);
     }
+    
+    /**
+     * Crea un registro de una instancia de cuenta
+     * @param object $object
+     * @throws InvalidArgumentException
+     */
 
     public function crear(object $object) {
         if ($object instanceof Cuenta) {
@@ -77,12 +123,19 @@ class CuentaDAO implements IDAO {
                 'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
             ]);
+            $stmt->closeCursor();
             $cuenta->setId($this->pdo->lastInsertId());
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
     }
 
+    /**
+     * Modifica un registro de una instancia de cuenta
+     * @param object $object
+     * @throws InvalidArgumentException
+     */
+    
     public function modificar(object $object) {
         if ($object instanceof Cuenta) {
             $cuenta = $object;
@@ -94,10 +147,17 @@ class CuentaDAO implements IDAO {
                 'saldo' => $cuenta->getSaldo(),
                 'fecha_creacion' => $cuenta->getFechaCreacion()->format('Y-m-d H:i:s')
             ]);
+            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
     }
+    
+   
+    /**
+     * Elimina un registro de una instancia de cuenta
+     * @param int $id
+     */
 
     public function eliminar(int $id) {
         $operaciones = $this->operacionDAO->obtenerPorIdCuenta($id);
@@ -106,12 +166,15 @@ class CuentaDAO implements IDAO {
         }
         $stmt = $this->pdo->prepare("DELETE FROM cuentas WHERE cuenta_id = :id");
         $stmt->execute(['id' => $id]);
+        $stmt->closeCursor();
     }
+    
+    // Estos métodos permiten usar el modo transaccional para operaciones de persistencia de cuentas.
 
     public function beginTransaction() {
         $this->pdo->beginTransaction();
     }
-    
+
     public function endTransaction() {
         $this->pdo->setAttribute(PDO::ATTR_AUTOCOMMIT, true);
     }

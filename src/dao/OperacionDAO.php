@@ -3,30 +3,56 @@
 require_once '../src/dao/IDAO.php';
 require_once '../src/modelo/Operacion.php';
 
+/**
+ * Clase OperacionDAO
+ */
 class OperacionDAO implements IDAO {
 
+    /**
+     * Conexión a la base de datos
+     * @var PDO
+     */
     private PDO $pdo;
 
     public function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
+    /**
+     * Obtener operación por identificador
+     * @param int $id
+     * @return Operacion|null
+     */
     public function obtenerPorId(int $id): ?Operacion {
         $stmt = $this->pdo->prepare("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE operacion_id = :id");
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operacion = $stmt->fetch();
+        $stmt->closeCursor();
         return $operacion ? $this->inicializarPostPDO($operacion) : null;
     }
+    
+    /**
+     * Obtener operaciones por identificador de cuenta
+     * @param int $idCuenta
+     * @return array
+     */
 
     public function obtenerPorIdCuenta(int $idCuenta): array {
         $stmt = $this->pdo->prepare("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE cuenta_id = :idCuenta");
         $stmt->execute(['idCuenta' => $idCuenta]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operaciones = $stmt->fetchAll() ?? [];
+        $stmt->closeCursor();
         array_walk($operaciones, fn($operacion) => $this->inicializarPostPDO($operacion));
         return $operaciones;
     }
+    
+    /**
+     * Cambia el valor de la propiedad de FechaCreacion de string a DateTime y Tipo de Operación
+     * @param Operacion $operacion
+     * @return Operacion
+     */
 
     private function inicializarPostPDO(Operacion $operacion): Operacion {
         if (is_string($operacion->getFecha())) {
@@ -41,11 +67,27 @@ class OperacionDAO implements IDAO {
         }
         return $operacion;
     }
+    
+    /**
+     * Obtener todas las operaciones
+     * @return type
+     */
 
     public function obtenerTodos() {
         $stmt = $this->pdo->query("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones");
-        return $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
+        $operaciones = $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
+        $stmt->closeCursor();
+        array_walk($operaciones, function ($operacion) {
+            $this->inicializarPostPDO($cliente);
+        });
+        return $operaciones;
     }
+    
+    /**
+     * Crea un registro de una instancia de operación
+     * @param object $object
+     * @throws InvalidArgumentException
+     */
 
     public function crear(object $object) {
         if ($object instanceof Operacion) {
@@ -57,11 +99,18 @@ class OperacionDAO implements IDAO {
                 'cantidad' => $operacion->getCantidad(),
                 'descripcion' => $operacion->getDescripcion()
             ]);
+            $stmt->closeCursor();
             $operacion->setId($this->pdo->lastInsertId());
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
     }
+    
+    /**
+     * Modifica un registro de una instancia de operación
+     * @param object $object
+     * @throws InvalidArgumentException
+     */
 
     public function modificar(object $object) {
         if ($object instanceof Operacion) {
@@ -75,15 +124,20 @@ class OperacionDAO implements IDAO {
                 'fecha_operacion' => $operacion->getFecha()->format('Y-m-d H:i:s'),
                 'descripcion' => $operacion->getDescripcion()
             ]);
+            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
     }
 
-    public function eliminar($id) {
+    /**
+     * Elimina un registro de una instancia de operación
+     * @param type $id
+     */
+    
+    public function eliminar(int $id) {
         $stmt = $this->pdo->prepare("DELETE FROM operaciones WHERE operacion_id = :id");
         $stmt->execute(['id' => $id]);
+        $stmt->closeCursor();
     }
-
-    // Otros métodos como obtenerTodos, etc.
 }

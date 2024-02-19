@@ -1,10 +1,10 @@
 <?php
 
-require_once "Cliente.php";
-require_once "Cuenta.php";
-require_once "CuentaCorriente.php";
-require_once "CuentaAhorros.php";
-require_once "TipoCuenta.php";
+require_once "../src/modelo/Cliente.php";
+require_once "../src/modelo/Cuenta.php";
+require_once "../src/modelo/CuentaCorriente.php";
+require_once "../src/modelo/CuentaAhorros.php";
+require_once "../src/modelo/TipoCuenta.php";
 require_once "../src/dao/ClienteDAO.php";
 require_once "../src/dao/CuentaDAO.php";
 require_once "../src/dao/OperacionDAO.php";
@@ -126,7 +126,7 @@ class Banco {
      * 
      * @return string
      */
-    public function getminSaldoComisionCC(): float {
+    public function getMinSaldoComisionCC(): float {
         return $this->minSaldoComisionCC;
     }
 
@@ -156,10 +156,11 @@ class Banco {
      * @param array $clientes Colección de clientes del banco
      * @return $this
      */
-//    public function setClientes(array $clientes = []) {
-//        $this->clientes = $clientes;
-//        return $this;
-//    }
+    public function setClientes(array $clientes = []) {
+        foreach ($clientes as $cliente) {
+            $this->clienteDAO->crear($cliente);
+        }
+    }
 
     /**
      * Establece la colección de cuentas del banco
@@ -167,10 +168,11 @@ class Banco {
      * @param array $cuentas Colección de cuentas del banco
      * @return $this
      */
-//    public function setCuentas(array $cuentas = []) {
-//        $this->cuentas = $cuentas;
-//        return $this;
-//    }
+    public function setCuentas(array $cuentas = []) {
+        foreach ($cuentas as $cuenta) {
+            $this->cuentaDAO->crear($cuenta);
+        }
+    }
 
     /**
      * Establece la comision de cuenta corriente del banco
@@ -369,7 +371,6 @@ class Banco {
         } catch (PDOException) {
             $this->cuentaDAO->rollback();
             $this->cuentaDAO->endTransaction();
-
         }
     }
 
@@ -381,7 +382,7 @@ class Banco {
 
         // Captura las propiedades necesarias con 'use'
         $comisionCC = $this->getComisionCC();
-        $minSaldoComisionCC = $this->getminSaldoComisionCC();
+        $minSaldoComisionCC = $this->getMinSaldoComisionCC();
 
         array_walk($cuentasCorrientes, function ($cuentaCC) use ($comisionCC, $minSaldoComisionCC) {
             $cuentaCC->aplicaComision($comisionCC, $minSaldoComisionCC);

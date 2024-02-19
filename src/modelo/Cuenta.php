@@ -138,6 +138,7 @@ class Cuenta implements IProductoBancario {
             throw new SaldoInsuficienteException($this->getId());
         }
     }
+    
 
     public function __toString() {
         $saldoFormatted = number_format($this->getSaldo(), 2); // Formatear el saldo con dos decimales
