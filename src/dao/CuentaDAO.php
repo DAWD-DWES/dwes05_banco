@@ -35,7 +35,8 @@ class CuentaDAO implements IDAO {
      * @return CuentaCorriente|CuentaAhorros|null
      */
     public function obtenerPorId(int $id): CuentaCorriente|CuentaAhorros|null {
-        $stmt = $this->pdo->prepare("SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas WHERE cuenta_id = :id");
+        $sql = "SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas WHERE cuenta_id = :id;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
@@ -52,7 +53,8 @@ class CuentaDAO implements IDAO {
      * @return array
      */
     public function obtenerIdCuentasPorClienteId(int $idCliente): array {
-        $stmt = $this->pdo->prepare("SELECT cuenta_id FROM cuentas WHERE cliente_id = :idCliente");
+        $sql = "SELECT cuenta_id FROM cuentas WHERE cliente_id = :idCliente;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['idCliente' => $idCliente]);
         $stmt->setFetchMode(PDO::FETCH_NUM);
         $idCuentas = $stmt->fetchAll() ?? [];
@@ -66,7 +68,8 @@ class CuentaDAO implements IDAO {
      * @return array
      */
     public function obtenerIdCuentasPorClienteDni(string $dni): array {
-        $stmt = $this->pdo->prepare("SELECT cuenta_id FROM cuentas WHERE dni = :dni");
+        $sql = "SELECT cuenta_id FROM cuentas WHERE dni = :dni;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['dni' => $dni]);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $idCuentas = $stmt->fetchAll() ?? [];
@@ -102,7 +105,8 @@ class CuentaDAO implements IDAO {
      * @return array
      */
     public function obtenerTodos(): array {
-        $stmt = $this->pdo->query("SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas");
+        $sql = "SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas;";
+        $stmt = $this->pdo->query($sql);
         $cuentasDatos = $stmt->fetchAll(PDO::FETCH_OBJ);
         $stmt->closeCursor();
         return array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos);
@@ -115,9 +119,10 @@ class CuentaDAO implements IDAO {
      */
 
     public function crear(object $object) {
+        $sql = "INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo);";
         if ($object instanceof Cuenta) {
             $cuenta = $object;
-            $stmt = $this->pdo->prepare("INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo)");
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 'cliente_id' => $cuenta->getIdCliente(),
                 'tipo' => $cuenta->getTipo()->value,
@@ -137,9 +142,10 @@ class CuentaDAO implements IDAO {
      */
     
     public function modificar(object $object) {
+        $sql = "UPDATE cuentas SET cliente_id = :cliente_id, tipo = :tipo, saldo = :saldo, fecha_creacion = :fecha_creacion WHERE cuenta_id = :id;";
         if ($object instanceof Cuenta) {
             $cuenta = $object;
-            $stmt = $this->pdo->prepare("UPDATE cuentas SET cliente_id = :cliente_id, tipo = :tipo, saldo = :saldo, fecha_creacion = :fecha_creacion WHERE cuenta_id = :id");
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 'id' => $cuenta->getId(),
                 'cliente_id' => $cuenta->getIdCliente(),
@@ -160,11 +166,12 @@ class CuentaDAO implements IDAO {
      */
 
     public function eliminar(int $id) {
+        $sql = "DELETE FROM cuentas WHERE cuenta_id = :id";
         $operaciones = $this->operacionDAO->obtenerPorIdCuenta($id);
         foreach ($operaciones as $operacion) {
             $this->operacionDAO->eliminar($operacion->getId());
         }
-        $stmt = $this->pdo->prepare("DELETE FROM cuentas WHERE cuenta_id = :id");
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stmt->closeCursor();
     }

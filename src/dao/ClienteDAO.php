@@ -33,7 +33,8 @@ class ClienteDAO implements IDAO {
      * @return Cliente|null
      */
     public function obtenerPorId(int $id): ?Cliente {
-        $stmt = $this->pdo->prepare("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE cliente_id = :id");
+        $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE cliente_id = :id;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
         $cliente = $stmt->fetch();
@@ -52,7 +53,8 @@ class ClienteDAO implements IDAO {
      * @return Cliente|null
      */
     public function obtenerPorDNI(string $dni): ?Cliente {
-        $stmt = $this->pdo->prepare("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE dni = :dni");
+        $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE dni = :dni;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['dni' => $dni]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Cliente');
         $cliente = $stmt->fetch();
@@ -81,7 +83,8 @@ class ClienteDAO implements IDAO {
      * @return type
      */
     public function obtenerTodos(): array {
-        $stmt = $this->pdo->query("SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes");
+        $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes;";
+        $stmt = $this->pdo->query($sql);
         $clientes = $stmt->fetchAll(PDO::FETCH_CLASS, 'Cliente');
         $stmt->closeCursor();
         array_walk($clientes, function ($cliente) {
@@ -97,9 +100,10 @@ class ClienteDAO implements IDAO {
      * @throws InvalidArgumentException
      */
     public function crear(object $object) {
+        $sql = "INSERT INTO clientes (dni, nombre, apellido1, apellido2, fecha_nacimiento, telefono) VALUES (:dni, :nombre, :apellido1, :apellido2, :fecha_nacimiento, :telefono);";
         if ($object instanceof Cliente) {
             $cliente = $object;
-            $stmt = $this->pdo->prepare("INSERT INTO clientes (dni, nombre, apellido1, apellido2, fecha_nacimiento, telefono) VALUES (:dni, :nombre, :apellido1, :apellido2, :fecha_nacimiento, :telefono)");
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 'dni' => $cliente->getDni(),
                 'nombre' => $cliente->getNombre(),
@@ -122,9 +126,10 @@ class ClienteDAO implements IDAO {
      * @throws InvalidArgumentException
      */
     public function modificar(object $object) {
+        $sql = "UPDATE clientes SET dni = :dni, nombre = :nombre, apellido1 = :apellido1, apellido2 = :apellido2, fecha_nacimiento = :fecha_nacimiento, telefono = :telefono WHERE cliente_id = :id;";
         if ($object instanceof Cliente) {
             $cliente = $object;
-            $stmt = $this->pdo->prepare("UPDATE clientes SET dni = :dni, nombre = :nombre, apellido1 = :apellido1, apellido2 = :apellido2, fecha_nacimiento = :fecha_nacimiento, telefono = :telefono WHERE cliente_id = :id");
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 'id' => $cliente->getId(),
                 'dni' => $cliente->getDni(),
@@ -145,7 +150,8 @@ class ClienteDAO implements IDAO {
      * @param int $id
      */
     public function eliminar(int $id) {
-        $stmt = $this->pdo->prepare("DELETE FROM clientes WHERE cliente_id = :id");
+        $sql = "DELETE FROM clientes WHERE cliente_id = :id;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stmt->closeCursor();
     }

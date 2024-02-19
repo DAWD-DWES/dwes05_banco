@@ -24,7 +24,8 @@ class OperacionDAO implements IDAO {
      * @return Operacion|null
      */
     public function obtenerPorId(int $id): ?Operacion {
-        $stmt = $this->pdo->prepare("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE operacion_id = :id");
+        $sql = "SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE operacion_id = :id;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operacion = $stmt->fetch();
@@ -38,7 +39,8 @@ class OperacionDAO implements IDAO {
      * @return array
      */
     public function obtenerPorIdCuenta(int $idCuenta): array {
-        $stmt = $this->pdo->prepare("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE cuenta_id = :idCuenta");
+        $sql = "SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE cuenta_id = :idCuenta;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['idCuenta' => $idCuenta]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operaciones = $stmt->fetchAll() ?? [];
@@ -71,7 +73,8 @@ class OperacionDAO implements IDAO {
      * @return type
      */
     public function obtenerTodos(): array {
-        $stmt = $this->pdo->query("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones");
+        $sql = "SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones;";
+        $stmt = $this->pdo->query($sql);
         $operaciones = $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
         $stmt->closeCursor();
         array_walk($operaciones, function ($operacion) {
@@ -86,9 +89,10 @@ class OperacionDAO implements IDAO {
      * @throws InvalidArgumentException
      */
     public function crear(object $object) {
+        $sql = "INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion);";
         if ($object instanceof Operacion) {
             $operacion = $object;
-            $stmt = $this->pdo->prepare("INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion)");
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo()->value,
@@ -108,9 +112,10 @@ class OperacionDAO implements IDAO {
      * @throws InvalidArgumentException
      */
     public function modificar(object $object) {
+        $sql = "UPDATE operaciones SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id;";
         if ($object instanceof Operacion) {
             $operacion = $object;
-            $stmt = $this->pdo->prepare("UPDATE operaciones SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id");
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
                 'id' => $operacion->getId(),
                 'cuenta_id' => $operacion->getIdCuenta(),
@@ -130,7 +135,8 @@ class OperacionDAO implements IDAO {
      * @param type $id
      */
     public function eliminar(int $id) {
-        $stmt = $this->pdo->prepare("DELETE FROM operaciones WHERE operacion_id = :id");
+        $sql = "DELETE FROM operaciones WHERE operacion_id = :id;";
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
         $stmt->closeCursor();
     }
