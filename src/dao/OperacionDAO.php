@@ -31,13 +31,12 @@ class OperacionDAO implements IDAO {
         $stmt->closeCursor();
         return $operacion ? $this->inicializarPostPDO($operacion) : null;
     }
-    
+
     /**
      * Obtener operaciones por identificador de cuenta
      * @param int $idCuenta
      * @return array
      */
-
     public function obtenerPorIdCuenta(int $idCuenta): array {
         $stmt = $this->pdo->prepare("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones WHERE cuenta_id = :idCuenta");
         $stmt->execute(['idCuenta' => $idCuenta]);
@@ -47,13 +46,12 @@ class OperacionDAO implements IDAO {
         array_walk($operaciones, fn($operacion) => $this->inicializarPostPDO($operacion));
         return $operaciones;
     }
-    
+
     /**
      * Cambia el valor de la propiedad de FechaCreacion de string a DateTime y Tipo de Operación
      * @param Operacion $operacion
      * @return Operacion
      */
-
     private function inicializarPostPDO(Operacion $operacion): Operacion {
         if (is_string($operacion->getFecha())) {
             $operacion->setFecha(new DateTime($operacion->getFecha()));
@@ -67,13 +65,12 @@ class OperacionDAO implements IDAO {
         }
         return $operacion;
     }
-    
+
     /**
      * Obtener todas las operaciones
      * @return type
      */
-
-    public function obtenerTodos() {
+    public function obtenerTodos(): array {
         $stmt = $this->pdo->query("SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones");
         $operaciones = $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
         $stmt->closeCursor();
@@ -82,13 +79,12 @@ class OperacionDAO implements IDAO {
         });
         return $operaciones;
     }
-    
+
     /**
      * Crea un registro de una instancia de operación
      * @param object $object
      * @throws InvalidArgumentException
      */
-
     public function crear(object $object) {
         if ($object instanceof Operacion) {
             $operacion = $object;
@@ -105,13 +101,12 @@ class OperacionDAO implements IDAO {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
     }
-    
+
     /**
      * Modifica un registro de una instancia de operación
      * @param object $object
      * @throws InvalidArgumentException
      */
-
     public function modificar(object $object) {
         if ($object instanceof Operacion) {
             $operacion = $object;
@@ -134,7 +129,6 @@ class OperacionDAO implements IDAO {
      * Elimina un registro de una instancia de operación
      * @param type $id
      */
-    
     public function eliminar(int $id) {
         $stmt = $this->pdo->prepare("DELETE FROM operaciones WHERE operacion_id = :id");
         $stmt->execute(['id' => $id]);

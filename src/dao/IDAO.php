@@ -4,7 +4,7 @@
 interface IDAO {
     public function obtenerPorId(int $id): ?object;
     
-    public function obtenerTodos();
+    public function obtenerTodos(): array;
     
     public function crear(object $object);
     
