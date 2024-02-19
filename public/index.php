@@ -2,7 +2,6 @@
 
 require_once '../src/modelo/Banco.php';
 require_once '../src/modelo/Cliente.php';
-require_once '../src/modelo/Cuenta.php';
 require_once '../src/modelo/TipoCuenta.php';
 
 $banco = new Banco("Molocos");
@@ -84,21 +83,25 @@ foreach ($clientes as $dniCliente => $cliente) {
     }
 }
 
-$clientesCuentas = array_map(fn($cliente) => $cliente->getIdCuentas(), $banco->obtenerClientes());
+$productosBancarios = array_map(function ($idCuenta) use ($banco) {
+    return $banco->getCuenta($idCuenta);
+}, ($banco->obtenerClientes())['12345678A']->getIdCuentas());
 
-foreach ($clientesCuentas as $clienteDni => $idCuentas) {
-    foreach ($idCuentas as $idCuenta) {
-        $cuenta = $banco->getCuenta($idCuenta);
-        $banco->ingresoProductoBancarioCliente($clienteDni, $cuenta, 20, "Regalo de cortesía del banco");
-    }
+$tarjeta = $banco->altaTarjetaCreditoCliente('12345678A');
+
+$productosBancarios[] = $tarjeta;
+
+foreach ($productosBancarios as $productosBancario) {
+    $banco->ingresoProductoBancarioCliente('12345678A', $productosBancario, 100, "Bonificación");
 }
 
-$clientes = $banco->obtenerClientes();
-foreach ($clientes as $dniCliente => $cliente) {
-    echo "</br> Datos del cliente con DNI: $dniCliente</br>";
-    $idCuentas = $cliente->getIdCuentas();
-    foreach ($idCuentas as $idCuenta) {
-        $cuenta = $banco->obtenerCuenta($idCuenta);
-        echo "</br>$cuenta</br>";
-    }
+echo "<h1>Produtos bancarios del cliente '12345678A'</h1>";
+
+$cliente = ($banco->obtenerClientes())['12345678A'];
+echo "</br> Datos del cliente con DNI: 12345678A</br>";
+$idCuentas = $cliente->getIdCuentas();
+foreach ($idCuentas as $idCuenta) {
+    $cuenta = $banco->obtenerCuenta($idCuenta);
+    echo "</br>$cuenta</br>";
 }
+echo "</br>$tarjeta</br>";

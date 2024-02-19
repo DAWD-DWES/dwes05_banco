@@ -26,7 +26,7 @@ class Cuenta implements IProductoBancario{
      * Id del cliente dueño de la cuenta
      * @var string
      */
-    private string $idCliente;
+    private string $dniCliente;
 
     /**
      * Operaciones realizadas en la cuenta
@@ -34,12 +34,12 @@ class Cuenta implements IProductoBancario{
      */
     private array $operaciones;
 
-    public function __construct(string $idCliente, float $cantidad = 0) {
+    public function __construct(string $dniCliente, float $cantidad = 0) {
         $this->setId(uniqid());
         $this->setSaldo(0);
         $this->setOperaciones([]);
         $this->ingreso($cantidad, "Ingreso inicial de $cantidad € en la cuenta");
-        $this->setIdCliente($idCliente);
+        $this->setDNICliente($dniCliente);
     }
 
     public function getId(): string {
@@ -50,8 +50,8 @@ class Cuenta implements IProductoBancario{
         return $this->saldo;
     }
 
-    public function getIdCliente(): string {
-        return $this->id;
+    public function getDNICliente(): string {
+        return $this->dni;
     }
 
     public function getOperaciones(): array {
@@ -66,8 +66,8 @@ class Cuenta implements IProductoBancario{
         $this->saldo = $saldo;
     }
 
-    public function setIdCliente($idCliente) {
-        $this->idCliente = $idCliente;
+    public function setDNICliente($dniCliente) {
+        $this->dniCliente = $dniCliente;
     }
 
     public function setTipoCuenta($tipoCuenta) {

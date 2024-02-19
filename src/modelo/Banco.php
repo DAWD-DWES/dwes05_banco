@@ -1,10 +1,11 @@
 <?php
 
-require_once "Cliente.php";
-require_once "Cuenta.php";
-require_once "CuentaCorriente.php";
-require_once "CuentaAhorros.php";
-require_once "TipoCuenta.php";
+require_once "../src/modelo/Cliente.php";
+require_once "../src/modelo/Cuenta.php";
+require_once "../src/modelo/TarjetaCredito.php";
+require_once "../src/modelo/CuentaCorriente.php";
+require_once "../src/modelo/CuentaAhorros.php";
+require_once "../src/modelo/TipoCuenta.php";
 require_once "../src/excepciones/ClienteNoEncontradoException.php";
 require_once "../src/excepciones/CuentaNoEncontradaException.php";
 
@@ -339,6 +340,18 @@ class Banco {
         $cliente->altaCuenta($cuenta->getId());
         return $cuenta->getId();
     }
+    
+     /**
+     * Crea una tarjeta de un cliente del banco
+     * 
+     * @param string $dni
+     * @param float $saldo
+     */
+    public function altaTarjetaCreditoCliente(string $dni): TarjetaCredito {
+        $cliente = $this->getCliente($dni);
+        $tarjeta = new TarjetaCredito($dni, 10000);
+        return $tarjeta;
+    }
 
     /**
      * Elimina una cuenta de un cliente del banco
@@ -465,4 +478,24 @@ class Banco {
         $cliente = $this->getCliente($dni);
         $productoBancario->debito($cantidad, $descripcion);
     }
+
+    /**
+     * Realiza un cargo a un producto bancario
+     * @param IProductoBancario $productoBancario
+     * @param float $cantidad
+     * @param string $descripcion
+     */
+  /*  public function realizarCargo(IProductoBancario $productoBancario, float $cantidad, string $descripcion) {
+        $productoBancario->debito($cantidad, $descripcion);
+    } */
+
+    /**
+     * Aplica una bonificación a un producto bancario
+     * @param IProductoBancario $productoBancario
+     * @param float $cantidad
+     * @param string $descripcion
+     */
+   /* public function AplicoBonificacion(IProductoBancario $productoBancario, float $cantidad, string $descripcion) {
+        $productoBancario->ingreso($cantidad, $descripcion);
+    } */
 }

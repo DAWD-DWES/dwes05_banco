@@ -9,5 +9,4 @@ Interface IProductoBancario {
 
     public function debito(float $cantidad, string $asunto): void;
 
-    public function getSaldo(): float;
 }
