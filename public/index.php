@@ -85,7 +85,7 @@ foreach ($clientes as $dniCliente => $cliente) {
 
 $productosBancarios = array_map(function ($idCuenta) use ($banco) {
     return $banco->getCuenta($idCuenta);
-}, ($banco->obtenerClientes())['12345678A']->getIdCuentas());
+}, $banco->obtenerCliente('12345678A')->getIdCuentas());
 
 $tarjeta = $banco->altaTarjetaCreditoCliente('12345678A');
 
