@@ -4,14 +4,22 @@ require_once '../vendor/autoload.php';
 require_once '../src/error_handler.php';
 
 use App\bd\BD;
-use App\dao\{OperacionDAO, CuentaDAO, ClienteDAO};
-use App\modelo\{Banco, Cliente, Cuenta};
+use App\dao\{
+    OperacionDAO,
+    CuentaDAO,
+    ClienteDAO
+};
+use App\modelo\{
+    Banco,
+    Cliente,
+    Cuenta
+};
 use App\modelo\TipoCuenta;
 use App\modelo\TipoOperacion;
-
 use App\excepciones\SaldoInsuficienteException;
+use Faker\Factory;
 
-
+$faker = Factory::create('es_ES');
 
 $pdo = BD::getConexion();
 
@@ -26,23 +34,25 @@ $banco->setMinSaldoComisionCC(1000);
 $banco->setInteresCA(2);
 
 // Datos de clientes de ejemplo
-$datosClientes = [
-    ['dni' => '12345678A', 'nombre' => 'Juan', 'apellido1' => 'Pérez', 'apellido2' => 'López', 'telefono' => '123456789', 'fechaNacimiento' => '1980-01-01'],
-    ['dni' => '23456789B', 'nombre' => 'Ana', 'apellido1' => 'García', 'apellido2' => 'Martín', 'telefono' => '987654321', 'fechaNacimiento' => '1985-02-02'],
-    ['dni' => '34567890C', 'nombre' => 'Carlos', 'apellido1' => 'Fernández', 'apellido2' => 'González', 'telefono' => '112233445', 'fechaNacimiento' => '1990-03-03']
-];
+$datosClientes = array_map(fn($x) => ['dni' => $faker->dni(), 
+    'nombre' => $faker->firstName('male' | 'female'), 
+    'apellido1' => $faker->lastName(), 
+    'apellido2' => $faker->lastName(), 
+    'telefono' => $faker->mobileNumber(), 
+    'fechaNacimiento' => $faker->date('Y-m-d')], range(0,9));
 
-// Crear tres clientes y agregar tres cuentas a cada uno
 foreach ($datosClientes as $datosCliente) {
     $banco->altaCliente($datosCliente['dni'], $datosCliente['nombre'], $datosCliente['apellido1'], $datosCliente['apellido2'], $datosCliente['telefono'], $datosCliente['fechaNacimiento']);
-    // Crear tres cuentas bancarias para cada cliente
-    for ($i = 0; $i < 3; $i++) {
+    // Crear cuentas bancarias para cada cliente
+    $numCuentas = rand(1,3);
+    for ($numCuentas = 0; $numCuentas < 3; $numCuentas++) {
         $tipoCuenta = rand(0, 1) ? TipoCuenta::CORRIENTE : TipoCuenta::AHORROS;
         $idCuenta = $banco->altaCuentaCliente($datosCliente['dni'], $tipoCuenta);
         $cantidad = rand(0, 500);
         $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
-        // Realizar tres operaciones de ingreso en las cada cuenta
-        for ($j = 0; $j < 3; $j++) {
+        // Realizar operaciones de ingreso en las cada cuenta
+        $numOperaciones = rand(1,3);
+        for ($numOperaciones = 0; $numOperaciones < 3; $numOperaciones++) {
             $tipoOperacion = rand(0, 1) ? TipoOperacion::INGRESO : TipoOperacion::DEBITO;
             $cantidad = rand(0, 500);
             try {
@@ -66,8 +76,16 @@ try {
     echo $ex->getMessage() . "</br>";
 }
 
+
+$clientes = $banco->obtenerClientes();
+
+$dniCliente1 = $clientes[rand(0,count($clientes))]->getDni();
+$dniCliente2 = $clientes[rand(0,count($clientes))]->getDni();
+
+
+
 try {
-    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
+    $banco->realizaTransferencia($dniCliente1, $dniCliente2, ($banco->obtenerCliente($dniCliente1)->getIdCuentas())[0], ($banco->obtenerCliente($dniCliente2)->getIdCuentas())[0], 500);
 } catch (SaldoInsuficienteException $ex) {
     echo $ex->getMessage();
 }
@@ -75,7 +93,6 @@ try {
 // Mostrar las cuentas y saldos de las cuentas de los clientes
 echo "<h1>Clientes y cuentas del banco</h1>";
 
-$clientes = $banco->obtenerClientes();
 foreach ($clientes as $dniCliente => $cliente) {
     echo "Datos del cliente con DNI: {$cliente->getDni()} </br>";
     $idCuentas = $cliente->getIdCuentas();
@@ -86,8 +103,12 @@ foreach ($clientes as $dniCliente => $cliente) {
     echo "</br>";
 }
 
-$banco->bajaCuentaCliente('12345678A', ($banco->obtenerCliente('12345678A')->getIdCuentas())[0]);
-$banco->bajaCliente('34567890C');
+
+$dniCliente3 = $clientes[rand(0,count($clientes))]->getDni();
+$dniCliente4 = $clientes[rand(0,count($clientes))]->getDni();
+
+$banco->bajaCuentaCliente($dniCliente3, ($banco->obtenerCliente($dniCliente3)->getIdCuentas())[0]);
+$banco->bajaCliente($dniCliente4);
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes despues de la baja
 echo "<h1>Clientes y cuentas del banco (baja de una cuenta y un cliente)</h1>";
