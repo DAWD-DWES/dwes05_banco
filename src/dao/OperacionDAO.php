@@ -78,7 +78,7 @@ class OperacionDAO implements IDAO {
         $operaciones = $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
         $stmt->closeCursor();
         array_walk($operaciones, function ($operacion) {
-            $this->inicializarPostPDO($cliente);
+            $this->inicializarPostPDO($operacion);
         });
         return $operaciones;
     }

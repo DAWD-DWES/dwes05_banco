@@ -61,18 +61,6 @@ class Banco {
     private IDAO $operacionDAO;
 
     /**
-     * Colección de clientes del banco
-     * @var array
-     */
-    // private array $clientes;
-
-    /**
-     * Colección de cuentas bancarias abiertas
-     * @var array
-     */
-    // private array $cuentas;
-
-    /**
      * Constructor de la clase Banco
      * 
      * @param string $nombre Nombre del banco
@@ -82,8 +70,6 @@ class Banco {
         $this->clienteDAO = $clienteDAO;
         $this->cuentaDAO = $cuentaDAO;
         $this->operacionDAO = $operacionDAO;
-        //  $this->setClientes();
-        //  $this->setCuentas();
     }
 
     /**
@@ -381,9 +367,10 @@ class Banco {
             $this->cuentaDAO->modificar($cuentaDestino);
             $this->cuentaDAO->commit();
             $this->cuentaDAO->endTransaction();
-        } catch (PDOException) {
+        } catch (Exception $ex) {
             $this->cuentaDAO->rollback();
             $this->cuentaDAO->endTransaction();
+            throw $ex;
         }
     }
 

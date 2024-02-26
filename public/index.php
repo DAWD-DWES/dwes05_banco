@@ -61,10 +61,12 @@ try {
 }
 
  try {
-    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 500);
+    $banco->realizaTransferencia('12345678A', '23456789B', ($banco->obtenerCliente('12345678A')->getIdCuentas())[1], ($banco->obtenerCliente('23456789B')->getIdCuentas())[0], 250);
 } catch (SaldoInsuficienteException $ex) {
     echo $ex->getMessage();
 }
+
+
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes
 echo "<h1>Clientes y cuentas del banco</h1>";
@@ -82,6 +84,7 @@ foreach ($clientes as $dniCliente => $cliente) {
 
 $banco->bajaCuentaCliente('12345678A', ($banco->obtenerCliente('12345678A')->getIdCuentas())[0]);
 $banco->bajaCliente('34567890C');
+
 
 // Mostrar las cuentas y saldos de las cuentas de los clientes despues de la baja
 echo "<h1>Clientes y cuentas del banco (baja de una cuenta y un cliente)</h1>";

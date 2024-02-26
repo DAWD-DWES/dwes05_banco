@@ -96,7 +96,7 @@ class ClienteDAO implements IDAO {
 
     /**
      * Crea un registro de una instancia de cliente
-     * @param object $object
+     * @param object $object Cliente para crear un registro en la BD
      * @throws InvalidArgumentException
      */
     public function crear(object $object) {
@@ -122,7 +122,8 @@ class ClienteDAO implements IDAO {
     /**
      * Modifica un registro de una instancia de clienteç
      * 
-     * @param object $object
+     * @param object $object Cliente para modificar un registro en el BD
+     *
      * @throws InvalidArgumentException
      */
     public function modificar(object $object) {
@@ -147,7 +148,7 @@ class ClienteDAO implements IDAO {
 
     /**
      * Elimina un registro de una instancia de cliente
-     * @param int $id
+     * @param int $id Identificador del cliente a eliminar de la BD
      */
     public function eliminar(int $id) {
         $sql = "DELETE FROM clientes WHERE cliente_id = :id;";
