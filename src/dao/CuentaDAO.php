@@ -63,21 +63,6 @@ class CuentaDAO implements IDAO {
     }
 
     /**
-     * Obtener los identificadores de las cuentas de un cliente dado su DNI
-     * @param string $dni
-     * @return array
-     */
-    public function obtenerIdCuentasPorClienteDNI(string $dni): array {
-        $sql = "SELECT cuenta_id FROM cuentas as c, clientes as cl WHERE c.cliente_id = cl.cliente_id and dni = :dni;";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['dni' => $dni]);
-        $stmt->setFetchMode(PDO::FETCH_NUM);
-        $idCuentas = $stmt->fetchAll() ?? [];
-        $stmt->closeCursor();
-        return array_merge(...$idCuentas);
-    }
-
-    /**
      * Crea una cuenta a partir de los datos obtenidos del registro
      * 
      * @param object $datosCuenta
