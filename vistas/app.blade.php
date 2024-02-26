@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Banco XYZ</title>
+        <title>Banco  Mid@s</title>
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
@@ -38,11 +38,10 @@
         <!-- Área de contenido central -->
         <div class="container mt-4">
             @section('contenido')  
-            @component('componentes.buscador', ['actionUrl' => '/buscar-cuenta', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente'])
+            @component('componentes.buscador', ['actionUrl' => '/buscar-cuenta', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => info_cliente])
             @endcomponent
             @show
         </div>
-
         @include('parciales.piepagina')
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
