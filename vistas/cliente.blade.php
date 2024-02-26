@@ -5,8 +5,8 @@
 
     <div class="cliente-info my-3">
         <h1>Información del Cliente</h1>
-        <p><strong>Nombre:</strong> {{ $cliente->nombre }}</p>
-        <p><strong>DNI:</strong> {{ $cliente->dni }}</p>
+        <p><strong>Nombre:</strong> {{ $cliente->getNombre() }}</p>
+        <p><strong>DNI:</strong> {{ $cliente->getDni() }}</p>
         <!-- Añade más campos de información del cliente según sea necesario -->
     </div>
 
@@ -25,10 +25,10 @@
                 <tbody>
                     @foreach($cuentas as $cuenta)
                         <tr>
-                            <td>{{ $cuenta->tipo }}</td>
-                            <td>{{ $cuenta->numero }}</td>
-                            <td>${{ number_format($cuenta->saldo, 2) }}</td>
-                            <td><a href="{{ url('/cuentas/detalle/' . $cuenta->id) }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>
+                            <td>{{ $cuenta->getTipo() }}</td>
+                            <td>{{ $cuenta->getId() }}</td>
+                            <td>${{ number_format($cuenta->getSaldo()), 2) }}</td>
+                            <td><a href="{{ url('/cuentas/detalle/' . $cuenta->getId()) }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>
                         </tr>
                     @endforeach
                 </tbody>

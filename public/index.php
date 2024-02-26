@@ -38,7 +38,7 @@ $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
 $banco->setInteresCA(2);
 
-if (input_filter(INPUT_POST, 'info_cliente')) {
+if (filter_input(INPUT_POST, 'info_cliente')) {
     $dni = input_filter(INPUT_POST, 'dnicliente');
     $cliente = $banco->obtenerCliente($dni);
     $cuentas = $banco->obtenerCuentasCliente($dni);

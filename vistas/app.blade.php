@@ -38,7 +38,7 @@
         <!-- Área de contenido central -->
         <div class="container mt-4">
             @section('contenido')  
-            @component('componentes.buscador', ['actionUrl' => '/buscar-cuenta', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => info_cliente])
+            @component('componentes.buscador', ['actionUrl' => '/buscar-cuenta', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'info_cliente'])
             @endcomponent
             @show
         </div>
