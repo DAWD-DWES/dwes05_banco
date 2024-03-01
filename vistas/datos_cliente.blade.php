@@ -3,10 +3,11 @@
 @section('contenido')
 @parent
 
-    <div class="cliente-info my-3">
+    <div class="my-3">
         <h1>Información del Cliente</h1>
-        <p><strong>Nombre:</strong> {{ $cliente->getNombre() }}</p>
+        <p><strong>Nombre:</strong> {{ $cliente->getNombre() .  " " . $cliente->getApellido1() . " " . $cliente->getApellido2() }}</p>
         <p><strong>DNI:</strong> {{ $cliente->getDni() }}</p>
+        <p><strong>Teléfono:</strong> {{ $cliente->getTelefono() }}</p>
         <!-- Añade más campos de información del cliente según sea necesario -->
     </div>
 
@@ -25,10 +26,10 @@
                 <tbody>
                     @foreach($cuentas as $cuenta)
                         <tr>
-                            <td>{{ $cuenta->getTipo() }}</td>
+                            <td>{{ $cuenta->getTipo()->value }}</td>
                             <td>{{ $cuenta->getId() }}</td>
-                            <td>${{ number_format($cuenta->getSaldo()), 2) }}</td>
-                            <td><a href="{{ url('/cuentas/detalle/' . $cuenta->getId()) }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>
+                            <td>${{ number_format($cuenta->getSaldo(), 2) }}</td>
+                            <td><a href="{{ 'index.php?pet_movimientos&id=' . $cuenta->getId() }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -38,4 +39,3 @@
         @endif
     </div>
 @endsection
-

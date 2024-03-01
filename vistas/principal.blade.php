@@ -1,5 +1,4 @@
 @extends('app')
-
 @section('contenido')
 @parent
 <div id="carouselExampleIndicators" class="carousel slide m-5" data-bs-ride="carousel">

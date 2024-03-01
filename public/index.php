@@ -5,26 +5,23 @@ require_once '../src/error_handler.php';
 
 use App\bd\BD;
 use App\dao\{
-OperacionDAO,
- CuentaDAO,
- ClienteDAO
+    OperacionDAO,
+    CuentaDAO,
+    ClienteDAO
 };
 use App\modelo\{
-Banco,
- Cliente,
- Cuenta
+    Banco,
+    Cliente,
+    Cuenta
 };
 use App\modelo\TipoCuenta;
 use App\modelo\TipoOperacion;
 use App\excepciones\SaldoInsuficienteException;
-use Faker\Factory;
 use eftec\bladeone\BladeOne;
 
 $vistas = __DIR__ . '/../vistas';
 $cache = __DIR__ . '/../cache';
 $blade = new BladeOne($vistas, $cache, BladeOne::MODE_DEBUG);
-
-
 
 $pdo = BD::getConexion();
 
@@ -38,11 +35,17 @@ $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
 $banco->setInteresCA(2);
 
-if (filter_input(INPUT_POST, 'info_cliente')) {
-    $dni = input_filter(INPUT_POST, 'dnicliente');
-    $cliente = $banco->obtenerCliente($dni);
-    $cuentas = $banco->obtenerCuentasCliente($dni);
-    echo $blade->run('cliente', compact('cliente', 'cuentas'));
+if ($clienteDAO->numeroClientes() == 0) {
+    echo $blade->run('carga_datos');
 } else {
-    echo $blade->run('principal');
+    if (filter_has_var(INPUT_POST, 'info_cliente')) {
+        $dni = filter_input(INPUT_POST, 'dnicliente');
+        $cliente = $banco->obtenerCliente($dni);
+        $cuentas = array_map(fn($idCuenta) => $cuentaDAO->obtenerPorId($idCuenta), $cliente->getIdCuentas());
+        echo $blade->run('cliente', compact('cliente', 'cuentas'));
+    } elseif (filter_has_var(INPUT_GET, 'pet_transferencia')) {
+        echo $blade->run('transferencia');
+    } else {
+        echo $blade->run('principal');
+    }
 }

@@ -3,29 +3,29 @@
 @section('contenido')
 @parent
 
-    <div class="cliente-info my-3">
-        <h1>Información del Cliente</h1>
-        <p><strong>Nombre:</strong> {{ $cliente->nombre }}</p>
-        <p><strong>DNI:</strong> {{ $cliente->dni }}</p>
+    <div class=" my-3">
+        <h1>Información de la Cuneta</h1>
+        <p><strong>Id:</strong> {{ $cuenta->getId() }}</p>
+        <p><strong>Tipo:</strong> {{ $cuenta->getTipo()->value }}</p>
         <!-- Añade más campos de información del cliente según sea necesario -->
     </div>
 
-    <div class="cuentas-lista my-3">
-        <h2>Cuentas del Cliente</h2>
-        @if(count($cuentas) > 0)
+    <div class="my-3">
+        <h2>Movimientos de la cuenta</h2>
+        @if(count($operaciones) > 0)
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Tipo de Cuenta</th>
+                        <th>Tipo de Operacion</th>
                         <th>Número de Cuenta</th>
-                        <th>Saldo Actual</th>
-                        <th>Acciones</th>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($cuentas as $cuenta)
+                    @foreach($operaciones as $operacion)
                         <tr>
-                            <td>{{ $cuenta->tipo }}</td>
+                            <td>{{ $operacion->getTipo()->value}}</td>
                             <td>{{ $cuenta->numero }}</td>
                             <td>${{ number_format($cuenta->saldo, 2) }}</td>
                             <td><a href="{{ url('/cuentas/detalle/' . $cuenta->id) }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>

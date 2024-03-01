@@ -97,6 +97,17 @@ class ClienteDAO implements IDAO {
         });
         return $clientes;
     }
+    
+    /**
+     * Obtiene el número de clientes en la BD
+     * @return int Número de clientes
+     */
+    public function numeroClientes(): int {
+        $sql = "SELECT count(*) FROM clientes;";
+        $stmt = $this->pdo->query($sql);
+        $numero = $stmt->fetchColumn();
+        return $numero;
+    }
 
     /**
      * Crea un registro de una instancia de cliente

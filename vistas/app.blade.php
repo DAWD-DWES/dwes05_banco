@@ -8,7 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     </head>
-    <body>
+    <body class="d-flex flex-column vh-100">
 
         <!-- Cabecera con barra de navegación -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -28,20 +28,21 @@
                             <a class="nav-link" href="/cuentas">Cuentas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/transferencias">Transferencias</a>
+                            <a class="nav-link" href="index.php?pet_transferencia">Transferencias</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
-
-        <!-- Área de contenido central -->
-        <div class="container mt-4">
-            @section('contenido')  
-            @component('componentes.buscador', ['actionUrl' => '/buscar-cuenta', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'info_cliente'])
-            @endcomponent
-            @show
-        </div>
+        <main class="flex-fill">
+            <!-- Área de contenido central -->
+            <div class="container mt-4">
+                @section('contenido')  
+                @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'info_cliente'])
+                @endcomponent
+                @show
+            </div>
+        </main>
         @include('parciales.piepagina')
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
