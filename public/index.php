@@ -38,12 +38,15 @@ $banco->setInteresCA(2);
 if ($clienteDAO->numeroClientes() == 0) {
     echo $blade->run('carga_datos');
 } else {
-    if (filter_has_var(INPUT_POST, 'info_cliente')) {
+    if (filter_has_var(INPUT_POST, 'creardatos')) {
+        
+    }
+    elseif (filter_has_var(INPUT_POST, 'infocliente')) {
         $dni = filter_input(INPUT_POST, 'dnicliente');
         $cliente = $banco->obtenerCliente($dni);
         $cuentas = array_map(fn($idCuenta) => $cuentaDAO->obtenerPorId($idCuenta), $cliente->getIdCuentas());
-        echo $blade->run('cliente', compact('cliente', 'cuentas'));
-    } elseif (filter_has_var(INPUT_GET, 'pet_transferencia')) {
+        echo $blade->run('datos_cliente', compact('cliente', 'cuentas'));
+    } elseif (filter_has_var(INPUT_GET, 'pettransferencia')) {
         echo $blade->run('transferencia');
     } else {
         echo $blade->run('principal');

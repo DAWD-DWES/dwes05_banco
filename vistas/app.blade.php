@@ -28,7 +28,7 @@
                             <a class="nav-link" href="/cuentas">Cuentas</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?pet_transferencia">Transferencias</a>
+                            <a class="nav-link" href="index.php?pettransferencia">Transferencias</a>
                         </li>
                     </ul>
                 </div>
@@ -38,7 +38,7 @@
             <!-- Área de contenido central -->
             <div class="container mt-4">
                 @section('contenido')  
-                @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'info_cliente'])
+                @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'infocliente'])
                 @endcomponent
                 @show
             </div>
