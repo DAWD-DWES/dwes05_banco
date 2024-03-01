@@ -51,6 +51,19 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         echo $blade->run('datos_cliente', compact('cliente', 'cuentas'));
     } elseif (filter_has_var(INPUT_GET, 'pettransferencia')) {
         echo $blade->run('transferencia');
+    } elseif (filter_has_var(INPUT_POST, 'transferencia')) {
+        $dniClienteOrigen = filter_input(INPUT_POST, 'dniorigen', FILTER_UNSAFE_RAW);
+        $idCuentaOrigen = (int) filter_input(INPUT_POST, 'cuentaorigen', FILTER_UNSAFE_RAW);
+        $dniClienteDestino = filter_input(INPUT_POST, 'dnidestino', FILTER_UNSAFE_RAW);
+        $idCuentaDestino = (int) filter_input(INPUT_POST, 'cuentadestino', FILTER_UNSAFE_RAW);
+        $cantidad = (float) filter_input(INPUT_POST, 'cantidad', FILTER_UNSAFE_RAW);
+        $asunto = filter_input(INPUT_POST, 'asunto', FILTER_UNSAFE_RAW);
+        $banco->realizaTransferencia($dniClienteOrigen, $dniClienteDestino, $idCuentaOrigen, $idCuentaDestino, $cantidad, $asunto);
+        echo $blade->run('principal');
+    } elseif (filter_has_var(INPUT_GET, 'movimientos')) {
+        $idCuenta = filter_input(INPUT_GET, 'idCuenta');
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        echo $blade->run('datos_cuenta', compact('cuenta'));
     } else {
         echo $blade->run('principal');
     }

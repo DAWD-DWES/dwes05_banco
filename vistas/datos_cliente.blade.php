@@ -29,7 +29,7 @@
                             <td>{{ $cuenta->getTipo()->value }}</td>
                             <td>{{ $cuenta->getId() }}</td>
                             <td>${{ number_format($cuenta->getSaldo(), 2) }}</td>
-                            <td><a href="{{ 'index.php?pet_movimientos&id=' . $cuenta->getId() }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>
+                            <td><a href="{{ 'index.php?movimientos&idCuenta=' . $cuenta->getId() }}" class="btn btn-primary btn-sm">Ver Movimientos</a></td>
                         </tr>
                     @endforeach
                 </tbody>

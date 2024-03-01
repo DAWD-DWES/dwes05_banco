@@ -11,22 +11,22 @@
                         <form method="post" action="index.php">
                             <div class="form-group">
                                 <label for="dni_origen">DNI Cliente Origen</label>
-                                <input type="text" class="form-control" id="dni_origen" name="dni_origen" required>
+                                <input type="text" class="form-control" id="dniorigen" name="dniorigen" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="cuenta_origen">Cuenta Cliente Origen</label>
-                                <input type="text" class="form-control" id="cuenta_origen" name="cuenta_origen" required>
+                                <input type="text" class="form-control" id="cuentaorigen" name="cuentaorigen" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="dni_destino">DNI Cliente Destino</label>
-                                <input type="text" class="form-control" id="dni_destino" name="dni_destino" required>
+                                <input type="text" class="form-control" id="dnidestino" name="dnidestino" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="cuenta_destino">Cuenta Cliente Destino</label>
-                                <input type="text" class="form-control" id="cuenta_destino" name="cuenta_destino" required>
+                                <input type="text" class="form-control" id="cuentadestino" name="cuentadestino" required>
                             </div>
 
                             <div class="form-group">
@@ -39,7 +39,7 @@
                                 <input type="text" class="form-control" id="asunto" name="asunto" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Realizar Transferencia</button>
+                            <button type="submit" class="btn btn-primary" name="transferencia">Realizar Transferencia</button>
                         </form>
                     </div>
                 </div>

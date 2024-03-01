@@ -6,6 +6,7 @@ use App\dao\IDAO;
 use App\excepciones\ClienteNoEncontradoException;
 use App\excepciones\CuentaNoEncontradaException;
 use PDOException;
+
 /**
  * Clase Banco
  */
@@ -360,7 +361,8 @@ class Banco {
      * @param float $saldo
      * @return bool
      */
-    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino, int $idCuentaOrigen, int $idCuentaDestino, float $cantidad) {
+    public function realizaTransferencia(string $dniClienteOrigen, string $dniClienteDestino,
+            int $idCuentaOrigen, int $idCuentaDestino, float $cantidad, string $asunto) {
         $clienteOrigen = $this->obtenerCliente($dniClienteOrigen);
         $clienteDestino = $this->obtenerCliente($dniClienteDestino);
         $cuentaOrigen = $this->obtenerCuenta($idCuentaOrigen);
@@ -370,7 +372,7 @@ class Banco {
             $this->cuentaDAO->beginTransaction();
             $cuentaOrigen->debito($cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
             $this->cuentaDAO->modificar($cuentaOrigen);
-            $cuentaDestino->ingreso($cantidad, "Transferencia de $cantidad € desde la cuenta $idCuentaOrigen a su cuenta $idCuentaDestino");
+            $cuentaDestino->ingreso($cantidad, "Transferencia de $cantidad. Asunto: $asunto");
             $this->cuentaDAO->modificar($cuentaDestino);
             $this->cuentaDAO->commit();
             $this->cuentaDAO->endTransaction();

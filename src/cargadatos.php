@@ -1,6 +1,11 @@
 <?php
 
-function cargaDatos($banco, $faker) {
+use App\modelo\TipoCuenta;
+use App\modelo\TipoOperacion;
+use Faker\Factory;
+
+function cargaDatos($banco) {
+    $faker = Factory::create('es_ES');
     $datosClientes = array_map(fn($x) => ['dni' => $faker->dni(),
         'nombre' => $faker->firstName('male' | 'female'),
         'apellido1' => $faker->lastName(),
@@ -22,21 +27,30 @@ function cargaDatos($banco, $faker) {
             for ($numOperaciones = 0; $numOperaciones < 3; $numOperaciones++) {
                 $tipoOperacion = rand(0, 1) ? TipoOperacion::INGRESO : TipoOperacion::DEBITO;
                 $cantidad = rand(0, 500);
-                if ($tipoOperacion === TipoOperacion::INGRESO) {
-                    $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
-                } else {
-                    $banco->debitoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Retirada de $cantidad € en la cuenta");
+                try {
+                    if ($tipoOperacion === TipoOperacion::INGRESO) {
+                        $banco->ingresoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Ingreso de $cantidad € en la cuenta");
+                    } else {
+                        $banco->debitoCuentaCliente($datosCliente['dni'], $idCuenta, $cantidad, "Retirada de $cantidad € en la cuenta");
+                    }
+                } catch (Exception) {
+                    
                 }
             }
         }
     }
-    $banco->aplicaComisionCC();
-
-    $banco->aplicaInteresCA();
-
+    try {
+        $banco->aplicaComisionCC();
+        $banco->aplicaInteresCA();
+    } catch (Exception) {
+        
+    }
     $clientes = $banco->obtenerClientes();
-
     $dniCliente1 = $clientes[rand(0, count($clientes))]->getDni();
     $dniCliente2 = $clientes[rand(0, count($clientes))]->getDni();
-    $banco->realizaTransferencia($dniCliente1, $dniCliente2, ($banco->obtenerCliente($dniCliente1)->getIdCuentas())[0], ($banco->obtenerCliente($dniCliente2)->getIdCuentas())[0], 500);
+    try {
+        $banco->realizaTransferencia($dniCliente1, $dniCliente2, ($banco->obtenerCliente($dniCliente1)->getIdCuentas())[0], ($banco->obtenerCliente($dniCliente2)->getIdCuentas())[0], 500);
+    } catch (Exception) {
+        
+    }
 }
