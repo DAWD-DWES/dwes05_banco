@@ -92,19 +92,21 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object) {
+    public function crear(object $object): void {
         $sql = "INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion);";
         if ($object instanceof Operacion) {
             $operacion = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $resultado = $stmt->execute([
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo()->value,
                 'cantidad' => $operacion->getCantidad(),
                 'descripcion' => $operacion->getDescripcion()
             ]);
             $stmt->closeCursor();
-            $operacion->setId($this->pdo->lastInsertId());
+            if ($resultado) {
+                $operacion->setId($this->pdo->lastInsertId());
+            }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
@@ -115,7 +117,7 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object) {
+    public function modificar(object $object): void {
         $sql = "UPDATE operaciones SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id;";
         if ($object instanceof Operacion) {
             $operacion = $object;
@@ -138,7 +140,7 @@ class OperacionDAO implements IDAO {
      * Elimina un registro de una instancia de operación
      * @param type $id
      */
-    public function eliminar(int $id) {
+    public function eliminar(int $id): void {
         $sql = "DELETE FROM operaciones WHERE operacion_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);

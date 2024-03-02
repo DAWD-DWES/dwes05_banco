@@ -97,7 +97,7 @@ class ClienteDAO implements IDAO {
         });
         return $clientes;
     }
-    
+
     /**
      * Obtiene el número de clientes en la BD
      * @return int Número de clientes
@@ -114,12 +114,12 @@ class ClienteDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object) {
+    public function crear(object $object): void {
         $sql = "INSERT INTO clientes (dni, nombre, apellido1, apellido2, fecha_nacimiento, telefono) VALUES (:dni, :nombre, :apellido1, :apellido2, :fecha_nacimiento, :telefono);";
         if ($object instanceof \App\modelo\Cliente) {
             $cliente = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $resultado = $stmt->execute([
                 'dni' => $cliente->getDni(),
                 'nombre' => $cliente->getNombre(),
                 'apellido1' => $cliente->getApellido1(),
@@ -128,7 +128,9 @@ class ClienteDAO implements IDAO {
                 'telefono' => $cliente->getTelefono()
             ]);
             $stmt->closeCursor();
-            $cliente->setId($this->pdo->lastInsertId());
+            if ($resultado) {
+                $cliente->setId($this->pdo->lastInsertId());
+            }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cliente.');
         }
@@ -140,7 +142,7 @@ class ClienteDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object) {
+    public function modificar(object $object): void {
         $sql = "UPDATE clientes SET dni = :dni, nombre = :nombre, apellido1 = :apellido1, apellido2 = :apellido2, fecha_nacimiento = :fecha_nacimiento, telefono = :telefono WHERE cliente_id = :id;";
         if ($object instanceof \App\modelo\Cliente) {
             $cliente = $object;
@@ -164,7 +166,7 @@ class ClienteDAO implements IDAO {
      * Elimina un registro de una instancia de cliente
      * @param int $id
      */
-    public function eliminar(int $id) {
+    public function eliminar(int $id): void {
         $sql = "DELETE FROM clientes WHERE cliente_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
