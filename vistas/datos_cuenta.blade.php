@@ -5,8 +5,8 @@
     <div class=" my-3">
         <h1>Información de la Cuenta</h1>
         <p><strong>Id:</strong> {{ $cuenta->getId() }}</p>
-        <p><strong>Tipo:</strong> {{ $cuenta->getTipo()->value }}</p>
-        <p><strong>Saldo:</strong> {{ $cuenta->getSaldo() }}</p>
+        <p><strong>Tipo:</strong> {{ strtoupper ($cuenta->getTipo()->value) }}</p>
+        <p><strong>Saldo:</strong> {{ $cuenta->getSaldo() }} €</p>
         <!-- Añade más campos de información del cliente según sea necesario -->
     </div>
 
@@ -27,8 +27,8 @@
                         <tr>
                             <td>{{ $operacion->getTipo()->value}}</td>
                             <td>{{ $operacion->getFecha()->format('Y-M-d') }}</td>
-                            <td>${{ number_format($operacion->getCantidad(), 2) }}</td>
-                            <td>${{ $operacion->getDescripcion() }}</td>
+                            <td>{{ number_format($operacion->getCantidad(), 2) }} €</td>
+                            <td>{{ htmlspecialchars($operacion->getDescripcion()) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

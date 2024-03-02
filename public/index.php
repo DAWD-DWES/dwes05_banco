@@ -49,17 +49,27 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         $cliente = $banco->obtenerCliente($dni);
         $cuentas = array_map(fn($idCuenta) => $cuentaDAO->obtenerPorId($idCuenta), $cliente->getIdCuentas());
         echo $blade->run('datos_cliente', compact('cliente', 'cuentas'));
+    } elseif (filter_has_var(INPUT_POST, 'infocuenta')) {
+        $idCuenta = filter_input(INPUT_POST, 'idcuenta');
+        $cuenta = $banco->obtenerCuenta($idCuenta);
+        echo $blade->run('datos_cuenta', compact('cuenta'));
     } elseif (filter_has_var(INPUT_GET, 'pettransferencia')) {
         echo $blade->run('transferencia');
     } elseif (filter_has_var(INPUT_POST, 'transferencia')) {
-        $dniClienteOrigen = filter_input(INPUT_POST, 'dniorigen', FILTER_UNSAFE_RAW);
-        $idCuentaOrigen = (int) filter_input(INPUT_POST, 'cuentaorigen', FILTER_UNSAFE_RAW);
-        $dniClienteDestino = filter_input(INPUT_POST, 'dnidestino', FILTER_UNSAFE_RAW);
-        $idCuentaDestino = (int) filter_input(INPUT_POST, 'cuentadestino', FILTER_UNSAFE_RAW);
-        $cantidad = (float) filter_input(INPUT_POST, 'cantidad', FILTER_UNSAFE_RAW);
-        $asunto = filter_input(INPUT_POST, 'asunto', FILTER_UNSAFE_RAW);
-        $banco->realizaTransferencia($dniClienteOrigen, $dniClienteDestino, $idCuentaOrigen, $idCuentaDestino, $cantidad, $asunto);
-        echo $blade->run('principal');
+        try {
+            $dniClienteOrigen = filter_input(INPUT_POST, 'dniclienteorigen', FILTER_UNSAFE_RAW);
+            $idCuentaOrigen = (int) filter_input(INPUT_POST, 'idcuentaorigen', FILTER_UNSAFE_RAW);
+            $dniClienteDestino = filter_input(INPUT_POST, 'dniclientedestino', FILTER_UNSAFE_RAW);
+            $idCuentaDestino = (int) filter_input(INPUT_POST, 'idcuentadestino', FILTER_UNSAFE_RAW);
+            $cantidad = (float) filter_input(INPUT_POST, 'cantidad', FILTER_UNSAFE_RAW);
+            $asunto = filter_input(INPUT_POST, 'asunto', FILTER_UNSAFE_RAW);
+            $banco->realizaTransferencia($dniClienteOrigen, $dniClienteDestino, $idCuentaOrigen, $idCuentaDestino, $cantidad, $asunto);
+            $message = "Transferencia realizada con éxito";
+        } catch (Exception $ex) {
+            $message = $ex->getMessage();
+        }
+        echo $blade->run('transferencia', compact('message', 'dniClienteOrigen', 'idCuentaOrigen',
+                        'dniClienteDestino', 'idCuentaDestino', 'cantidad', 'asunto'));
     } elseif (filter_has_var(INPUT_GET, 'movimientos')) {
         $idCuenta = filter_input(INPUT_GET, 'idCuenta');
         $cuenta = $banco->obtenerCuenta($idCuenta);

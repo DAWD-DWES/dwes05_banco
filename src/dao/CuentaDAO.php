@@ -43,10 +43,7 @@ class CuentaDAO implements IDAO {
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
         $stmt->closeCursor();
-        if ($datosCuenta) {
-            $cuenta = $this->crearCuenta($datosCuenta);
-            return $cuenta;
-        }
+        return $datosCuenta ? $this->crearCuenta($datosCuenta) : null;
     }
 
     /**

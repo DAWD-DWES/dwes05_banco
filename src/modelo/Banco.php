@@ -372,7 +372,7 @@ class Banco {
             $this->cuentaDAO->beginTransaction();
             $cuentaOrigen->debito($cantidad, "Transferencia de $cantidad € desde su cuenta $idCuentaOrigen a la cuenta $idCuentaDestino");
             $this->cuentaDAO->modificar($cuentaOrigen);
-            $cuentaDestino->ingreso($cantidad, "Transferencia de $cantidad. Asunto: $asunto");
+            $cuentaDestino->ingreso($cantidad, "Transferencia de $cantidad €. Asunto: $asunto");
             $this->cuentaDAO->modificar($cuentaDestino);
             $this->cuentaDAO->commit();
             $this->cuentaDAO->endTransaction();

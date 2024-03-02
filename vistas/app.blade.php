@@ -13,7 +13,7 @@
         <!-- Cabecera con barra de navegación -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="index.php">
                     <img src="img/clover-7876940_1280.png" alt="Icono Banco" style="height: 30px;">
                     Banco Mid@s</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,12 +21,6 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="/clientes">Clientes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/cuentas">Cuentas</a>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?pettransferencia">Transferencias</a>
                         </li>
@@ -39,6 +33,8 @@
             <div class="container mt-4">
                 @section('contenido')  
                 @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por DNI de Cliente', 'fieldName' => 'dnicliente', 'info' => 'infocliente'])
+                @endcomponent
+                @component('componentes.buscador', ['actionUrl' => '/index.php', 'placeholder' => 'Buscar por Id de Cuenta', 'fieldName' => 'idcuenta', 'info' => 'infocuenta'])
                 @endcomponent
                 @show
             </div>
