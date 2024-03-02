@@ -43,7 +43,7 @@ class ClienteDAO implements IDAO {
             $this->inicializarPostPDO($cliente);
             $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($this->getId()));
         }
-        return $cliente;
+        return $cliente ?: null;
     }
 
     /**
@@ -63,7 +63,7 @@ class ClienteDAO implements IDAO {
             $this->inicializarPostPDO($cliente);
             $cliente->setIdCuentas($this->cuentaDAO->obtenerIdCuentasPorClienteId($cliente->getId()));
         }
-        return $cliente;
+        return $cliente ?: null;
     }
 
     /**
