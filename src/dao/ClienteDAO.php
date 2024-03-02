@@ -137,7 +137,7 @@ class ClienteDAO implements IDAO {
     }
 
     /**
-     * Modifica un registro de una instancia de clienteç
+     * Modifica un registro de una instancia de cliente
      * 
      * @param object $object
      * @throws InvalidArgumentException
