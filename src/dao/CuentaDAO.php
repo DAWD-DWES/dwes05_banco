@@ -9,6 +9,7 @@ use App\dao\OperacionDAO;
 use PDO;
 use DateTime;
 use InvalidArgumentException;
+
 /**
  * Clase CuentaDAO
  */
@@ -43,10 +44,7 @@ class CuentaDAO implements IDAO {
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
         $stmt->closeCursor();
-        if ($datosCuenta) {
-            $cuenta = $this->crearCuenta($datosCuenta);
-            return $cuenta;
-        }
+        return $datosCuenta ? $this->crearCuenta($datosCuenta) : null;
     }
 
     /**
@@ -113,13 +111,12 @@ class CuentaDAO implements IDAO {
         $stmt->closeCursor();
         return array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos);
     }
-    
+
     /**
      * Crea un registro de una instancia de cuenta
      * @param object $object
      * @throws InvalidArgumentException
      */
-
     public function crear(object $object) {
         $sql = "INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo);";
         if ($object instanceof \App\modelo\Cuenta) {
@@ -142,7 +139,6 @@ class CuentaDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    
     public function modificar(object $object) {
         $sql = "UPDATE cuentas SET cliente_id = :cliente_id, tipo = :tipo, saldo = :saldo, fecha_creacion = :fecha_creacion WHERE cuenta_id = :id;";
         if ($object instanceof \App\modelo\Cuenta) {
@@ -160,13 +156,11 @@ class CuentaDAO implements IDAO {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
     }
-    
-   
+
     /**
      * Elimina un registro de una instancia de cuenta
      * @param int $id
      */
-
     public function eliminar(int $id) {
         $sql = "DELETE FROM cuentas WHERE cuenta_id = :id";
         $operaciones = $this->operacionDAO->obtenerPorIdCuenta($id);
@@ -177,7 +171,7 @@ class CuentaDAO implements IDAO {
         $stmt->execute(['id' => $id]);
         $stmt->closeCursor();
     }
-    
+
     // Estos métodos permiten usar el modo transaccional para operaciones de persistencia de cuentas.
 
     public function beginTransaction() {
