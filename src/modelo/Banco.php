@@ -75,8 +75,6 @@ class Banco {
         $this->clienteDAO = $clienteDAO;
         $this->cuentaDAO = $cuentaDAO;
         $this->operacionDAO = $operacionDAO;
-        //  $this->setClientes();
-        //  $this->setCuentas();
     }
 
     /**

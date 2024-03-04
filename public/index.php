@@ -10,9 +10,7 @@ use App\dao\{
     ClienteDAO
 };
 use App\modelo\{
-    Banco,
-    Cliente,
-    Cuenta
+    Banco
 };
 use App\modelo\TipoCuenta;
 use App\modelo\TipoOperacion;
