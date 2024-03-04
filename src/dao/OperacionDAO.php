@@ -92,7 +92,7 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object): void {
+    public function crear(object $object): int {
         $sql = "INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion);";
         if ($object instanceof Operacion) {
             $operacion = $object;
@@ -105,7 +105,7 @@ class OperacionDAO implements IDAO {
             ]);
             $stmt->closeCursor();
             if ($resultado) {
-                $operacion->setId($this->pdo->lastInsertId());
+                return ($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');

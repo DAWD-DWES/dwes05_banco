@@ -117,7 +117,7 @@ class CuentaDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object): void {
+    public function crear(object $object): int {
         $sql = "INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo);";
         if ($object instanceof \App\modelo\Cuenta) {
             $cuenta = $object;
@@ -129,7 +129,7 @@ class CuentaDAO implements IDAO {
             ]);
             $stmt->closeCursor();
             if ($resultado) {
-                $cuenta->setId($this->pdo->lastInsertId());
+                return ($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');

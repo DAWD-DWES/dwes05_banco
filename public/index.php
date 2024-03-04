@@ -12,17 +12,14 @@ use App\dao\{
 };
 use App\modelo\{
     Banco,
-    Cliente,
-    Cuenta
 };
-use App\modelo\TipoCuenta;
-use App\modelo\TipoOperacion;
-use App\excepciones\SaldoInsuficienteException;
+
 use eftec\bladeone\BladeOne;
 
 $vistas = __DIR__ . '/../vistas';
 $cache = __DIR__ . '/../cache';
 $blade = new BladeOne($vistas, $cache, BladeOne::MODE_DEBUG);
+$blade->setBaseURL("http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/");
 
 $pdo = BD::getConexion();
 

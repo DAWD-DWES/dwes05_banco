@@ -8,7 +8,7 @@ interface IDAO {
     
     public function obtenerTodos(): array;
     
-    public function crear(object $object): void;
+    public function crear(object $object): int;
     
     public function modificar(object $object): void;
     
