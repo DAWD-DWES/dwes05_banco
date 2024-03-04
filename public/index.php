@@ -13,7 +13,6 @@ use App\dao\{
 use App\modelo\{
     Banco,
 };
-
 use eftec\bladeone\BladeOne;
 
 $vistas = __DIR__ . '/../vistas';
@@ -38,9 +37,6 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
 } else {
     if ($clienteDAO->numeroClientes() == 0) {
         echo $blade->run('carga_datos');
-    } elseif (filter_has_var(INPUT_POST, 'creardatos')) {
-        cargaDatos($banco);
-        echo $blade->run('principal');
     } elseif (filter_has_var(INPUT_POST, 'infocliente')) {
         $dni = filter_input(INPUT_POST, 'dnicliente');
         $cliente = $banco->obtenerCliente($dni);
