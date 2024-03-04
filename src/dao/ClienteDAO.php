@@ -40,7 +40,7 @@ class ClienteDAO implements IDAO {
         $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE cliente_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, '\App\modelo\Cliente');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Cliente::class);
         $cliente = $stmt->fetch();
         $stmt->closeCursor();
         if ($cliente) {
@@ -60,7 +60,7 @@ class ClienteDAO implements IDAO {
         $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes WHERE dni = :dni;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['dni' => $dni]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, 'App\modelo\Cliente');
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Cliente::class);
         $cliente = $stmt->fetch();
         $stmt->closeCursor();
         if ($cliente) {
@@ -89,7 +89,7 @@ class ClienteDAO implements IDAO {
     public function obtenerTodos(): array {
         $sql = "SELECT cliente_id as id, dni, nombre, apellido1, apellido2, fecha_nacimiento as fechaNacimiento, telefono FROM clientes;";
         $stmt = $this->pdo->query($sql);
-        $clientes = $stmt->fetchAll(PDO::FETCH_CLASS, '\App\modelo\Cliente');
+        $clientes = $stmt->fetchAll(PDO::FETCH_CLASS, Cliente::class);
         $stmt->closeCursor();
         array_walk($clientes, function ($cliente) {
             $this->inicializarPostPDO($cliente);
