@@ -13,6 +13,10 @@ use App\dao\{
 use App\modelo\{
     Banco,
 };
+use TipoCambio\{
+    TipoCambio,
+    VariablesDisponibles
+};
 use eftec\bladeone\BladeOne;
 
 $vistas = __DIR__ . '/../vistas';
@@ -67,6 +71,10 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         $idCuenta = filter_input(INPUT_GET, 'idCuenta');
         $cuenta = $banco->obtenerCuenta($idCuenta);
         echo $blade->run('datos_cuenta', compact('cuenta'));
+    } elseif (filter_has_var(INPUT_GET, 'petconsultadivisa')) {
+        $servTipoCambio = new TipoCambio();
+        $divisas = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
+        echo $blade->run('consulta_divisa', compact('divisas'));
     } else {
         echo $blade->run('principal');
     }

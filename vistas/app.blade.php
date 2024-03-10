@@ -24,6 +24,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="index.php?pettransferencia">Transferencias</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php?petconsultadivisa">Consulta Cambio Divisa</a>
+                        </li>
                     </ul>
                 </div>
             </div>
