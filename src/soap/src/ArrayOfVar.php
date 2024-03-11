@@ -2,7 +2,7 @@
 
 namespace TipoCambio;
 
-class ArrayOfVar implements \ArrayAccess, \Iterator, \Countable
+class ArrayOfVar
 {
 
     /**

@@ -15,16 +15,35 @@ use App\modelo\{
 };
 use TipoCambio\{
     TipoCambio,
-    VariablesDisponibles
+    VariablesDisponibles,
+    TipoCambioRangoMoneda,
+    VarCustom
 };
 use eftec\bladeone\BladeOne;
+use Dotenv\Dotenv;
+
+// Inicializa el acceso a las variables de entorno
+
+$dotenv = Dotenv::createImmutable(__DIR__ . "/../");
+$dotenv->load();
 
 $vistas = __DIR__ . '/../vistas';
 $cache = __DIR__ . '/../cache';
 $blade = new BladeOne($vistas, $cache, BladeOne::MODE_DEBUG);
 $blade->setBaseURL("http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/");
 
-$pdo = BD::getConexion();
+// Establece conexión a la base de datos PDO
+try {
+    $host = $_ENV['DB_HOST'];
+    $port = $_ENV['DB_PORT'];
+    $database = $_ENV['DB_DATABASE'];
+    $usuario = $_ENV['DB_USUARIO'];
+    $password = $_ENV['DB_PASSWORD'];
+    $pdo = BD::getConexion($host, $port, $database, $usuario, $password);
+} catch (PDOException $error) {
+    echo $blade->run("cnxbderror", compact('error'));
+    die;
+}
 
 $operacionDAO = new OperacionDAO($pdo);
 $cuentaDAO = new CuentaDAO($pdo, $operacionDAO);
@@ -73,9 +92,26 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         echo $blade->run('datos_cuenta', compact('cuenta'));
     } elseif (filter_has_var(INPUT_GET, 'petconsultadivisa')) {
         $servTipoCambio = new TipoCambio();
-        $divisas = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
+        $variablesDisponiblesResponse = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
+        $divisas = $variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable();
         echo $blade->run('consulta_divisa', compact('divisas'));
-    } else {
+    } 
+    elseif (filter_has_var(INPUT_POST, 'consultadivisa')) {
+        $servTipoCambio = new TipoCambio();
+        $divisaOrigen = filter_input(INPUT_POST, 'divisaorigen');
+        $divisaDestino = filter_input(INPUT_POST, 'divisadestino');
+        $numDias = filter_input(INPUT_POST, 'numdias');
+        $hoy = new DateTime();
+        $fechaFinal = $hoy->format('d/m/Y');
+        $fechaInicial = $hoy->sub(new DateInterval("P" . $numDias - 1 . "D"))->format('d/m/Y');
+        $cambios1 = $servTipoCambio->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaOrigen))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
+        $cambios2 = $servTipoCambio->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaDestino))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
+        $cambios = array_map (fn($x,$y) => 
+                [1/$x->getVenta()*$y->getVenta(), 1/$x->getVenta()*$y->getVenta(), $x->getFecha()], $cambios1, $cambios2);
+        $variablesDisponiblesResponse = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
+        $divisas = $variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable();
+        echo $blade->run('consulta_divisa', compact('divisas', 'divisaOrigen', 'divisaDestino'));
+    }else {
         echo $blade->run('principal');
     }
 }
