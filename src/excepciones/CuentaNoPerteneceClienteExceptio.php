@@ -20,6 +20,7 @@ class CuentaNoEncontradaException extends Exception {
     public function getIdCuenta() {
         return $this->idCuenta;
     }
+
     public function getdni() {
         return $this->dni;
     }

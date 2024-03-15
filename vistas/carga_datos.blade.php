@@ -6,4 +6,5 @@
         <button class="btn btn-secondary"  name="creardatos"><i class="fa fa-database p-2" aria-hidden="true"></i>Instalar Datos de Ejemplo</button>
     </div>
 </form>
+
 @endsection

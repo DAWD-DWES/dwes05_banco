@@ -37,6 +37,12 @@ class Banco {
     private string $nombre;
 
     /**
+     * Gestor de divisas
+     * @var IGestorDivisas
+     */
+    private IGestorDivisas $gestorDivisas;
+
+    /**
      * DAO para persistir clientes
      * @var IDAO
      */
@@ -55,29 +61,16 @@ class Banco {
     private IDAO $operacionDAO;
 
     /**
-     * Colección de clientes del banco
-     * @var array
-     */
-    // private array $clientes;
-
-    /**
-     * Colección de cuentas bancarias abiertas
-     * @var array
-     */
-    // private array $cuentas;
-
-    /**
      * Constructor de la clase Banco
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct(IDAO $clienteDAO, IDAO $cuentaDAO, IDAO $operacionDAO, string $nombre) {
+    public function __construct(IGestorDivisas $gestorDivisas, IDAO $clienteDAO, IDAO $cuentaDAO, IDAO $operacionDAO, string $nombre) {
         $this->setNombre($nombre);
+        $this->gestorDivisas = $gestorDivisas;
         $this->clienteDAO = $clienteDAO;
         $this->cuentaDAO = $cuentaDAO;
         $this->operacionDAO = $operacionDAO;
-        //  $this->setClientes();
-        //  $this->setCuentas();
     }
 
     /**
@@ -87,6 +80,15 @@ class Banco {
      */
     public function getNombre(): string {
         return $this->nombre;
+    }
+
+    /**
+     * Obtiene el nombre del banco
+     * 
+     * @return string
+     */
+    public function getGestorDivisas(): IGestorDivisas {
+        return $this->gestorDivisas;
     }
 
     /**
@@ -408,5 +410,21 @@ class Banco {
             $cuentaCA->aplicaInteres($interesCA);
             $this->cuentaDAO->modificar($cuentaCA);
         });
+    }
+
+    /**
+     * Proporciona una tabla con el cambio entre dos divisas durante un periodo consecutivo de días. El servicio no proporciona datos de días de fin de semana para alguna divisa
+     * @param int $divisaOrigen Código numérico de la divisa origen
+     * @param int $divisaDestino Código numérico de la divisa destino
+     * @param string $fechaInicial Fecha inicial
+     * @param string $fechaFinal Fecha Final
+     * @return array|null Tabla con los datos de compra y venta de la divisa cada día del banco
+     */
+    public function consultarCambioDivisa(int $divisaOrigen, int $divisaDestino, string $fechaInicial, string $fechaFinal = null): ?array {
+        return $this->getGestorDivisas()->consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal);
+    }
+
+    public function listaDivisasDisponibles(): array {
+        return $this->getGestorDivisas()->listaDivisasDisponibles();
     }
 }

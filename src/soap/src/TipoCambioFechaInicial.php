@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioFechaInicial
-{
+class TipoCambioFechaInicial {
 
     /**
      * @var string $fechainit
@@ -13,27 +12,23 @@ class TipoCambioFechaInicial
     /**
      * @param string $fechainit
      */
-    public function __construct($fechainit)
-    {
-      $this->fechainit = $fechainit;
+    public function __construct($fechainit) {
+        $this->fechainit = $fechainit;
     }
 
     /**
      * @return string
      */
-    public function getFechainit()
-    {
-      return $this->fechainit;
+    public function getFechainit() {
+        return $this->fechainit;
     }
 
     /**
      * @param string $fechainit
      * @return \TipoCambio\TipoCambioFechaInicial
      */
-    public function setFechainit($fechainit)
-    {
-      $this->fechainit = $fechainit;
-      return $this;
+    public function setFechainit($fechainit) {
+        $this->fechainit = $fechainit;
+        return $this;
     }
-
 }

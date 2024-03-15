@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class VarCustom
-{
+class VarCustom {
 
     /**
      * @var int $moneda
@@ -30,83 +29,73 @@ class VarCustom
      * @param float $venta
      * @param float $compra
      */
-    public function __construct($moneda, $venta, $compra)
-    {
-      $this->moneda = $moneda;
-      $this->venta = $venta;
-      $this->compra = $compra;
+    public function __construct($moneda, $venta, $compra) {
+        $this->moneda = $moneda;
+        $this->venta = $venta;
+        $this->compra = $compra;
     }
 
     /**
      * @return int
      */
-    public function getMoneda()
-    {
-      return $this->moneda;
+    public function getMoneda() {
+        return $this->moneda;
     }
 
     /**
      * @param int $moneda
      * @return \TipoCambio\Var
      */
-    public function setMoneda($moneda)
-    {
-      $this->moneda = $moneda;
-      return $this;
+    public function setMoneda($moneda) {
+        $this->moneda = $moneda;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getFecha()
-    {
-      return $this->fecha;
+    public function getFecha() {
+        return $this->fecha;
     }
 
     /**
      * @param string $fecha
      * @return \TipoCambio\Var
      */
-    public function setFecha($fecha)
-    {
-      $this->fecha = $fecha;
-      return $this;
+    public function setFecha($fecha) {
+        $this->fecha = $fecha;
+        return $this;
     }
 
     /**
      * @return float
      */
-    public function getVenta()
-    {
-      return $this->venta;
+    public function getVenta() {
+        return $this->venta;
     }
 
     /**
      * @param float $venta
      * @return \TipoCambio\Var
      */
-    public function setVenta($venta)
-    {
-      $this->venta = $venta;
-      return $this;
+    public function setVenta($venta) {
+        $this->venta = $venta;
+        return $this;
     }
 
     /**
      * @return float
      */
-    public function getCompra()
-    {
-      return $this->compra;
+    public function getCompra() {
+        return $this->compra;
     }
 
     /**
      * @param float $compra
      * @return \TipoCambio\Var
      */
-    public function setCompra($compra)
-    {
-      $this->compra = $compra;
-      return $this;
+    public function setCompra($compra) {
+        $this->compra = $compra;
+        return $this;
     }
-
 }

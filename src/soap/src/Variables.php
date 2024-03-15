@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class Variables
-{
+class Variables {
 
     /**
      * @var int $variable
@@ -13,27 +12,23 @@ class Variables
     /**
      * @param int $variable
      */
-    public function __construct($variable)
-    {
-      $this->variable = $variable;
+    public function __construct($variable) {
+        $this->variable = $variable;
     }
 
     /**
      * @return int
      */
-    public function getVariable()
-    {
-      return $this->variable;
+    public function getVariable() {
+        return $this->variable;
     }
 
     /**
      * @param int $variable
      * @return \TipoCambio\Variables
      */
-    public function setVariable($variable)
-    {
-      $this->variable = $variable;
-      return $this;
+    public function setVariable($variable) {
+        $this->variable = $variable;
+        return $this;
     }
-
 }

@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class VariablesResponse
-{
+class VariablesResponse {
 
     /**
      * @var InfoVariable $VariablesResult
@@ -13,27 +12,23 @@ class VariablesResponse
     /**
      * @param InfoVariable $VariablesResult
      */
-    public function __construct($VariablesResult)
-    {
-      $this->VariablesResult = $VariablesResult;
+    public function __construct($VariablesResult) {
+        $this->VariablesResult = $VariablesResult;
     }
 
     /**
      * @return InfoVariable
      */
-    public function getVariablesResult()
-    {
-      return $this->VariablesResult;
+    public function getVariablesResult() {
+        return $this->VariablesResult;
     }
 
     /**
      * @param InfoVariable $VariablesResult
      * @return \TipoCambio\VariablesResponse
      */
-    public function setVariablesResult($VariablesResult)
-    {
-      $this->VariablesResult = $VariablesResult;
-      return $this;
+    public function setVariablesResult($VariablesResult) {
+        $this->VariablesResult = $VariablesResult;
+        return $this;
     }
-
 }

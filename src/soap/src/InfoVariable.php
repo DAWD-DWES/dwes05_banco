@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class InfoVariable
-{
+class InfoVariable {
 
     /**
      * @var ArrayOfVariable $Variables
@@ -28,81 +27,71 @@ class InfoVariable
     /**
      * @param int $TotalItems
      */
-    public function __construct($TotalItems)
-    {
-      $this->TotalItems = $TotalItems;
+    public function __construct($TotalItems) {
+        $this->TotalItems = $TotalItems;
     }
 
     /**
      * @return ArrayOfVariable
      */
-    public function getVariables()
-    {
-      return $this->Variables;
+    public function getVariables() {
+        return $this->Variables;
     }
 
     /**
      * @param ArrayOfVariable $Variables
      * @return \TipoCambio\InfoVariable
      */
-    public function setVariables($Variables)
-    {
-      $this->Variables = $Variables;
-      return $this;
+    public function setVariables($Variables) {
+        $this->Variables = $Variables;
+        return $this;
     }
 
     /**
      * @return ArrayOfVar
      */
-    public function getCambioDia()
-    {
-      return $this->CambioDia;
+    public function getCambioDia() {
+        return $this->CambioDia;
     }
 
     /**
      * @param ArrayOfVar $CambioDia
      * @return \TipoCambio\InfoVariable
      */
-    public function setCambioDia($CambioDia)
-    {
-      $this->CambioDia = $CambioDia;
-      return $this;
+    public function setCambioDia($CambioDia) {
+        $this->CambioDia = $CambioDia;
+        return $this;
     }
 
     /**
      * @return ArrayOfVarDolar
      */
-    public function getCambioDolar()
-    {
-      return $this->CambioDolar;
+    public function getCambioDolar() {
+        return $this->CambioDolar;
     }
 
     /**
      * @param ArrayOfVarDolar $CambioDolar
      * @return \TipoCambio\InfoVariable
      */
-    public function setCambioDolar($CambioDolar)
-    {
-      $this->CambioDolar = $CambioDolar;
-      return $this;
+    public function setCambioDolar($CambioDolar) {
+        $this->CambioDolar = $CambioDolar;
+        return $this;
     }
 
     /**
      * @return int
      */
-    public function getTotalItems()
-    {
-      return $this->TotalItems;
+    public function getTotalItems() {
+        return $this->TotalItems;
     }
 
     /**
      * @param int $TotalItems
      * @return \TipoCambio\InfoVariable
      */
-    public function setTotalItems($TotalItems)
-    {
-      $this->TotalItems = $TotalItems;
-      return $this;
+    public function setTotalItems($TotalItems) {
+        $this->TotalItems = $TotalItems;
+        return $this;
     }
-
 }

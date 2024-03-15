@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioDiaResponse
-{
+class TipoCambioDiaResponse {
 
     /**
      * @var InfoVariable $TipoCambioDiaResult
@@ -13,27 +12,23 @@ class TipoCambioDiaResponse
     /**
      * @param InfoVariable $TipoCambioDiaResult
      */
-    public function __construct($TipoCambioDiaResult)
-    {
-      $this->TipoCambioDiaResult = $TipoCambioDiaResult;
+    public function __construct($TipoCambioDiaResult) {
+        $this->TipoCambioDiaResult = $TipoCambioDiaResult;
     }
 
     /**
      * @return InfoVariable
      */
-    public function getTipoCambioDiaResult()
-    {
-      return $this->TipoCambioDiaResult;
+    public function getTipoCambioDiaResult() {
+        return $this->TipoCambioDiaResult;
     }
 
     /**
      * @param InfoVariable $TipoCambioDiaResult
      * @return \TipoCambio\TipoCambioDiaResponse
      */
-    public function setTipoCambioDiaResult($TipoCambioDiaResult)
-    {
-      $this->TipoCambioDiaResult = $TipoCambioDiaResult;
-      return $this;
+    public function setTipoCambioDiaResult($TipoCambioDiaResult) {
+        $this->TipoCambioDiaResult = $TipoCambioDiaResult;
+        return $this;
     }
-
 }

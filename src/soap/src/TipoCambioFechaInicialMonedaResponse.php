@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioFechaInicialMonedaResponse
-{
+class TipoCambioFechaInicialMonedaResponse {
 
     /**
      * @var DataVariable $TipoCambioFechaInicialMonedaResult
@@ -13,27 +12,23 @@ class TipoCambioFechaInicialMonedaResponse
     /**
      * @param DataVariable $TipoCambioFechaInicialMonedaResult
      */
-    public function __construct($TipoCambioFechaInicialMonedaResult)
-    {
-      $this->TipoCambioFechaInicialMonedaResult = $TipoCambioFechaInicialMonedaResult;
+    public function __construct($TipoCambioFechaInicialMonedaResult) {
+        $this->TipoCambioFechaInicialMonedaResult = $TipoCambioFechaInicialMonedaResult;
     }
 
     /**
      * @return DataVariable
      */
-    public function getTipoCambioFechaInicialMonedaResult()
-    {
-      return $this->TipoCambioFechaInicialMonedaResult;
+    public function getTipoCambioFechaInicialMonedaResult() {
+        return $this->TipoCambioFechaInicialMonedaResult;
     }
 
     /**
      * @param DataVariable $TipoCambioFechaInicialMonedaResult
      * @return \TipoCambio\TipoCambioFechaInicialMonedaResponse
      */
-    public function setTipoCambioFechaInicialMonedaResult($TipoCambioFechaInicialMonedaResult)
-    {
-      $this->TipoCambioFechaInicialMonedaResult = $TipoCambioFechaInicialMonedaResult;
-      return $this;
+    public function setTipoCambioFechaInicialMonedaResult($TipoCambioFechaInicialMonedaResult) {
+        $this->TipoCambioFechaInicialMonedaResult = $TipoCambioFechaInicialMonedaResult;
+        return $this;
     }
-
 }

@@ -23,18 +23,18 @@ class Operacion {
             $this->setCantidad($cantidad);
             $this->setFecha(new DateTime());
             $this->setDescripcion($descripcion);
-        } 
+        }
         /* else {
-            if (is_string($this->tipo)) {
-                $this->fechaNacimiento = new DateTime($this->fechaNacimiento);
-            }
-        } */
+          if (is_string($this->tipo)) {
+          $this->fechaNacimiento = new DateTime($this->fechaNacimiento);
+          }
+          } */
     }
 
     public function getId(): int {
         return $this->id;
     }
-    
+
     // Cuidado con el tipo
 
     public function getTipo() {

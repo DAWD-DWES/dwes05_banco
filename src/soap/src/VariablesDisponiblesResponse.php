@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class VariablesDisponiblesResponse
-{
+class VariablesDisponiblesResponse {
 
     /**
      * @var InfoVariable $VariablesDisponiblesResult
@@ -13,27 +12,23 @@ class VariablesDisponiblesResponse
     /**
      * @param InfoVariable $VariablesDisponiblesResult
      */
-    public function __construct($VariablesDisponiblesResult)
-    {
-      $this->VariablesDisponiblesResult = $VariablesDisponiblesResult;
+    public function __construct($VariablesDisponiblesResult) {
+        $this->VariablesDisponiblesResult = $VariablesDisponiblesResult;
     }
 
     /**
      * @return InfoVariable
      */
-    public function getVariablesDisponiblesResult()
-    {
-      return $this->VariablesDisponiblesResult;
+    public function getVariablesDisponiblesResult() {
+        return $this->VariablesDisponiblesResult;
     }
 
     /**
      * @param InfoVariable $VariablesDisponiblesResult
      * @return \TipoCambio\VariablesDisponiblesResponse
      */
-    public function setVariablesDisponiblesResult($VariablesDisponiblesResult)
-    {
-      $this->VariablesDisponiblesResult = $VariablesDisponiblesResult;
-      return $this;
+    public function setVariablesDisponiblesResult($VariablesDisponiblesResult) {
+        $this->VariablesDisponiblesResult = $VariablesDisponiblesResult;
+        return $this;
     }
-
 }

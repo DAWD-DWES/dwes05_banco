@@ -2,36 +2,31 @@
 
 namespace TipoCambio;
 
-class ArrayOfVarDolar
-{
+class ArrayOfVarDolar {
 
     /**
      * @var VarDolar[] $VarDolar
      */
     protected $VarDolar = null;
 
-    
-    public function __construct()
-    {
-    
+    public function __construct() {
+        
     }
 
     /**
      * @return VarDolar[]
      */
-    public function getVarDolar()
-    {
-      return $this->VarDolar;
+    public function getVarDolar() {
+        return $this->VarDolar;
     }
 
     /**
      * @param VarDolar[] $VarDolar
      * @return \TipoCambio\ArrayOfVarDolar
      */
-    public function setVarDolar(array $VarDolar = null)
-    {
-      $this->VarDolar = $VarDolar;
-      return $this;
+    public function setVarDolar(array $VarDolar = null) {
+        $this->VarDolar = $VarDolar;
+        return $this;
     }
 
     /**
@@ -40,9 +35,8 @@ class ArrayOfVarDolar
      * @param mixed $offset An offset to check for
      * @return boolean true on success or false on failure
      */
-    public function offsetExists($offset)
-    {
-      return isset($this->VarDolar[$offset]);
+    public function offsetExists($offset) {
+        return isset($this->VarDolar[$offset]);
     }
 
     /**
@@ -51,9 +45,8 @@ class ArrayOfVarDolar
      * @param mixed $offset The offset to retrieve
      * @return VarDolar
      */
-    public function offsetGet($offset)
-    {
-      return $this->VarDolar[$offset];
+    public function offsetGet($offset) {
+        return $this->VarDolar[$offset];
     }
 
     /**
@@ -63,13 +56,12 @@ class ArrayOfVarDolar
      * @param VarDolar $value The value to set
      * @return void
      */
-    public function offsetSet($offset, $value)
-    {
-      if (!isset($offset)) {
-        $this->VarDolar[] = $value;
-      } else {
-        $this->VarDolar[$offset] = $value;
-      }
+    public function offsetSet($offset, $value) {
+        if (!isset($offset)) {
+            $this->VarDolar[] = $value;
+        } else {
+            $this->VarDolar[$offset] = $value;
+        }
     }
 
     /**
@@ -78,9 +70,8 @@ class ArrayOfVarDolar
      * @param mixed $offset The offset to unset
      * @return void
      */
-    public function offsetUnset($offset)
-    {
-      unset($this->VarDolar[$offset]);
+    public function offsetUnset($offset) {
+        unset($this->VarDolar[$offset]);
     }
 
     /**
@@ -88,9 +79,8 @@ class ArrayOfVarDolar
      *
      * @return VarDolar Return the current element
      */
-    public function current()
-    {
-      return current($this->VarDolar);
+    public function current() {
+        return current($this->VarDolar);
     }
 
     /**
@@ -99,9 +89,8 @@ class ArrayOfVarDolar
      *
      * @return void
      */
-    public function next()
-    {
-      next($this->VarDolar);
+    public function next() {
+        next($this->VarDolar);
     }
 
     /**
@@ -109,9 +98,8 @@ class ArrayOfVarDolar
      *
      * @return string|null Return the key of the current element or null
      */
-    public function key()
-    {
-      return key($this->VarDolar);
+    public function key() {
+        return key($this->VarDolar);
     }
 
     /**
@@ -119,9 +107,8 @@ class ArrayOfVarDolar
      *
      * @return boolean Return the validity of the current position
      */
-    public function valid()
-    {
-      return $this->key() !== null;
+    public function valid() {
+        return $this->key() !== null;
     }
 
     /**
@@ -130,9 +117,8 @@ class ArrayOfVarDolar
      *
      * @return void
      */
-    public function rewind()
-    {
-      reset($this->VarDolar);
+    public function rewind() {
+        reset($this->VarDolar);
     }
 
     /**
@@ -140,9 +126,7 @@ class ArrayOfVarDolar
      *
      * @return VarDolar Return count of elements
      */
-    public function count()
-    {
-      return count($this->VarDolar);
+    public function count() {
+        return count($this->VarDolar);
     }
-
 }

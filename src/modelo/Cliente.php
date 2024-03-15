@@ -65,10 +65,9 @@ class Cliente {
             $this->setApellido2($apellido2);
             $this->setTelefono($telefono);
             $this->setFechaNacimiento(new DateTime($fechaNacimiento));
-        } 
+        }
         $this->setIdCuentas([]);
     }
-
 
     public function getId(): int {
         return $this->id;

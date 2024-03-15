@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioFechaInicialMoneda
-{
+class TipoCambioFechaInicialMoneda {
 
     /**
      * @var string $fechainit
@@ -19,46 +18,40 @@ class TipoCambioFechaInicialMoneda
      * @param string $fechainit
      * @param int $moneda
      */
-    public function __construct($fechainit, $moneda)
-    {
-      $this->fechainit = $fechainit;
-      $this->moneda = $moneda;
+    public function __construct($fechainit, $moneda) {
+        $this->fechainit = $fechainit;
+        $this->moneda = $moneda;
     }
 
     /**
      * @return string
      */
-    public function getFechainit()
-    {
-      return $this->fechainit;
+    public function getFechainit() {
+        return $this->fechainit;
     }
 
     /**
      * @param string $fechainit
      * @return \TipoCambio\TipoCambioFechaInicialMoneda
      */
-    public function setFechainit($fechainit)
-    {
-      $this->fechainit = $fechainit;
-      return $this;
+    public function setFechainit($fechainit) {
+        $this->fechainit = $fechainit;
+        return $this;
     }
 
     /**
      * @return int
      */
-    public function getMoneda()
-    {
-      return $this->moneda;
+    public function getMoneda() {
+        return $this->moneda;
     }
 
     /**
      * @param int $moneda
      * @return \TipoCambio\TipoCambioFechaInicialMoneda
      */
-    public function setMoneda($moneda)
-    {
-      $this->moneda = $moneda;
-      return $this;
+    public function setMoneda($moneda) {
+        $this->moneda = $moneda;
+        return $this;
     }
-
 }

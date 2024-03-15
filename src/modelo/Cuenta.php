@@ -5,6 +5,7 @@ namespace App\modelo;
 use App\dao\OperacionDAO;
 use App\excepciones\SaldoInsuficienteException;
 use DateTime;
+
 /**
  * Clase Cuenta 
  */
@@ -137,7 +138,6 @@ class Cuenta implements IProductoBancario {
             throw new SaldoInsuficienteException($this->getId());
         }
     }
-    
 
     public function __toString() {
         $saldoFormatted = number_format($this->getSaldo(), 2); // Formatear el saldo con dos decimales

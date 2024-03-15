@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioDiaStringResponse
-{
+class TipoCambioDiaStringResponse {
 
     /**
      * @var string $TipoCambioDiaStringResult
@@ -13,27 +12,23 @@ class TipoCambioDiaStringResponse
     /**
      * @param string $TipoCambioDiaStringResult
      */
-    public function __construct($TipoCambioDiaStringResult)
-    {
-      $this->TipoCambioDiaStringResult = $TipoCambioDiaStringResult;
+    public function __construct($TipoCambioDiaStringResult) {
+        $this->TipoCambioDiaStringResult = $TipoCambioDiaStringResult;
     }
 
     /**
      * @return string
      */
-    public function getTipoCambioDiaStringResult()
-    {
-      return $this->TipoCambioDiaStringResult;
+    public function getTipoCambioDiaStringResult() {
+        return $this->TipoCambioDiaStringResult;
     }
 
     /**
      * @param string $TipoCambioDiaStringResult
      * @return \TipoCambio\TipoCambioDiaStringResponse
      */
-    public function setTipoCambioDiaStringResult($TipoCambioDiaStringResult)
-    {
-      $this->TipoCambioDiaStringResult = $TipoCambioDiaStringResult;
-      return $this;
+    public function setTipoCambioDiaStringResult($TipoCambioDiaStringResult) {
+        $this->TipoCambioDiaStringResult = $TipoCambioDiaStringResult;
+        return $this;
     }
-
 }

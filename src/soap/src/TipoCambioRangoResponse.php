@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioRangoResponse
-{
+class TipoCambioRangoResponse {
 
     /**
      * @var DataVariable $TipoCambioRangoResult
@@ -13,27 +12,23 @@ class TipoCambioRangoResponse
     /**
      * @param DataVariable $TipoCambioRangoResult
      */
-    public function __construct($TipoCambioRangoResult)
-    {
-      $this->TipoCambioRangoResult = $TipoCambioRangoResult;
+    public function __construct($TipoCambioRangoResult) {
+        $this->TipoCambioRangoResult = $TipoCambioRangoResult;
     }
 
     /**
      * @return DataVariable
      */
-    public function getTipoCambioRangoResult()
-    {
-      return $this->TipoCambioRangoResult;
+    public function getTipoCambioRangoResult() {
+        return $this->TipoCambioRangoResult;
     }
 
     /**
      * @param DataVariable $TipoCambioRangoResult
      * @return \TipoCambio\TipoCambioRangoResponse
      */
-    public function setTipoCambioRangoResult($TipoCambioRangoResult)
-    {
-      $this->TipoCambioRangoResult = $TipoCambioRangoResult;
-      return $this;
+    public function setTipoCambioRangoResult($TipoCambioRangoResult) {
+        $this->TipoCambioRangoResult = $TipoCambioRangoResult;
+        return $this;
     }
-
 }

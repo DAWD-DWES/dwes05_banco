@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class TipoCambioRangoMonedaResponse
-{
+class TipoCambioRangoMonedaResponse {
 
     /**
      * @var DataVariable $TipoCambioRangoMonedaResult
@@ -13,27 +12,23 @@ class TipoCambioRangoMonedaResponse
     /**
      * @param DataVariable $TipoCambioRangoMonedaResult
      */
-    public function __construct($TipoCambioRangoMonedaResult)
-    {
-      $this->TipoCambioRangoMonedaResult = $TipoCambioRangoMonedaResult;
+    public function __construct($TipoCambioRangoMonedaResult) {
+        $this->TipoCambioRangoMonedaResult = $TipoCambioRangoMonedaResult;
     }
 
     /**
      * @return DataVariable
      */
-    public function getTipoCambioRangoMonedaResult()
-    {
-      return $this->TipoCambioRangoMonedaResult;
+    public function getTipoCambioRangoMonedaResult() {
+        return $this->TipoCambioRangoMonedaResult;
     }
 
     /**
      * @param DataVariable $TipoCambioRangoMonedaResult
      * @return \TipoCambio\TipoCambioRangoMonedaResponse
      */
-    public function setTipoCambioRangoMonedaResult($TipoCambioRangoMonedaResult)
-    {
-      $this->TipoCambioRangoMonedaResult = $TipoCambioRangoMonedaResult;
-      return $this;
+    public function setTipoCambioRangoMonedaResult($TipoCambioRangoMonedaResult) {
+        $this->TipoCambioRangoMonedaResult = $TipoCambioRangoMonedaResult;
+        return $this;
     }
-
 }

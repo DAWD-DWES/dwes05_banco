@@ -12,12 +12,8 @@ use App\dao\{
 };
 use App\modelo\{
     Banco,
-};
-use TipoCambio\{
-    TipoCambio,
-    VariablesDisponibles,
-    TipoCambioRangoMoneda,
-    VarCustom
+    IGestorDivisas,
+    GestorDivisasSOAP
 };
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
@@ -49,7 +45,9 @@ $operacionDAO = new OperacionDAO($pdo);
 $cuentaDAO = new CuentaDAO($pdo, $operacionDAO);
 $clienteDAO = new ClienteDAO($pdo, $cuentaDAO);
 
-$banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Molocos");
+$gestorDivisas = new GestorDivisasSOAP();
+
+$banco = new Banco($gestorDivisas, $clienteDAO, $cuentaDAO, $operacionDAO, "Molocos");
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
@@ -91,27 +89,23 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         $cuenta = $banco->obtenerCuenta($idCuenta);
         echo $blade->run('datos_cuenta', compact('cuenta'));
     } elseif (filter_has_var(INPUT_GET, 'petconsultadivisa')) {
-        $servTipoCambio = new TipoCambio();
-        $variablesDisponiblesResponse = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
-        $divisas = $variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable();
+        $divisas = $banco->listaDivisasDisponibles();
         echo $blade->run('consulta_divisa', compact('divisas'));
-    } 
-    elseif (filter_has_var(INPUT_POST, 'consultadivisa')) {
-        $servTipoCambio = new TipoCambio();
+    } elseif (filter_has_var(INPUT_POST, 'consultadivisa')) {
         $divisaOrigen = filter_input(INPUT_POST, 'divisaorigen');
         $divisaDestino = filter_input(INPUT_POST, 'divisadestino');
-        $numDias = filter_input(INPUT_POST, 'numdias');
-        $hoy = new DateTime();
-        $fechaFinal = $hoy->format('d/m/Y');
-        $fechaInicial = $hoy->sub(new DateInterval("P" . $numDias - 1 . "D"))->format('d/m/Y');
-        $cambios1 = $servTipoCambio->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaOrigen))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
-        $cambios2 = $servTipoCambio->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaDestino))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
-        $cambios = array_map (fn($x,$y) => 
-                [1/$x->getVenta()*$y->getVenta(), 1/$x->getVenta()*$y->getVenta(), $x->getFecha()], $cambios1, $cambios2);
-        $variablesDisponiblesResponse = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
-        $divisas = $variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable();
-        echo $blade->run('consulta_divisa', compact('divisas', 'divisaOrigen', 'divisaDestino'));
-    }else {
+        $fechaInicial = filter_input(INPUT_POST, 'fechainicial');
+        $fechaFinal = filter_input(INPUT_POST, 'fechafinal');
+        $divisas = $banco->listaDivisasDisponibles();
+        $divisaOrigenNombre = array_filter($divisas, function ($variable) use ($divisaOrigen) {
+            return ($variable->getMoneda() === $divisaOrigen);
+        });
+        $divisaDestinoNombre = array_filter($divisas, function ($variable) use ($divisaOrigen) {
+            return ($variable->getMoneda() === $divisaOrigen);
+        });
+        $cambios = $banco->consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal);
+        echo $blade->run('consulta_divisa', compact('divisas', 'cambios'));
+    } else {
         echo $blade->run('principal');
     }
 }

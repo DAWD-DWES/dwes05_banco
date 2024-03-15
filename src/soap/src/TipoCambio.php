@@ -2,62 +2,59 @@
 
 namespace TipoCambio;
 
-
 /**
  * Tipo de cambio en moneda extranjera
  */
-class TipoCambio extends \SoapClient
-{
+class TipoCambio extends \SoapClient {
 
     /**
      * @var array $classmap The defined classes
      */
-    private static $classmap = array (
-  'VariablesDisponibles' => 'TipoCambio\\VariablesDisponibles',
-  'VariablesDisponiblesResponse' => 'TipoCambio\\VariablesDisponiblesResponse',
-  'InfoVariable' => 'TipoCambio\\InfoVariable',
-  'ArrayOfVariable' => 'TipoCambio\\ArrayOfVariable',
-  'Variable' => 'TipoCambio\\Variable',
-  'ArrayOfVar' => 'TipoCambio\\ArrayOfVar',
-  'Var' => 'TipoCambio\\VarCustom',
-  'ArrayOfVarDolar' => 'TipoCambio\\ArrayOfVarDolar',
-  'VarDolar' => 'TipoCambio\\VarDolar',
-  'Variables' => 'TipoCambio\\Variables',
-  'VariablesResponse' => 'TipoCambio\\VariablesResponse',
-  'TipoCambioFechaInicial' => 'TipoCambio\\TipoCambioFechaInicial',
-  'TipoCambioFechaInicialResponse' => 'TipoCambio\\TipoCambioFechaInicialResponse',
-  'DataVariable' => 'TipoCambio\\DataVariable',
-  'TipoCambioRango' => 'TipoCambio\\TipoCambioRango',
-  'TipoCambioRangoResponse' => 'TipoCambio\\TipoCambioRangoResponse',
-  'TipoCambioFechaInicialMoneda' => 'TipoCambio\\TipoCambioFechaInicialMoneda',
-  'TipoCambioFechaInicialMonedaResponse' => 'TipoCambio\\TipoCambioFechaInicialMonedaResponse',
-  'TipoCambioRangoMoneda' => 'TipoCambio\\TipoCambioRangoMoneda',
-  'TipoCambioRangoMonedaResponse' => 'TipoCambio\\TipoCambioRangoMonedaResponse',
-  'TipoCambioDia' => 'TipoCambio\\TipoCambioDia',
-  'TipoCambioDiaResponse' => 'TipoCambio\\TipoCambioDiaResponse',
-  'TipoCambioDiaString' => 'TipoCambio\\TipoCambioDiaString',
-  'TipoCambioDiaStringResponse' => 'TipoCambio\\TipoCambioDiaStringResponse',
-);
+    private static $classmap = array(
+        'VariablesDisponibles' => 'TipoCambio\\VariablesDisponibles',
+        'VariablesDisponiblesResponse' => 'TipoCambio\\VariablesDisponiblesResponse',
+        'InfoVariable' => 'TipoCambio\\InfoVariable',
+        'ArrayOfVariable' => 'TipoCambio\\ArrayOfVariable',
+        'Variable' => 'TipoCambio\\Variable',
+        'ArrayOfVar' => 'TipoCambio\\ArrayOfVar',
+        'Var' => 'TipoCambio\\VarCustom',
+        'ArrayOfVarDolar' => 'TipoCambio\\ArrayOfVarDolar',
+        'VarDolar' => 'TipoCambio\\VarDolar',
+        'Variables' => 'TipoCambio\\Variables',
+        'VariablesResponse' => 'TipoCambio\\VariablesResponse',
+        'TipoCambioFechaInicial' => 'TipoCambio\\TipoCambioFechaInicial',
+        'TipoCambioFechaInicialResponse' => 'TipoCambio\\TipoCambioFechaInicialResponse',
+        'DataVariable' => 'TipoCambio\\DataVariable',
+        'TipoCambioRango' => 'TipoCambio\\TipoCambioRango',
+        'TipoCambioRangoResponse' => 'TipoCambio\\TipoCambioRangoResponse',
+        'TipoCambioFechaInicialMoneda' => 'TipoCambio\\TipoCambioFechaInicialMoneda',
+        'TipoCambioFechaInicialMonedaResponse' => 'TipoCambio\\TipoCambioFechaInicialMonedaResponse',
+        'TipoCambioRangoMoneda' => 'TipoCambio\\TipoCambioRangoMoneda',
+        'TipoCambioRangoMonedaResponse' => 'TipoCambio\\TipoCambioRangoMonedaResponse',
+        'TipoCambioDia' => 'TipoCambio\\TipoCambioDia',
+        'TipoCambioDiaResponse' => 'TipoCambio\\TipoCambioDiaResponse',
+        'TipoCambioDiaString' => 'TipoCambio\\TipoCambioDiaString',
+        'TipoCambioDiaStringResponse' => 'TipoCambio\\TipoCambioDiaStringResponse',
+    );
 
     /**
      * @param array $options A array of config values
      * @param string $wsdl The wsdl file to use
      */
-    public function __construct(array $options = array(), $wsdl = null)
-    {
-    
-  foreach (self::$classmap as $key => $value) {
-    if (!isset($options['classmap'][$key])) {
-      $options['classmap'][$key] = $value;
-    }
-  }
-      $options = array_merge(array (
-  'features' => 1,
-), $options);
-      if (!$wsdl) {
-        $wsdl = 'https://www.banguat.gob.gt/variables/ws/TipoCambio.asmx?WSDL';
-      }
-      parent::__construct($wsdl, $options);
+    public function __construct(array $options = array(), $wsdl = null) {
+
+        foreach (self::$classmap as $key => $value) {
+            if (!isset($options['classmap'][$key])) {
+                $options['classmap'][$key] = $value;
+            }
+        }
+        $options = array_merge(array(
+            'features' => 1,
+                ), $options);
+        if (!$wsdl) {
+            $wsdl = 'https://www.banguat.gob.gt/variables/ws/TipoCambio.asmx?WSDL';
+        }
+        parent::__construct($wsdl, $options);
     }
 
     /**
@@ -66,9 +63,8 @@ class TipoCambio extends \SoapClient
      * @param VariablesDisponibles $parameters
      * @return VariablesDisponiblesResponse
      */
-    public function VariablesDisponibles(VariablesDisponibles $parameters)
-    {
-      return $this->__soapCall('VariablesDisponibles', array($parameters));
+    public function VariablesDisponibles(VariablesDisponibles $parameters) {
+        return $this->__soapCall('VariablesDisponibles', array($parameters));
     }
 
     /**
@@ -77,9 +73,8 @@ class TipoCambio extends \SoapClient
      * @param Variables $parameters
      * @return VariablesResponse
      */
-    public function Variables(Variables $parameters)
-    {
-      return $this->__soapCall('Variables', array($parameters));
+    public function Variables(Variables $parameters) {
+        return $this->__soapCall('Variables', array($parameters));
     }
 
     /**
@@ -88,9 +83,8 @@ class TipoCambio extends \SoapClient
      * @param TipoCambioFechaInicial $parameters
      * @return TipoCambioFechaInicialResponse
      */
-    public function TipoCambioFechaInicial(TipoCambioFechaInicial $parameters)
-    {
-      return $this->__soapCall('TipoCambioFechaInicial', array($parameters));
+    public function TipoCambioFechaInicial(TipoCambioFechaInicial $parameters) {
+        return $this->__soapCall('TipoCambioFechaInicial', array($parameters));
     }
 
     /**
@@ -99,9 +93,8 @@ class TipoCambio extends \SoapClient
      * @param TipoCambioRango $parameters
      * @return TipoCambioRangoResponse
      */
-    public function TipoCambioRango(TipoCambioRango $parameters)
-    {
-      return $this->__soapCall('TipoCambioRango', array($parameters));
+    public function TipoCambioRango(TipoCambioRango $parameters) {
+        return $this->__soapCall('TipoCambioRango', array($parameters));
     }
 
     /**
@@ -110,9 +103,8 @@ class TipoCambio extends \SoapClient
      * @param TipoCambioFechaInicialMoneda $parameters
      * @return TipoCambioFechaInicialMonedaResponse
      */
-    public function TipoCambioFechaInicialMoneda(TipoCambioFechaInicialMoneda $parameters)
-    {
-      return $this->__soapCall('TipoCambioFechaInicialMoneda', array($parameters));
+    public function TipoCambioFechaInicialMoneda(TipoCambioFechaInicialMoneda $parameters) {
+        return $this->__soapCall('TipoCambioFechaInicialMoneda', array($parameters));
     }
 
     /**
@@ -121,9 +113,8 @@ class TipoCambio extends \SoapClient
      * @param TipoCambioRangoMoneda $parameters
      * @return TipoCambioRangoMonedaResponse
      */
-    public function TipoCambioRangoMoneda(TipoCambioRangoMoneda $parameters)
-    {
-      return $this->__soapCall('TipoCambioRangoMoneda', array($parameters));
+    public function TipoCambioRangoMoneda(TipoCambioRangoMoneda $parameters) {
+        return $this->__soapCall('TipoCambioRangoMoneda', array($parameters));
     }
 
     /**
@@ -132,9 +123,8 @@ class TipoCambio extends \SoapClient
      * @param TipoCambioDia $parameters
      * @return TipoCambioDiaResponse
      */
-    public function TipoCambioDia(TipoCambioDia $parameters)
-    {
-      return $this->__soapCall('TipoCambioDia', array($parameters));
+    public function TipoCambioDia(TipoCambioDia $parameters) {
+        return $this->__soapCall('TipoCambioDia', array($parameters));
     }
 
     /**
@@ -143,9 +133,7 @@ class TipoCambio extends \SoapClient
      * @param TipoCambioDiaString $parameters
      * @return TipoCambioDiaStringResponse
      */
-    public function TipoCambioDiaString(TipoCambioDiaString $parameters)
-    {
-      return $this->__soapCall('TipoCambioDiaString', array($parameters));
+    public function TipoCambioDiaString(TipoCambioDiaString $parameters) {
+        return $this->__soapCall('TipoCambioDiaString', array($parameters));
     }
-
 }

@@ -2,13 +2,9 @@
 
 namespace TipoCambio;
 
-class VariablesDisponibles
-{
+class VariablesDisponibles {
 
-    
-    public function __construct()
-    {
-    
+    public function __construct() {
+        
     }
-
 }

@@ -2,8 +2,7 @@
 
 namespace TipoCambio;
 
-class Variable
-{
+class Variable {
 
     /**
      * @var int $moneda
@@ -18,45 +17,39 @@ class Variable
     /**
      * @param int $moneda
      */
-    public function __construct($moneda)
-    {
-      $this->moneda = $moneda;
+    public function __construct($moneda) {
+        $this->moneda = $moneda;
     }
 
     /**
      * @return int
      */
-    public function getMoneda()
-    {
-      return $this->moneda;
+    public function getMoneda() {
+        return $this->moneda;
     }
 
     /**
      * @param int $moneda
      * @return \TipoCambio\Variable
      */
-    public function setMoneda($moneda)
-    {
-      $this->moneda = $moneda;
-      return $this;
+    public function setMoneda($moneda) {
+        $this->moneda = $moneda;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getDescripcion()
-    {
-      return $this->descripcion;
+    public function getDescripcion() {
+        return $this->descripcion;
     }
 
     /**
      * @param string $descripcion
      * @return \TipoCambio\Variable
      */
-    public function setDescripcion($descripcion)
-    {
-      $this->descripcion = $descripcion;
-      return $this;
+    public function setDescripcion($descripcion) {
+        $this->descripcion = $descripcion;
+        return $this;
     }
-
 }

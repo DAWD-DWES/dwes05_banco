@@ -2,13 +2,9 @@
 
 namespace TipoCambio;
 
-class TipoCambioDiaString
-{
+class TipoCambioDiaString {
 
-    
-    public function __construct()
-    {
-    
+    public function __construct() {
+        
     }
-
 }
