@@ -92,6 +92,7 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         $divisas = $banco->listaDivisasDisponibles();
         echo $blade->run('consulta_divisa', compact('divisas'));
     } elseif (filter_has_var(INPUT_POST, 'consultadivisa')) {
+        $consultaDivisa = true;
         $divisaOrigen = filter_input(INPUT_POST, 'divisaorigen');
         $divisaDestino = filter_input(INPUT_POST, 'divisadestino');
         $fechaInicial = filter_input(INPUT_POST, 'fechainicial');
@@ -104,7 +105,7 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
             return ($variable->getMoneda() === $divisaOrigen);
         });
         $cambios = $banco->consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal);
-        echo $blade->run('consulta_divisa', compact('divisas', 'cambios'));
+        echo $blade->run('consulta_divisa', compact('divisaOrigen', 'divisaDestino', 'fechaInicial', 'fechaFinal', 'divisas', 'cambios', 'consultaDivisa'));
     } else {
         echo $blade->run('principal');
     }

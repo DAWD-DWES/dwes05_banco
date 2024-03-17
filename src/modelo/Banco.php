@@ -424,7 +424,7 @@ class Banco {
         return $this->getGestorDivisas()->consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal);
     }
 
-    public function listaDivisasDisponibles(): array {
+    public function listaDivisasDisponibles(): ?array {
         return $this->getGestorDivisas()->listaDivisasDisponibles();
     }
 }
