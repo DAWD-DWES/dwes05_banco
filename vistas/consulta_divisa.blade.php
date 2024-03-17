@@ -3,7 +3,7 @@
 @section('contenido')
 <div>
     <h1>Consulta de Cambio de Divisas</h1>
-    <form action="index.php" method="POST">
+    <form action="divisas.php" method="POST">
         <div class="row my-4">
             <div class="form-group col-md-3">
                 <label for="divisa_origen">Divisa de Origen:</label>

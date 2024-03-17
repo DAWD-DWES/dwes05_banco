@@ -22,7 +22,7 @@ class GestorDivisasSOAP implements IGestorDivisas {
         $this->servicioDivisa = new TipoCambio();
     }
 
-    public function listaDivisasDisponibles(): array {
+    public function listaDivisasDisponibles(): ?array {
         $servTipoCambio = new TipoCambio();
         $variablesDisponiblesResponse = $servTipoCambio->VariablesDisponibles(new VariablesDisponibles());
         $divisas = $variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable();

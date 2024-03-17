@@ -40,32 +40,32 @@ class Banco {
      * Gestor de divisas
      * @var IGestorDivisas
      */
-    private IGestorDivisas $gestorDivisas;
+    private ?IGestorDivisas $gestorDivisas;
 
     /**
      * DAO para persistir clientes
      * @var IDAO
      */
-    private IDAO $clienteDAO;
+    private ?IDAO $clienteDAO;
 
     /**
      * DAO para persistir cuentas
      * @var IDAO
      */
-    private IDAO $cuentaDAO;
+    private ?IDAO $cuentaDAO;
 
     /**
      * DAO para persistir operaciones
      * @var IDAO
      */
-    private IDAO $operacionDAO;
+    private ?IDAO $operacionDAO;
 
     /**
      * Constructor de la clase Banco
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct(IGestorDivisas $gestorDivisas, IDAO $clienteDAO, IDAO $cuentaDAO, IDAO $operacionDAO, string $nombre) {
+    public function __construct( string $nombre, IGestorDivisas $gestorDivisas = null, IDAO $clienteDAO = null, IDAO $cuentaDAO = null, IDAO $operacionDAO = null) {
         $this->setNombre($nombre);
         $this->gestorDivisas = $gestorDivisas;
         $this->clienteDAO = $clienteDAO;
@@ -199,6 +199,43 @@ class Banco {
      */
     public function setInteresCA(float $interesCA) {
         $this->interesCA = $interesCA;
+    }
+    
+    /**
+     * Establece el gestor de divisas
+     * 
+     * @return void
+     */
+    public function setGestorDivisas(IGestorDivisas $gestorDivisas): void {
+        $this->gestorDivisas = $gestorDivisas;
+    }
+    
+    /**
+     * Establece el cliente DAO
+     * 
+     * @return void
+     */
+    public function setClienteDAO(IDAO $clienteDAO): void {
+        $this->clienteDAO = $clienteDAO;
+    }
+    
+    /**
+     * Establece la cuenta DAO
+     * 
+     * @return void
+     */
+    public function setCuentaDAO(IDAO $cuentaDAO): void {
+        $this->cuentaDAO = $cuentaDAO;
+    }
+    
+    
+    /**
+     * Establece la operación DAO
+     * 
+     * @return void
+     */
+    public function setOperacionDAO(IDAO $OperacionDAO): void {
+        $this->OperacionDAO = $OperacionDAO;
     }
 
     /**

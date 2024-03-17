@@ -47,7 +47,10 @@ $clienteDAO = new ClienteDAO($pdo, $cuentaDAO);
 
 $gestorDivisas = new GestorDivisasSOAP();
 
-$banco = new Banco($gestorDivisas, $clienteDAO, $cuentaDAO, $operacionDAO, "Molocos");
+$banco = new Banco("Midas");
+$banco->setClienteDAO($clienteDAO);
+$banco->setCuentaDAO($cuentaDAO);
+$banco->setOperacionDAO($operacionDAO);
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
@@ -88,24 +91,6 @@ if (filter_has_var(INPUT_POST, 'creardatos')) {
         $idCuenta = filter_input(INPUT_GET, 'idCuenta');
         $cuenta = $banco->obtenerCuenta($idCuenta);
         echo $blade->run('datos_cuenta', compact('cuenta'));
-    } elseif (filter_has_var(INPUT_GET, 'petconsultadivisa')) {
-        $divisas = $banco->listaDivisasDisponibles();
-        echo $blade->run('consulta_divisa', compact('divisas'));
-    } elseif (filter_has_var(INPUT_POST, 'consultadivisa')) {
-        $consultaDivisa = true;
-        $divisaOrigen = filter_input(INPUT_POST, 'divisaorigen');
-        $divisaDestino = filter_input(INPUT_POST, 'divisadestino');
-        $fechaInicial = filter_input(INPUT_POST, 'fechainicial');
-        $fechaFinal = filter_input(INPUT_POST, 'fechafinal');
-        $divisas = $banco->listaDivisasDisponibles();
-        $divisaOrigenNombre = array_filter($divisas, function ($variable) use ($divisaOrigen) {
-            return ($variable->getMoneda() === $divisaOrigen);
-        });
-        $divisaDestinoNombre = array_filter($divisas, function ($variable) use ($divisaOrigen) {
-            return ($variable->getMoneda() === $divisaOrigen);
-        });
-        $cambios = $banco->consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal);
-        echo $blade->run('consulta_divisa', compact('divisaOrigen', 'divisaDestino', 'fechaInicial', 'fechaFinal', 'divisas', 'cambios', 'consultaDivisa'));
     } else {
         echo $blade->run('principal');
     }
