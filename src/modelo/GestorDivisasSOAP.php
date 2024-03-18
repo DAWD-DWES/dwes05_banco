@@ -48,7 +48,13 @@ class GestorDivisasSOAP implements IGestorDivisas {
             } else if (DateTime::createFromFormat('d/m/Y', $cambiosDivisaOrigen[$i]->getFecha()) < DateTime::createFromFormat('d/m/Y', $cambiosDivisaDestino[$j]->getFecha())) {
                 $j++;
             } else {
-                if ($divisaOrigen == 24) { //caso especial de euro
+                if ($divisaOrigen == 2) {
+                    $venta = $cambiosDivisaDestino[$j]->getVenta();
+                    $compra = $cambiosDivisaDestino[$j]->getCompra();
+                } elseif ($divisaDestino == 2) {
+                    $venta = 1 / $cambiosDivisaDestino[$j]->getVenta();
+                    $compra = 1 / $cambiosDivisaDestino[$j]->getCompra();
+                } elseif ($divisaOrigen == 24) { //caso especial de euro
                     $venta = $cambiosDivisaOrigen[$i]->getVenta() * $cambiosDivisaDestino[$j]->getVenta();
                     $compra = $cambiosDivisaOrigen[$i]->getCompra() * $cambiosDivisaDestino[$j]->getCompra();
                 } elseif ($divisaDestino == 24) { // caso especial de euro
