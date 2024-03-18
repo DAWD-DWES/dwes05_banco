@@ -28,37 +28,37 @@ class GestorDivisasSOAP implements IGestorDivisas {
         return $divisas;
     }
 
-    public function consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal = null): ?array {
+    public function consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaIni, $fechaFin = null): ?array {
         $cambios = [];
-        $fechaFinal = $fechaFinal ? (new DateTime($fechaFinal))->format('d/m/Y') : (new DateTime('hoy'))->format('d/m/Y');
-        $fechaInicial = (new DateTime($fechaInicial))->format('d/m/Y');
+        $fechaFinal = $fechaFin ? (new DateTime($fechaFin))->format('d/m/Y') : (new DateTime('hoy'))->format('d/m/Y');
+        $fechaInicial = (new DateTime($fechaIni))->format('d/m/Y');
         $cambiosDivisaOrigen = $this->servicioDivisa->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaOrigen))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
         $cambiosDivisaDestino = $this->servicioDivisa->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaDestino))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
         $divisaOrigenNombre = current(array_filter($this->listaDivisasDisponibles(), function ($variable) use ($divisaOrigen) {
                     return ($variable->getMoneda() === $divisaOrigen);
                 }))->getDescripcion();
         $divisaDestinoNombre = current(array_filter($this->listaDivisasDisponibles(), function ($variable) use ($divisaDestino) {
-                            return ($variable->getMoneda() === $divisaDestino);
-                        }))->getDescripcion();
+                    return ($variable->getMoneda() === $divisaDestino);
+                }))->getDescripcion();
         $i = 0;
         $j = 0;
         while (isset($cambiosDivisaOrigen[$i]) && isset($cambiosDivisaDestino[$j])) {
-            if (DateTime::createFromFormat('d/m/Y', $cambiosDivisaOrigen[$i]->getFecha()) < DateTime::createFromFormat('d/m/Y', $cambiosDivisaDestino[$i]->getFecha())) {
+            if (DateTime::createFromFormat('d/m/Y', $cambiosDivisaOrigen[$i]->getFecha()) < DateTime::createFromFormat('d/m/Y', $cambiosDivisaDestino[$j]->getFecha())) {
                 $i++;
-            } else if (DateTime::createFromFormat('d/m/Y', $cambiosDivisaOrigen[$i]->getFecha()) < DateTime::createFromFormat('d/m/Y', $cambiosDivisaDestino[$i]->getFecha())) {
+            } else if (DateTime::createFromFormat('d/m/Y', $cambiosDivisaOrigen[$i]->getFecha()) < DateTime::createFromFormat('d/m/Y', $cambiosDivisaDestino[$j]->getFecha())) {
                 $j++;
             } else {
                 if ($divisaOrigen == 24) { //caso especial de euro
-                    $venta = $cambiosDivisaOrigen[$j]->getVenta() * $cambiosDivisaDestino[$i]->getVenta();
-                    $compra = $cambiosDivisaOrigen[$j]->getCompra() * $cambiosDivisaDestino[$i]->getCompra();
+                    $venta = $cambiosDivisaOrigen[$i]->getVenta() * $cambiosDivisaDestino[$j]->getVenta();
+                    $compra = $cambiosDivisaOrigen[$i]->getCompra() * $cambiosDivisaDestino[$j]->getCompra();
                 } elseif ($divisaDestino == 24) { // caso especial de euro
-                    $venta = 1 / $cambiosDivisaOrigen[$j]->getVenta() * 1 / $cambiosDivisaDestino[$i]->getVenta();
-                    $compra = 1 / $cambiosDivisaOrigen[$j]->getCompra() * 1 / $cambiosDivisaDestino[$i]->getCompra();
+                    $venta = 1 / $cambiosDivisaOrigen[$i]->getVenta() * 1 / $cambiosDivisaDestino[$j]->getVenta();
+                    $compra = 1 / $cambiosDivisaOrigen[$i]->getCompra() * 1 / $cambiosDivisaDestino[$j]->getCompra();
                 } else {
-                    $venta = 1 / $cambiosDivisaOrigen[$j]->getVenta() * $cambiosDivisaDestino[$i]->getVenta();
-                    $compra = 1 / $cambiosDivisaOrigen[$j]->getCompra() * $cambiosDivisaDestino[$i]->getCompra();
+                    $venta = 1 / $cambiosDivisaOrigen[$i]->getVenta() * $cambiosDivisaDestino[$j]->getVenta();
+                    $compra = 1 / $cambiosDivisaOrigen[$i]->getCompra() * $cambiosDivisaDestino[$j]->getCompra();
                 }
-                $fecha = $cambiosDivisaOrigen[$j]->getFecha();
+                $fecha = $cambiosDivisaOrigen[$i]->getFecha();
                 $cambio = new CambioDivisa($divisaOrigen, $divisaOrigenNombre, $divisaDestino, $divisaDestinoNombre, $fecha, $compra, $venta);
                 $cambios[] = $cambio;
                 $i++;
