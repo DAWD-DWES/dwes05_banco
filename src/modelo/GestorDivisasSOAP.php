@@ -18,13 +18,18 @@ class GestorDivisasSOAP implements IGestorDivisas {
 
     private SoapClient $servicioDivisa;
 
+    const DIVISAS_DESAPARACIDAS = [1, 4, 6, 8, 11, 12, 13, 14, 27, 28, 42];
+
     public function __construct() {
         $this->servicioDivisa = new TipoCambio();
     }
 
     public function listaDivisasDisponibles(): ?array {
         $variablesDisponiblesResponse = $this->servicioDivisa->VariablesDisponibles(new VariablesDisponibles());
-        $divisas = $variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable();
+        $divisas = array_filter($variablesDisponiblesResponse->getVariablesDisponiblesResult()->getVariables()->getVariable(),
+                function ($divisa) {
+                    return !in_array($divisa->getMoneda(), self::DIVISAS_DESAPARACIDAS);
+                });
         return $divisas;
     }
 
