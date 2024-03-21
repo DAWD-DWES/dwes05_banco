@@ -11,10 +11,13 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "TipoCambio\\": "src/soap/src/"
+            "TipoCambio\\": "src/soap/src/",
+            "ServicioCalculadora\\": "src/servidorSoap/src",
+            "Calculadora\\": "src/calculadora/src"
         }
     },
     "require-dev": {
-        "wsdl2phpgenerator/wsdl2phpgenerator": "^3.4"
+        "wsdl2phpgenerator/wsdl2phpgenerator": "^3.4",
+        "php2wsdl/php2wsdl": "^0.7.0"
     }
 }

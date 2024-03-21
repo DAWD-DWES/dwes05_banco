@@ -1,9 +1,9 @@
 <?php
 
 require '../vendor/autoload.php';
-$url = "http://localhost/dwes06_tarea/servidorSoap/servicio.wsdl";
+$url = "http://localhost/dwes05_banco/servidorSoap/servicio.wsdl";
 
-use Clases\Operaciones;
+use ServicioCalculadora\Operaciones;
 
 try {
     $server = new SoapServer($url);

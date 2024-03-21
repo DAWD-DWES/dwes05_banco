@@ -1,8 +1,8 @@
 <?php
 
-namespace Clases;
+namespace ServicioCalculadora;
 
-class Operacionesw {
+class Operaciones {
 
     /**
      * @soap
@@ -26,12 +26,21 @@ class Operacionesw {
 
     /**
      * @soap
-     * @param  string $texto
-     * @return string
+     * @param float $a
+     * @param float $b
+     * @return float
      */
-    public function saludo($texto) {
-        return "Hola $texto";
+    public function multiplica($a, $b) {
+        return $a * $b;
     }
 
+    /**
+     * @soap
+     * @param float $a
+     * @param float $b
+     * @return float
+     */
+    public function divide($a, $b) {
+        return $a / $b;
+    }
 }
-
