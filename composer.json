@@ -11,9 +11,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "TipoCambio\\": "src/soap/src/",
-            "ServicioCalculadora\\": "src/servidorSoap/src",
-            "Calculadora\\": "src/calculadora/src"
+            "TipoCambio\\": "soapdivisas/src/",
+            "Hipoteca\\": "soaphipoteca/src"
         }
     },
     "require-dev": {

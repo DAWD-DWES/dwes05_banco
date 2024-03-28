@@ -28,10 +28,10 @@
                             <a class="nav-link" href="index.php?pettransferencia">Transferencias</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="divisas.php?petconsultadivisa">Consulta Cambio Divisa</a>
+                            <a class="nav-link" href="divisa.php?petconsultadivisa">Consulta Cambio Divisa</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="calculadora.php?petconsultadivisa">Calculadora</a>
+                            <a class="nav-link" href="hipoteca.php?petconsultahipoteca">Hipoteca</a>
                         </li>
                     </ul>
                 </div>

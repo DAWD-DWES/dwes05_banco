@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://localhost/servidorSoap/servidor.php" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="CalculoHipoteca" targetNamespace="http://localhost/servidorSoap/servidor.php">
+  <types>
+    <xsd:schema targetNamespace="http://localhost/servidorSoap/servidor.php">
+      <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+    </xsd:schema>
+  </types>
+  <portType name="CalculoHipotecaPort">
+    <operation name="calculoCuota">
+      <input message="tns:calculoCuotaIn"/>
+      <output message="tns:calculoCuotaOut"/>
+    </operation>
+  </portType>
+  <binding name="CalculoHipotecaBinding" type="tns:CalculoHipotecaPort">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="calculoCuota">
+      <soap:operation soapAction="http://localhost/servidorSoap/servidor.php#calculoCuota"/>
+      <input>
+        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/servidorSoap/servidor.php"/>
+      </input>
+      <output>
+        <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost/servidorSoap/servidor.php"/>
+      </output>
+    </operation>
+  </binding>
+  <message name="calculoCuotaIn">
+    <part name="cantidad" type="xsd:float"/>
+    <part name="anyos" type="xsd:int"/>
+    <part name="tasaInteresAnual" type="xsd:float"/>
+  </message>
+  <message name="calculoCuotaOut">
+    <part name="return" type="xsd:float"/>
+  </message>
+  <service name="CalculoHipoteca">
+    <port name="CalculoHipotecaPort" binding="tns:CalculoHipotecaBinding">
+      <soap:address location="http://localhost/servidorSoap/servidor.php"/>
+    </port>
+  </service>
+</definitions>

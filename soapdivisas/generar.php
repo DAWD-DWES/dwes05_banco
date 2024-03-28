@@ -1,7 +1,7 @@
 <?php
 
 //utilizamos el autoload de composer
-require '../../vendor/autoload.php';
+require '../vendor/autoload.php';
 
 use Wsdl2PhpGenerator\Generator;
 use Wsdl2PhpGenerator\Config;
