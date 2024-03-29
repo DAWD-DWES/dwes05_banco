@@ -96,12 +96,12 @@ class ClienteDAO implements IDAO {
      * @param object $object Cliente para crear un registro en la BD
      * @throws InvalidArgumentException
      */
-    public function crear(object $object) {
+    public function crear(object $object): bool {
         $sql = "INSERT INTO clientes (dni, nombre, apellido1, apellido2, fecha_nacimiento, telefono) VALUES (:dni, :nombre, :apellido1, :apellido2, :fecha_nacimiento, :telefono);";
         if ($object instanceof Cliente) {
             $cliente = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'dni' => $cliente->getDni(),
                 'nombre' => $cliente->getNombre(),
                 'apellido1' => $cliente->getApellido1(),
@@ -109,10 +109,13 @@ class ClienteDAO implements IDAO {
                 'fecha_nacimiento' => $cliente->getFechaNacimiento()->format('Y-m-d'),
                 'telefono' => $cliente->getTelefono()
             ]);
-            $cliente->setId($this->pdo->lastInsertId());
+            if ($result) {
+                $cliente->setId($this->pdo->lastInsertId());
+            }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cliente.');
         }
+        return $result;
     }
 
     /**
@@ -122,12 +125,12 @@ class ClienteDAO implements IDAO {
      *
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object) {
+    public function modificar(object $object): bool {
         $sql = "UPDATE clientes SET dni = :dni, nombre = :nombre, apellido1 = :apellido1, apellido2 = :apellido2, fecha_nacimiento = :fecha_nacimiento, telefono = :telefono WHERE cliente_id = :id;";
         if ($object instanceof Cliente) {
             $cliente = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'id' => $cliente->getId(),
                 'dni' => $cliente->getDni(),
                 'nombre' => $cliente->getNombre(),
@@ -139,6 +142,7 @@ class ClienteDAO implements IDAO {
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cliente.');
         }
+        return $result;
     }
 
     /**
@@ -148,6 +152,7 @@ class ClienteDAO implements IDAO {
     public function eliminar(int $id) {
         $sql = "DELETE FROM clientes WHERE cliente_id = :id;";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
     }
 }

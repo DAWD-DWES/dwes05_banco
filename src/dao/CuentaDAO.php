@@ -96,20 +96,23 @@ class CuentaDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object) {
+    public function crear(object $object): bool {
         $sql = "INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo);";
         if ($object instanceof Cuenta) {
             $cuenta = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'cliente_id' => $cuenta->getIdCliente(),
                 'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
             ]);
-            $cuenta->setId($this->pdo->lastInsertId());
+            if ($result) {
+                $cuenta->setId($this->pdo->lastInsertId());
+            }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
+        return $result;
     }
 
     /**
@@ -117,12 +120,12 @@ class CuentaDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object) {
+    public function modificar(object $object): bool {
         $sql = "UPDATE cuentas SET cliente_id = :cliente_id, tipo = :tipo, saldo = :saldo, fecha_creacion = :fecha_creacion WHERE cuenta_id = :id;";
         if ($object instanceof Cuenta) {
             $cuenta = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'id' => $cuenta->getId(),
                 'cliente_id' => $cuenta->getIdCliente(),
                 'tipo' => $cuenta->getTipo()->value,
@@ -132,20 +135,22 @@ class CuentaDAO implements IDAO {
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
+        return $result;
     }
 
     /**
      * Elimina un registro de una instancia de cuenta
      * @param int $id
      */
-    public function eliminar(int $id) {
+    public function eliminar(int $id): bool {
         $sql = "DELETE FROM cuentas WHERE cuenta_id = :id";
         $operaciones = $this->operacionDAO->obtenerPorIdCuenta($id);
         foreach ($operaciones as $operacion) {
             $this->operacionDAO->eliminar($operacion->getId());
         }
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
     }
 
     // Estos métodos permiten usar el modo transaccional para operaciones de persistencia de cuentas.
