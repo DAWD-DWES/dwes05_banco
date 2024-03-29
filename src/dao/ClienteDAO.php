@@ -127,7 +127,6 @@ class ClienteDAO implements IDAO {
                 'fecha_nacimiento' => $cliente->getFechaNacimiento()->format('Y-m-d'),
                 'telefono' => $cliente->getTelefono()
             ]);
-            $stmt->closeCursor();
             if ($resultado) {
                 return ($this->pdo->lastInsertId());
             }
@@ -156,7 +155,6 @@ class ClienteDAO implements IDAO {
                 'fecha_nacimiento' => $cliente->getFechaNacimiento()->format('Y-m-d'),
                 'telefono' => $cliente->getTelefono()
             ]);
-            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cliente.');
         }
@@ -170,6 +168,5 @@ class ClienteDAO implements IDAO {
         $sql = "DELETE FROM clientes WHERE cliente_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        $stmt->closeCursor();
     }
 }
