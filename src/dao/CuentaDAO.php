@@ -40,7 +40,6 @@ class CuentaDAO implements IDAO {
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
-        $stmt->closeCursor();
         return $datosCuenta ? $this->crearCuenta($datosCuenta) : null;
     }
 
@@ -55,7 +54,6 @@ class CuentaDAO implements IDAO {
         $stmt->execute(['idCliente' => $idCliente]);
         $stmt->setFetchMode(PDO::FETCH_NUM);
         $idCuentas = $stmt->fetchAll() ?? [];
-        $stmt->closeCursor();
         return array_merge(...$idCuentas);
     }
 
@@ -90,7 +88,6 @@ class CuentaDAO implements IDAO {
         $sql = "SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas;";
         $stmt = $this->pdo->query($sql);
         $cuentasDatos = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $stmt->closeCursor();
         return array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos);
     }
 
@@ -109,7 +106,6 @@ class CuentaDAO implements IDAO {
                 'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
             ]);
-            $stmt->closeCursor();
             $cuenta->setId($this->pdo->lastInsertId());
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
@@ -133,7 +129,6 @@ class CuentaDAO implements IDAO {
                 'saldo' => $cuenta->getSaldo(),
                 'fecha_creacion' => $cuenta->getFechaCreacion()->format('Y-m-d H:i:s')
             ]);
-            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
@@ -151,7 +146,6 @@ class CuentaDAO implements IDAO {
         }
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        $stmt->closeCursor();
     }
 
     // Estos métodos permiten usar el modo transaccional para operaciones de persistencia de cuentas.

@@ -29,7 +29,6 @@ class OperacionDAO implements IDAO {
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operacion = $stmt->fetch();
-        $stmt->closeCursor();
         return $operacion ? $this->inicializarPostPDO($operacion) : null;
     }
 
@@ -44,7 +43,6 @@ class OperacionDAO implements IDAO {
         $stmt->execute(['idCuenta' => $idCuenta]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, 'Operacion');
         $operaciones = $stmt->fetchAll() ?? [];
-        $stmt->closeCursor();
         array_walk($operaciones, fn($operacion) => $this->inicializarPostPDO($operacion));
         return $operaciones;
     }
@@ -76,7 +74,6 @@ class OperacionDAO implements IDAO {
         $sql = "SELECT operacion_id as id, cuenta_id as idCuenta, tipo_operacion as tipo, cantidad, fecha_operacion as fecha, descripcion FROM operaciones;";
         $stmt = $this->pdo->query($sql);
         $operaciones = $stmt->fetchAll(PDO::FETCH_CLASS, 'Operacion');
-        $stmt->closeCursor();
         array_walk($operaciones, function ($operacion) {
             $this->inicializarPostPDO($operacion);
         });
@@ -99,7 +96,6 @@ class OperacionDAO implements IDAO {
                 'cantidad' => $operacion->getCantidad(),
                 'descripcion' => $operacion->getDescripcion()
             ]);
-            $stmt->closeCursor();
             $operacion->setId($this->pdo->lastInsertId());
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
@@ -124,7 +120,6 @@ class OperacionDAO implements IDAO {
                 'fecha_operacion' => $operacion->getFecha()->format('Y-m-d H:i:s'),
                 'descripcion' => $operacion->getDescripcion()
             ]);
-            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
@@ -138,6 +133,5 @@ class OperacionDAO implements IDAO {
         $sql = "DELETE FROM operaciones WHERE operacion_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
-        $stmt->closeCursor();
     }
 }
