@@ -89,23 +89,24 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object): int {
+    public function crear(object $object): bool {
         $sql = "INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion);";
         if ($object instanceof Operacion) {
             $operacion = $object;
             $stmt = $this->pdo->prepare($sql);
-            $resultado = $stmt->execute([
+            $result = $stmt->execute([
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo()->value,
                 'cantidad' => $operacion->getCantidad(),
                 'descripcion' => $operacion->getDescripcion()
             ]);
             if ($resultado) {
-                return ($this->pdo->lastInsertId());
+                $this->setId($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
+        return $result;
     }
 
     /**
@@ -113,12 +114,12 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object): void {
+    public function modificar(object $object): bool {
         $sql = "UPDATE operaciones SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id;";
         if ($object instanceof Operacion) {
             $operacion = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'id' => $operacion->getId(),
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo(),
@@ -129,15 +130,17 @@ class OperacionDAO implements IDAO {
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
+        return $result;
     }
 
     /**
      * Elimina un registro de una instancia de operación
      * @param type $id
      */
-    public function eliminar(int $id): void {
+    public function eliminar(int $id): bool {
         $sql = "DELETE FROM operaciones WHERE operacion_id = :id;";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
     }
 }
