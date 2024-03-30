@@ -37,12 +37,6 @@ class Banco {
     private string $nombre;
 
     /**
-     * Gestor de divisas
-     * @var IGestorDivisas
-     */
-    private ?IGestorDivisas $gestorDivisas;
-
-    /**
      * DAO para persistir clientes
      * @var IDAO
      */
@@ -65,7 +59,7 @@ class Banco {
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct( string $nombre, IGestorDivisas $gestorDivisas = null, IDAO $clienteDAO = null, IDAO $cuentaDAO = null, IDAO $operacionDAO = null) {
+    public function __construct(string $nombre, IGestorDivisas $gestorDivisas = null, IDAO $clienteDAO = null, IDAO $cuentaDAO = null, IDAO $operacionDAO = null) {
         $this->setNombre($nombre);
         $this->gestorDivisas = $gestorDivisas;
         $this->clienteDAO = $clienteDAO;
@@ -200,7 +194,7 @@ class Banco {
     public function setInteresCA(float $interesCA) {
         $this->interesCA = $interesCA;
     }
-    
+
     /**
      * Establece el gestor de divisas
      * 
@@ -209,7 +203,7 @@ class Banco {
     public function setGestorDivisas(IGestorDivisas $gestorDivisas): void {
         $this->gestorDivisas = $gestorDivisas;
     }
-    
+
     /**
      * Establece el cliente DAO
      * 
@@ -218,7 +212,7 @@ class Banco {
     public function setClienteDAO(IDAO $clienteDAO): void {
         $this->clienteDAO = $clienteDAO;
     }
-    
+
     /**
      * Establece la cuenta DAO
      * 
@@ -227,8 +221,7 @@ class Banco {
     public function setCuentaDAO(IDAO $cuentaDAO): void {
         $this->cuentaDAO = $cuentaDAO;
     }
-    
-    
+
     /**
      * Establece la operación DAO
      * 
@@ -447,21 +440,5 @@ class Banco {
             $cuentaCA->aplicaInteres($interesCA);
             $this->cuentaDAO->modificar($cuentaCA);
         });
-    }
-
-    /**
-     * Proporciona una tabla con el cambio entre dos divisas durante un periodo consecutivo de días. El servicio no proporciona datos de días de fin de semana para alguna divisa
-     * @param int $divisaOrigen Código numérico de la divisa origen
-     * @param int $divisaDestino Código numérico de la divisa destino
-     * @param string $fechaInicial Fecha inicial
-     * @param string $fechaFinal Fecha Final
-     * @return array|null Tabla con los datos de compra y venta de la divisa cada día del banco
-     */
-    public function consultarCambioDivisa(int $divisaOrigen, int $divisaDestino, string $fechaInicial, string $fechaFinal = null): ?array {
-        return $this->getGestorDivisas()->consultarCambioDivisa($divisaOrigen, $divisaDestino, $fechaInicial, $fechaFinal);
-    }
-
-    public function listaDivisasDisponibles(): ?array {
-        return $this->getGestorDivisas()->listaDivisasDisponibles();
     }
 }

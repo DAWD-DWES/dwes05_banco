@@ -40,10 +40,10 @@ class GestorDivisasSOAP implements IGestorDivisas {
         $cambiosDivisaOrigen = $this->servicioDivisa->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaOrigen))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
         $cambiosDivisaDestino = $this->servicioDivisa->TipoCambioRangoMoneda(new TipoCambioRangoMoneda($fechaInicial, $fechaFinal, $divisaDestino))->getTipoCambioRangoMonedaResult()->getVars()->getVar();
         $divisaOrigenNombre = current(array_filter($this->listaDivisasDisponibles(), function ($variable) use ($divisaOrigen) {
-                    return ($variable->getMoneda() === $divisaOrigen);
+                    return ($variable->getMoneda() == $divisaOrigen);
                 }))->getDescripcion();
         $divisaDestinoNombre = current(array_filter($this->listaDivisasDisponibles(), function ($variable) use ($divisaDestino) {
-                    return ($variable->getMoneda() === $divisaDestino);
+                    return ($variable->getMoneda() == $divisaDestino);
                 }))->getDescripcion();
         $i = 0;
         $j = 0;
