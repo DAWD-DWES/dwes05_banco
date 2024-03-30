@@ -9,9 +9,9 @@ interface IDAO {
 
     public function obtenerTodos(): array;
 
-    public function crear(object $object): int;
+    public function crear(object $object): bool;
 
-    public function modificar(object $object): void;
+    public function modificar(object $object): bool;
 
-    public function eliminar(int $id): void;
+    public function eliminar(int $id): bool;
 }

@@ -43,7 +43,6 @@ class CuentaDAO implements IDAO {
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_OBJ);
         $datosCuenta = $stmt->fetch();
-        $stmt->closeCursor();
         return $datosCuenta ? $this->crearCuenta($datosCuenta) : null;
     }
 
@@ -58,7 +57,6 @@ class CuentaDAO implements IDAO {
         $stmt->execute(['idCliente' => $idCliente]);
         $stmt->setFetchMode(PDO::FETCH_NUM);
         $idCuentas = $stmt->fetchAll() ?? [];
-        $stmt->closeCursor();
         return array_merge(...$idCuentas);
     }
 
@@ -73,7 +71,6 @@ class CuentaDAO implements IDAO {
         $stmt->execute(['dni' => $dni]);
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $idCuentas = $stmt->fetchAll() ?? [];
-        $stmt->closeCursor();
         return $idCuentas;
     }
 
@@ -108,7 +105,6 @@ class CuentaDAO implements IDAO {
         $sql = "SELECT cuenta_id as id, cliente_id as idCliente, tipo, saldo, fecha_creacion as fechaCreacion FROM cuentas;";
         $stmt = $this->pdo->query($sql);
         $cuentasDatos = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $stmt->closeCursor();
         return array_map(fn($datos) => $this->crearCuenta($datos), $cuentasDatos);
     }
 
@@ -117,23 +113,24 @@ class CuentaDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object): int {
+    public function crear(object $object): bool {
         $sql = "INSERT INTO cuentas (cliente_id, tipo, saldo) VALUES (:cliente_id, :tipo, :saldo);";
         if ($object instanceof \App\modelo\Cuenta) {
             $cuenta = $object;
             $stmt = $this->pdo->prepare($sql);
-            $resultado = $stmt->execute([
+            $result = $stmt->execute([
                 'cliente_id' => $cuenta->getIdCliente(),
                 'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
             ]);
             $stmt->closeCursor();
             if ($resultado) {
-                return ($this->pdo->lastInsertId());
+                $object->setId($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
+        return $result;
     }
 
     /**
@@ -141,37 +138,37 @@ class CuentaDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object): void {
+    public function modificar(object $object): bool {
         $sql = "UPDATE cuentas SET cliente_id = :cliente_id, tipo = :tipo, saldo = :saldo, fecha_creacion = :fecha_creacion WHERE cuenta_id = :id;";
         if ($object instanceof \App\modelo\Cuenta) {
             $cuenta = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'id' => $cuenta->getId(),
                 'cliente_id' => $cuenta->getIdCliente(),
                 'tipo' => $cuenta->getTipo()->value,
                 'saldo' => $cuenta->getSaldo(),
                 'fecha_creacion' => $cuenta->getFechaCreacion()->format('Y-m-d H:i:s')
             ]);
-            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
         }
+        return $result;
     }
 
     /**
      * Elimina un registro de una instancia de cuenta
      * @param int $id
      */
-    public function eliminar(int $id): void {
+    public function eliminar(int $id): bool {
         $sql = "DELETE FROM cuentas WHERE cuenta_id = :id";
         $operaciones = $this->operacionDAO->obtenerPorIdCuenta($id);
         foreach ($operaciones as $operacion) {
             $this->operacionDAO->eliminar($operacion->getId());
         }
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        $stmt->closeCursor();
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
     }
 
     // Estos métodos permiten usar el modo transaccional para operaciones de persistencia de cuentas.
