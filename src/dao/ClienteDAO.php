@@ -149,7 +149,7 @@ class ClienteDAO implements IDAO {
      * Elimina un registro de una instancia de cliente
      * @param int $id Identificador del cliente a eliminar de la BD
      */
-    public function eliminar(int $id) {
+    public function eliminar(int $id): bool {
         $sql = "DELETE FROM clientes WHERE cliente_id = :id;";
         $stmt = $this->pdo->prepare($sql);
         $result = $stmt->execute(['id' => $id]);
