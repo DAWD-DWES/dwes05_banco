@@ -33,7 +33,6 @@ class OperacionDAO implements IDAO {
         $stmt->execute(['id' => $id]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, Operacion::class);
         $operacion = $stmt->fetch();
-        $stmt->closeCursor();
         return $operacion ? $this->inicializarPostPDO($operacion) : null;
     }
 
@@ -48,7 +47,6 @@ class OperacionDAO implements IDAO {
         $stmt->execute(['idCuenta' => $idCuenta]);
         $stmt->setFetchMode(PDO::FETCH_CLASS, Operacion::class);
         $operaciones = $stmt->fetchAll() ?? [];
-        $stmt->closeCursor();
         array_walk($operaciones, fn($operacion) => $this->inicializarPostPDO($operacion));
         return $operaciones;
     }
@@ -92,24 +90,25 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object): int {
+    public function crear(object $object): bool {
         $sql = "INSERT INTO operaciones (cuenta_id, tipo_operacion, cantidad, descripcion) VALUES (:cuenta_id, :tipo_operacion, :cantidad, :descripcion);";
         if ($object instanceof Operacion) {
             $operacion = $object;
             $stmt = $this->pdo->prepare($sql);
-            $resultado = $stmt->execute([
+            $result = $stmt->execute([
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo()->value,
                 'cantidad' => $operacion->getCantidad(),
                 'descripcion' => $operacion->getDescripcion()
             ]);
             $stmt->closeCursor();
-            if ($resultado) {
-                return ($this->pdo->lastInsertId());
+            if ($result) {
+                $this->setId($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
+        return $result;
     }
 
     /**
@@ -117,12 +116,12 @@ class OperacionDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function modificar(object $object): void {
+    public function modificar(object $object): bool {
         $sql = "UPDATE operaciones SET cuenta_id = :cuenta_id, tipo_operacion = :tipo_operacion, cantidad = :cantidad, fecha_operacion = :fecha_operacion, descripcion = :descripcion WHERE operacion_id = :id;";
         if ($object instanceof Operacion) {
             $operacion = $object;
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([
+            $result = $stmt->execute([
                 'id' => $operacion->getId(),
                 'cuenta_id' => $operacion->getIdCuenta(),
                 'tipo_operacion' => $operacion->getTipo(),
@@ -130,20 +129,21 @@ class OperacionDAO implements IDAO {
                 'fecha_operacion' => $operacion->getFecha()->format('Y-m-d H:i:s'),
                 'descripcion' => $operacion->getDescripcion()
             ]);
-            $stmt->closeCursor();
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');
         }
+        return $result;
     }
 
     /**
      * Elimina un registro de una instancia de operación
      * @param type $id
      */
-    public function eliminar(int $id): void {
+    public function eliminar(int $id): bool {
         $sql = "DELETE FROM operaciones WHERE operacion_id = :id;";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['id' => $id]);
-        $stmt->closeCursor();
+        $result = $stmt->execute(['id' => $id]);
+        return $result;
+        
     }
 }
