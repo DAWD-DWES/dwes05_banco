@@ -124,8 +124,8 @@ class CuentaDAO implements IDAO {
                 'saldo' => $cuenta->getSaldo(),
             ]);
             $stmt->closeCursor();
-            if ($resultado) {
-                $object->setId($this->pdo->lastInsertId());
+            if ($result) {
+                $cuenta->setId($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cuenta.');
