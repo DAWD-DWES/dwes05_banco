@@ -156,6 +156,7 @@ class ClienteDAO implements IDAO {
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cliente.');
         }
+        echo "helo;";
         return $result;
     }
 
