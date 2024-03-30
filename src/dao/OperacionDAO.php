@@ -101,9 +101,8 @@ class OperacionDAO implements IDAO {
                 'cantidad' => $operacion->getCantidad(),
                 'descripcion' => $operacion->getDescripcion()
             ]);
-            $stmt->closeCursor();
             if ($result) {
-                $this->setId($this->pdo->lastInsertId());
+                $operacion->setId($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Operacion.');

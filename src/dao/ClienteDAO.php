@@ -125,7 +125,7 @@ class ClienteDAO implements IDAO {
                 'telefono' => $cliente->getTelefono()
             ]);
             if ($result) {
-                $this->setId($this->pdo->lastInsertId());
+                $cliente->setId($this->pdo->lastInsertId());
             }
         } else {
             throw new InvalidArgumentException('Se esperaba un objeto de tipo Cliente.');
