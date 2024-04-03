@@ -2,7 +2,7 @@
 
 namespace Hipoteca;
 
-class CalculoHipoteca extends \SoapClient
+class CalculoHipotecaService extends \SoapClient
 {
 
     /**

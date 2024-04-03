@@ -3,7 +3,7 @@
 namespace App\modelo;
 
 use SoapClient;
-use Hipoteca\CalculoHipoteca;
+use Hipoteca\CalculoHipotecaService;
 
 /**
  * Clase GestorDivisasSOAP
@@ -14,7 +14,7 @@ class GestorHipotecasSOAP {
 
 
     public function __construct() {
-        $this->servicioHipoteca = new CalculoHipoteca();
+        $this->servicioHipoteca = new CalculoHipotecaService();
     }
 
     public function calculoCuota(float $cantidad, int $anyos, float $tasaInteresAnual): float {

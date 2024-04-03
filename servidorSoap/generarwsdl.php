@@ -2,11 +2,10 @@
 require '../vendor/autoload.php';
 
 use PHP2WSDL\PHPClass2WSDL;
-use ServicioHipoteca\CalculoHipoteca;
+require_once 'src\CalculoHipoteca.php';
 
-$uri = 'http://localhost/dwes05_banco/servidorSoap/servidor.php';
+$uri = 'http://localhost/servidorSoap/servidor.php';
 
-$calculoHipoteca = new CalculoHipoteca();
-$wsdlGenerator = new PHPClass2WSDL(ServicioHipoteca\CalculoHipoteca::class, $uri);
+$wsdlGenerator = new PHPClass2WSDL(CalculoHipoteca::class, $uri);
 $wsdlGenerator->generateWSDL(true);
 $fichero = $wsdlGenerator->save('calculohipoteca.wsdl');

@@ -31,7 +31,7 @@
   <message name="calculoCuotaOut">
     <part name="return" type="xsd:float"/>
   </message>
-  <service name="CalculoHipoteca">
+  <service name="CalculoHipotecaService">
     <port name="CalculoHipotecaPort" binding="tns:CalculoHipotecaBinding">
       <soap:address location="http://localhost/servidorSoap/servidor.php"/>
     </port>

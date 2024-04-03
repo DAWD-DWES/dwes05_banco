@@ -1,17 +1,17 @@
 <?php
 
 
- function autoload_9c4a79e86b543e1f842936e29b458bba($class)
+ function autoload_90b37f0f712da0502d114e10ab1a11b5($class)
 {
     $classes = array(
-        'Hipoteca\ServicioHipotecaCalculoHipotecaService' => __DIR__ .'/ServicioHipotecaCalculoHipotecaService.php'
+        'Hipoteca\CalculoHipotecaService' => __DIR__ .'/CalculoHipotecaService.php'
     );
     if (!empty($classes[$class])) {
         include $classes[$class];
     };
 }
 
-spl_autoload_register('autoload_9c4a79e86b543e1f842936e29b458bba');
+spl_autoload_register('autoload_90b37f0f712da0502d114e10ab1a11b5');
 
 // Do nothing. The rest is just leftovers from the code generation.
 {

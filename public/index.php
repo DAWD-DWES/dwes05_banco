@@ -11,9 +11,7 @@ use App\dao\{
     ClienteDAO
 };
 use App\modelo\{
-    Banco,
-    IGestorDivisas,
-    GestorDivisasSOAP
+    Banco
 };
 use eftec\bladeone\BladeOne;
 use Dotenv\Dotenv;
@@ -44,8 +42,6 @@ try {
 $operacionDAO = new OperacionDAO($pdo);
 $cuentaDAO = new CuentaDAO($pdo, $operacionDAO);
 $clienteDAO = new ClienteDAO($pdo, $cuentaDAO);
-
-$gestorDivisas = new GestorDivisasSOAP();
 
 $banco = new Banco("Midas");
 $banco->setClienteDAO($clienteDAO);
