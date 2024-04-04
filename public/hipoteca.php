@@ -4,7 +4,6 @@ require_once '../vendor/autoload.php';
 require_once '../src/error_handler.php';
 
 use App\modelo\{
-    Banco,
     GestorHipotecasSOAP
 };
 use eftec\bladeone\BladeOne;

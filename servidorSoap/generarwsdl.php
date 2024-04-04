@@ -1,5 +1,4 @@
 <?php
-require '../vendor/autoload.php';
 
 use PHP2WSDL\PHPClass2WSDL;
 require_once 'src\CalculoHipoteca.php';
