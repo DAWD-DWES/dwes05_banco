@@ -59,9 +59,8 @@ class Banco {
      * 
      * @param string $nombre Nombre del banco
      */
-    public function __construct(string $nombre, IGestorDivisas $gestorDivisas = null, IDAO $clienteDAO = null, IDAO $cuentaDAO = null, IDAO $operacionDAO = null) {
+    public function __construct(string $nombre, IDAO $clienteDAO = null, IDAO $cuentaDAO = null, IDAO $operacionDAO = null) {
         $this->setNombre($nombre);
-        $this->gestorDivisas = $gestorDivisas;
         $this->clienteDAO = $clienteDAO;
         $this->cuentaDAO = $cuentaDAO;
         $this->operacionDAO = $operacionDAO;
@@ -193,15 +192,6 @@ class Banco {
      */
     public function setInteresCA(float $interesCA) {
         $this->interesCA = $interesCA;
-    }
-
-    /**
-     * Establece el gestor de divisas
-     * 
-     * @return void
-     */
-    public function setGestorDivisas(IGestorDivisas $gestorDivisas): void {
-        $this->gestorDivisas = $gestorDivisas;
     }
 
     /**
