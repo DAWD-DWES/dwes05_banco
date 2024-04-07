@@ -5,7 +5,7 @@ require_once '../src/modelo/Cliente.php';
 require_once '../src/modelo/Cuenta.php';
 require_once '../src/modelo/TipoCuenta.php';
 
-$banco = new Banco("Molocos");
+$banco = new Banco("Midas");
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
