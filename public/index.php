@@ -6,7 +6,7 @@ require_once '../src/modelo/Cuenta.php';
 require_once '../src/modelo/TipoOperacion.php';
 
 
-$banco = new Banco("Molocos");
+$banco = new Banco("Midas");
 
 // Datos de clientes de ejemplo
 $datosClientes = [
