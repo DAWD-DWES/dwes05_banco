@@ -217,8 +217,8 @@ class Banco {
      * 
      * @return void
      */
-    public function setOperacionDAO(IDAO $OperacionDAO): void {
-        $this->operacionDAO = $OperacionDAO;
+    public function setOperacionDAO(IDAO $operacionDAO): void {
+        $this->operacionDAO = $operacionDAO;
     }
 
     /**
