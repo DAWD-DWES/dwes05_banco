@@ -114,7 +114,7 @@ class ClienteDAO implements IDAO {
      * @param object $object
      * @throws InvalidArgumentException
      */
-    public function crear(object $object): int {
+    public function crear(object $object): bool {
         $sql = "INSERT INTO clientes (dni, nombre, apellido1, apellido2, fecha_nacimiento, telefono) VALUES (:dni, :nombre, :apellido1, :apellido2, :fecha_nacimiento, :telefono);";
         if ($object instanceof \App\modelo\Cliente) {
             $cliente = $object;

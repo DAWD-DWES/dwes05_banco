@@ -54,17 +54,6 @@ class Banco {
      */
     private IDAO $operacionDAO;
 
-    /**
-     * Colección de clientes del banco
-     * @var array
-     */
-    // private array $clientes;
-
-    /**
-     * Colección de cuentas bancarias abiertas
-     * @var array
-     */
-    // private array $cuentas;
 
     /**
      * Constructor de la clase Banco
@@ -76,8 +65,6 @@ class Banco {
         $this->clienteDAO = $clienteDAO;
         $this->cuentaDAO = $cuentaDAO;
         $this->operacionDAO = $operacionDAO;
-        //  $this->setClientes();
-        //  $this->setCuentas();
     }
 
     /**

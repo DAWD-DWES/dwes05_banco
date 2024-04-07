@@ -26,7 +26,7 @@ $operacionDAO = new OperacionDAO($pdo);
 $cuentaDAO = new CuentaDAO($pdo, $operacionDAO);
 $clienteDAO = new ClienteDAO($pdo, $cuentaDAO);
 
-$banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Molocos");
+$banco = new Banco($clienteDAO, $cuentaDAO, $operacionDAO, "Midas");
 
 $banco->setComisionCC(5);
 $banco->setMinSaldoComisionCC(1000);
