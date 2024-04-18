@@ -25,10 +25,10 @@ if (filter_has_var(INPUT_GET, 'petconsultahipoteca')) {
     $cantidad = filter_input(INPUT_POST, 'cantidad', FILTER_UNSAFE_RAW);
     $anyos = filter_input(INPUT_POST, 'anyos', FILTER_UNSAFE_RAW);
     $tasaInteres = filter_input(INPUT_POST, 'tasainteres', FILTER_UNSAFE_RAW);
-    
+
     $cuota = round($gestorHipotecas->calculoCuota($cantidad, $anyos, $tasaInteres));
-    echo $blade->run('consulta_hipoteca', compact('cantidad', 'anyos', 'tasaInteres', 'cuota', 'consultaCuota'));
+    echo json_encode(['cuota' => round($cuota, 2)]);
 } else {
-    echo $blade->run('principal');
+    echo json_encode(['error' => 'Información insuficiente para calcular la cuota.']);
 }
 

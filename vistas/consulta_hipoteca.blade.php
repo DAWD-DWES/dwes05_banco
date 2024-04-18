@@ -23,17 +23,18 @@
         </div>
         <button type="submit" class="btn btn-primary" name="consultacuota">Consultar</button>
     </form>
-    @if (isset($consultaCuota))
-    <div class="container">
+    <div id="seccioncuota" class="container d-none">
         <h2 class="text-center my-4">Cuota Mensual de la Hipoteca</h2>
         <div class="row">
             <div class="col-3">
                 <label for="cuota">Cuota Mensual:</label>
-                <input type="number" class="form-control" id="cuota" readonly value="{{ $cuota }}">
+                <input type="text" class="form-control" id="cuota" readonly>
             </div>
         </div>
     </div>
-    @endif
 </div>
 @endsection
-
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="assets/js/hipoteca.js"></script>
+@endpush
